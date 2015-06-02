@@ -1,7 +1,7 @@
 {
-  "name": "utanikki",
+  "name": "uta-nikki",
   "version": "1.0.0",
-  "description": "UtaNikki: An Ionic project",
+  "description": "Uta Nikki, a poetic diary app",
   "dependencies": {
     "gulp": "^3.5.6",
     "gulp-sass": "^1.3.3",

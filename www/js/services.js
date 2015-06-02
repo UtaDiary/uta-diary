@@ -1,4 +1,38 @@
-angular.module('starter.services', [])
+angular.module('nikki.services', [])
+
+.factory('Entries', function() {
+
+  // Sample entry data
+  var entries= [{
+    id: 0,
+    date: 'June 1, 2015',
+    title: 'A New Journal',
+    text: "It's nice to start fresh every once in a while."
+  }, {
+    id: 1,
+    date: 'June 2, 2015',
+    title: 'Looking Forward',
+    text: "A few notes to myself on where I'd like to go."
+  }];
+
+  console.log("entries: ", entries);
+  return {
+    all: function() {
+      return entries;
+    },
+    remove: function(entry) {
+      entries.splice(entries.indexOf(entry), 1);
+    },
+    get: function(entryId) {
+      for (var i = 0; i < chats.length; i++) {
+        if (entries[i].id === parseInt(entryId)) {
+          return chats[i];
+        }
+      }
+      return null;
+    }
+  };
+})
 
 .factory('Chats', function() {
   // Might use a resource here that returns a JSON array
