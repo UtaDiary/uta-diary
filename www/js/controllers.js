@@ -16,6 +16,10 @@ angular.module('nikki.controllers', [])
   };
 })
 
+.controller('EntryDetailCtrl', function($scope, $stateParams, Entries) {
+  $scope.entry = Entries.get($stateParams.entryId);
+})
+
 .controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
   $scope.chat = Chats.get($stateParams.chatId);
 })

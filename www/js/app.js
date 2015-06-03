@@ -27,16 +27,9 @@ angular.module('nikki', ['ionic', 'nikki.controllers', 'nikki.services'])
     templateUrl: "templates/tabs.html"
   })
 
-  // Each tab has its own nav history stack:
-  .state('tab.dash', {
-    url: '/dash',
-    views: {
-      'tab-dash': {
-        templateUrl: 'templates/tab-dash.html',
-        controller: 'DashCtrl'
-      }
-    }
-  })
+  //
+  // Tabs
+  //
 
  .state('tab.entries', {
       url: '/entries',
@@ -47,6 +40,26 @@ angular.module('nikki', ['ionic', 'nikki.controllers', 'nikki.services'])
         }
       }
     })
+
+  .state('tab.entry-detail', {
+    url: '/entries/:entryId',
+    views: {
+      'tab-entries': {
+        templateUrl: 'templates/entry-detail.html',
+        controller: 'EntryDetailCtrl'
+      }
+    }
+  })
+
+  .state('tab.dash', {
+    url: '/dash',
+    views: {
+      'tab-dash': {
+        templateUrl: 'templates/tab-dash.html',
+        controller: 'DashCtrl'
+      }
+    }
+  })
 
  .state('tab.chats', {
       url: '/chats',
@@ -78,7 +91,7 @@ angular.module('nikki', ['ionic', 'nikki.controllers', 'nikki.services'])
     }
   });
 
-  // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/tab/dash');
+  // Default Route
+  $urlRouterProvider.otherwise('/tab/entries');
 
 });

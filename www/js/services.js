@@ -7,7 +7,7 @@ angular.module('nikki.services', [])
     id: 0,
     date: 'June 1, 2015',
     title: 'A New Journal',
-    text: "It's nice to start fresh every once in a while."
+    text: "It's nice to start fresh every once in a while!"
   }, {
     id: 1,
     date: 'June 2, 2015',
@@ -24,9 +24,9 @@ angular.module('nikki.services', [])
       entries.splice(entries.indexOf(entry), 1);
     },
     get: function(entryId) {
-      for (var i = 0; i < chats.length; i++) {
+      for (var i = 0; i < entries.length; i++) {
         if (entries[i].id === parseInt(entryId)) {
-          return chats[i];
+          return entries[i];
         }
       }
       return null;
