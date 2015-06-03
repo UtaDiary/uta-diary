@@ -1,6 +1,10 @@
 <ion-view view-title="{{ entry.date }}">
   <ion-content class="padding">
     <h2>{{ entry.title }}</h2>
-    {{entry.text}}
+    <div ng-hide="editingText" ng-click="editingText = true;">{{ entry.text }}</div>
+    <form ng-show="editingText" ng-submit="editingText = false;">
+      <textarea ng-model="entry.text" placeholder="What's on my mind today?"></textarea>
+      <button type="submit">Save</button>
+    </form>
   </ion-content>
 </ion-view>
