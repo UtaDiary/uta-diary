@@ -3,8 +3,8 @@
     <h2>{{ entry.title }}</h2>
     <div ng-hide="editingText" ng-click="editingText = true;">{{ entry.text }}</div>
     <form ng-show="editingText" ng-submit="editingText = false;">
-      <textarea ng-model="entry.text" placeholder="What's on my mind today?"></textarea>
-      <button type="submit">Save</button>
+      <textarea cols="80" ng-model="entry.text" placeholder="What's on my mind today?"></textarea>
+      <button class="button button-balanced" type="submit">Save</button>
     </form>
   </ion-content>
 </ion-view>
