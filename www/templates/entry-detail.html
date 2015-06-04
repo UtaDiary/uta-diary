@@ -4,7 +4,9 @@
     <div ng-hide="editingText" ng-click="editingText = true;">{{ entry.text }}</div>
     <form ng-show="editingText" ng-submit="editingText = false;">
       <textarea cols="80" ng-model="entry.text" placeholder="What's on my mind today?"></textarea>
-      <button class="button button-balanced" type="submit">Save</button>
+      <button class="button button-balanced button-small" type="submit">
+        <i class="icon ion-checkmark"></i> Save
+      </button>
     </form>
   </ion-content>
 </ion-view>
