@@ -1,11 +1,14 @@
 <ion-view view-title="{{ entry.date }}">
   <ion-content class="padding">
     <h2>{{ entry.title }}</h2>
-    <div ng-hide="editingText" ng-click="editingText = true;">{{ entry.text }}</div>
+    <div ng-hide="editingText" ng-click="editingText = true; original = entry.text">{{ entry.text }}</div>
     <form ng-show="editingText" ng-submit="editingText = false;">
       <textarea cols="80" ng-model="entry.text" placeholder="What's on my mind today?"></textarea>
       <button class="button button-balanced button-small" type="submit">
-        <i class="icon ion-checkmark"></i> Save
+        <i class="icon ion-checkmark-round"></i> Save
+      </button>
+      <button class="button button-assertive button-small" ng-click="entry.text = original" type="submit">
+        <i class="icon ion-close-round"></i> Cancel
       </button>
     </form>
   </ion-content>
