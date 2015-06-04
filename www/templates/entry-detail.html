@@ -1,7 +1,9 @@
 <ion-view view-title="{{ entry.date }}">
   <ion-content class="padding">
     <h2>{{ entry.title }}</h2>
-    <div ng-hide="editingText" ng-click="editingText = true; original = entry.text">{{ entry.text }}</div>
+    <div ng-hide="editingText" ng-click="editingText = true; original = entry.text"
+         ng-bind-html="renderMarkdown(entry.text)">
+    </div>
     <form ng-show="editingText" ng-submit="editingText = false;">
       <textarea cols="80" ng-model="entry.text" placeholder="What's on my mind today?"></textarea>
       <button class="button button-balanced button-small" type="submit">

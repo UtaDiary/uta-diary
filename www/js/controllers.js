@@ -17,6 +17,11 @@ angular.module('nikki.controllers', [])
 })
 
 .controller('EntryDetailCtrl', function($scope, $stateParams, Entries) {
+  $scope.renderMarkdown = function(text) {
+    var converter = new showdown.Converter();
+    var html = converter.makeHtml(text);
+    return html;
+  };
   $scope.entry = Entries.get($stateParams.entryId);
 })
 
