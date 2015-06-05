@@ -1,6 +1,14 @@
 <ion-view view-title="{{ entry.date }}">
   <ion-content class="padding">
-    <h2>{{ entry.title }}</h2>
+    <h2 ng-hide="editingTitle" ng-click="editingTitle = true; originalTitle = entry.title">
+      {{ entry.title }}
+    </h2>
+    <form name="titleForm" ng-show="editingTitle" ng-submit="editingTitle = false">
+      <input type="text" ng-model="entry.title" ng-blur="editingTitle = false"/>
+      <button class="button button-balanced button-small" type="submit">
+        <i class="icon ion-checkmark-round"></i>
+      </button>
+    </form>
     <div ng-hide="editingText" ng-click="editingText = true; original = entry.text"
          ng-bind-html="renderMarkdown(entry.text)">
     </div>
