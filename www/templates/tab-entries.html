@@ -1,6 +1,11 @@
 <ion-view view-title="Entries">
   <ion-content>
     <ion-list>
+      <ion-item class="nikki new-entry item-remove-animate item-avatar item-icon-right">
+        <h2 class="nikki new-entry-header">Today</h2>
+        <p>New Entry</p>
+        <i class="icon ion-plus icon-accessory"></i>
+      </ion-item>
       <ion-item class="item-remove-animate item-avatar item-icon-right"
                 ng-repeat="entry in entries" type="item-text-wrap" href="#/tab/entries/{{entry.id}}">
         <h2>{{entry.date}}</h2>
