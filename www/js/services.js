@@ -5,20 +5,39 @@ angular.module('nikki.services', [])
   // Sample entry data
   var entries= [{
     id: 0,
-    date: 'June 1, 2015',
+    date: new Date(2015, 06, 01),
     title: 'A New Journal',
     text: "It's nice to start fresh every once in a while!"
   }, {
     id: 1,
-    date: 'June 2, 2015',
+    date: new Date(2015, 06, 02),
     title: 'Looking Forward',
     text: "A few notes to myself on where I'd like to go."
   }];
 
   console.log("entries: ", entries);
-  return {
+  var Entries = {
     all: function() {
       return entries;
+    },
+    last: function() {
+      return entries[entries.length - 1];
+    },
+    nextId: function() {
+      return entries.length > 0
+        ? Entries.last().id + 1
+        : 0;
+    },
+    create: function(options) {
+      options = arguments[0] || {};
+      var entry = {
+        id: options.id || Entries.nextId(),
+        date: options.date || new Date(),
+        text: options.text || "What's on my mind today?",
+        title: options.title || "Title"
+      };
+      entries.push(entry);
+      return entry;
     },
     remove: function(entry) {
       entries.splice(entries.indexOf(entry), 1);
@@ -32,6 +51,7 @@ angular.module('nikki.services', [])
       return null;
     }
   };
+  return Entries;
 })
 
 .factory('Chats', function() {

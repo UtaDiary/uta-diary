@@ -4,6 +4,15 @@ angular.module('nikki.controllers', [])
 
 .controller('EntriesCtrl', function($scope, Entries) {
   $scope.entries = Entries.all();
+  $scope.create = function() {
+    var options = {
+      date: new Date(),
+      title: "Title"
+    };
+    var entry = Entries.create(options);
+    console.log("Creating entry!");
+    console.log("entry: ", entry);
+  };
   $scope.remove = function(chat) {
     Entries.remove(chat);
   };

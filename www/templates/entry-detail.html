@@ -1,4 +1,4 @@
-<ion-view view-title="{{ entry.date }}">
+<ion-view view-title="{{ entry.date | date:'MMMM dd, yyyy' }}">
   <ion-content class="padding">
     <h2 ng-hide="editingTitle" ng-click="editingTitle = true; originalTitle = entry.title">
       {{ entry.title }}
