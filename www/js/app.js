@@ -2,7 +2,7 @@
 
 angular.module('nikki', ['ionic', 'nikki.controllers', 'nikki.services'])
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, Entries) {
   $ionicPlatform.ready(function() {
     if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
       // Hide the input accessory bar
@@ -13,6 +13,17 @@ angular.module('nikki', ['ionic', 'nikki.controllers', 'nikki.services'])
       StatusBar.styleLightContent();
     }
   });
+
+  // Load entries from storage
+  Entries.reload();
+
+  // Check for existing entries
+  if (Entries.all().length == 0) {
+
+    // Add a welcome entry
+    Entries.create(Entries.examples.welcome);
+    Entries.commit();
+  }
 })
 
 .config(function($stateProvider, $urlRouterProvider) {
