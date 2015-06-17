@@ -2,32 +2,60 @@ angular.module('nikki.services', [])
 
 .factory('Entries', function() {
 
-  // Sample entry data
-  var entries= [{
-    id: 0,
-    date: new Date(2015, 06, 01),
-    title: 'A New Journal',
-    text: "It's nice to start fresh every once in a while!"
-  }, {
-    id: 1,
-    date: new Date(2015, 06, 02),
-    title: 'Looking Forward',
-    text: "A few notes to myself on where I'd like to go."
-  }];
+  var entries= [];
+
+  // Example entries
+  var examples = {
+    welcome: {
+      date: new Date(2015, 06, 17),
+      title: 'Welcome!',
+      text: "Thanks for using Uta Nikki!\n\nHopefully, these notes will help you get started."
+    },
+    first: {
+      date: new Date(2015, 06, 02),
+      title: 'Looking Forward',
+      text: "A few notes to myself on where I'd like to go."
+    },
+    second: {
+      date: new Date(2015, 06, 01),
+      title: 'A New Journal',
+      text: "It's nice to start fresh every once in a while!"
+    }
+  };
 
   console.log("entries: ", entries);
   var Entries = {
+
+    // Example entries.
+    examples: examples,
+
+    // Reloads all entries from storage.
+    reload: function() {
+      console.log("Reloading entries!")
+    },
+
+    // Commits all entries to storage.
+    commit: function() {
+    },
+
+    // Gets all journal entries as an array.
     all: function() {
       return entries;
     },
+
+    // Gets the most recently created journal entry.
     last: function() {
       return entries[entries.length - 1];
     },
+
+    // Gets the next journal entry id.
     nextId: function() {
       return entries.length > 0
         ? Entries.last().id + 1
         : 0;
     },
+
+    // Creates a new journal entry.
     create: function(options) {
       options = arguments[0] || {};
       var entry = {
@@ -39,9 +67,13 @@ angular.module('nikki.services', [])
       entries.push(entry);
       return entry;
     },
+
+    // Removes a given entry object.
     remove: function(entry) {
       entries.splice(entries.indexOf(entry), 1);
     },
+
+    // Gets a journal entry by id.
     get: function(entryId) {
       for (var i = 0; i < entries.length; i++) {
         if (entries[i].id === parseInt(entryId)) {
