@@ -26,20 +26,29 @@ angular.module('nikki.controllers', [])
 })
 
 .controller('EntryDetailCtrl', function($scope, $stateParams, Entries) {
-  $scope.state = {
-    editingText: false,
-    editingTitle: false
-  };
   $scope.Entries = Entries;
   $scope.entry = Entries.get($stateParams.entryId);
+  $scope.state = {
+    editingText: false,
+    editingTitle: false,
+    originalText: $scope.entry.text
+  };
   $scope.renderMarkdown = function(text) {
     var converter = new showdown.Converter();
     var html = converter.makeHtml(text);
     return html;
   };
-  $scope.saveForm = function() {
+  $scope.startEditor = function() {
+    $scope.state.editingText = true;
+    $scope.state.originalText = $scope.entry.text;
+  };
+  $scope.saveChanges = function() {
     $scope.state.editingText = false;
     Entries.commit();
+  };
+  $scope.cancelChanges = function() {
+    $scope.state.editingText = false;
+    $scope.entry.text = $scope.state.originalText;
   };
 })
 
