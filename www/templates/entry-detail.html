@@ -1,18 +1,18 @@
 <ion-view view-title="{{ entry.date | date:'MMMM dd, yyyy' }}">
   <ion-content class="padding">
-    <h2 ng-hide="editingTitle" ng-click="editingTitle = true; originalTitle = entry.title">
+    <h2 ng-hide="state.editingTitle" ng-click="state.editingTitle = true; originalTitle = entry.title">
       {{ entry.title }}
     </h2>
-    <form name="titleForm" ng-show="editingTitle" ng-submit="editingTitle = false">
-      <input type="text" ng-model="entry.title" ng-blur="editingTitle = false"/>
+    <form name="titleForm" ng-show="state.editingTitle" ng-submit="state.editingTitle = false">
+      <input type="text" ng-model="entry.title" ng-blur="state.editingTitle = false"/>
       <button class="button button-balanced button-small" type="submit">
         <i class="icon ion-checkmark-round"></i>
       </button>
     </form>
-    <div ng-hide="editingText" ng-click="editingText = true; original = entry.text"
+    <div ng-hide="state.editingText" ng-click="state.editingText = true; original = entry.text"
          ng-bind-html="renderMarkdown(entry.text)">
     </div>
-    <form ng-show="editingText" ng-submit="editingText = false;">
+    <form ng-show="state.editingText" ng-submit="saveForm()">
       <textarea cols="80" ng-model="entry.text" placeholder="What's on my mind today?"></textarea>
       <button class="button button-balanced button-small" type="submit">
         <i class="icon ion-checkmark-round"></i> Save

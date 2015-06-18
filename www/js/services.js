@@ -31,11 +31,12 @@ angular.module('nikki.services', [])
 
     // Reloads all entries from storage.
     reload: function() {
-      console.log("Reloading entries!")
+      console.log("Reloading entries!");
     },
 
     // Commits all entries to storage.
     commit: function() {
+      console.log("Committing entries!");
     },
 
     // Gets all journal entries as an array.

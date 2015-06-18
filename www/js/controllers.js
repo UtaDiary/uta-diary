@@ -26,12 +26,21 @@ angular.module('nikki.controllers', [])
 })
 
 .controller('EntryDetailCtrl', function($scope, $stateParams, Entries) {
+  $scope.state = {
+    editingText: false,
+    editingTitle: false
+  };
+  $scope.Entries = Entries;
+  $scope.entry = Entries.get($stateParams.entryId);
   $scope.renderMarkdown = function(text) {
     var converter = new showdown.Converter();
     var html = converter.makeHtml(text);
     return html;
   };
-  $scope.entry = Entries.get($stateParams.entryId);
+  $scope.saveForm = function() {
+    $scope.state.editingText = false;
+    Entries.commit();
+  };
 })
 
 .controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
