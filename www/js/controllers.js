@@ -33,30 +33,6 @@ angular.module('nikki.controllers', [])
     editingTitle: false,
     originalText: $scope.entry.text
   };
-  $scope.renderMarkdown = function(text) {
-    var converter = new showdown.Converter();
-    var html = converter.makeHtml(text);
-    return html;
-  };
-  $scope.startTitleEditor = function() {
-    $scope.state.editingTitle = true;
-    $scope.originalTitle = $scope.entry.title
-  };
-  $scope.saveTitleChanges = function() {
-    $scope.state.editingTitle = false
-  };
-  $scope.startEditor = function() {
-    $scope.state.editingText = true;
-    $scope.state.originalText = $scope.entry.text;
-  };
-  $scope.saveChanges = function() {
-    $scope.state.editingText = false;
-    Entries.commit();
-  };
-  $scope.cancelChanges = function() {
-    $scope.state.editingText = false;
-    $scope.entry.text = $scope.state.originalText;
-  };
 })
 
 .controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
