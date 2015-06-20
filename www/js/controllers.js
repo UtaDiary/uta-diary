@@ -18,20 +18,15 @@ angular.module('nikki.controllers', [])
   };
 })
 
+.controller('EntryDetailCtrl', function($scope, $stateParams, Entries) {
+  $scope.Entries = Entries;
+  $scope.entry = Entries.get($stateParams.entryId);
+})
+
 .controller('ChatsCtrl', function($scope, Chats) {
   $scope.chats = Chats.all();
   $scope.remove = function(chat) {
     Chats.remove(chat);
-  };
-})
-
-.controller('EntryDetailCtrl', function($scope, $stateParams, Entries) {
-  $scope.Entries = Entries;
-  $scope.entry = Entries.get($stateParams.entryId);
-  $scope.state = {
-    editingText: false,
-    editingTitle: false,
-    originalText: $scope.entry.text
   };
 })
 

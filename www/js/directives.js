@@ -1,5 +1,22 @@
 angular.module('nikki.directives', [])
 
+.directive('nikkiEntry', [function() {
+  return {
+    templateUrl: 'templates/nikki-entry.html',
+    restrict: 'AE',
+    scope: {
+      entry: '='
+    },
+    link: function($scope, $element, $attrs) {
+      $scope.state = {
+        editingText: false,
+        editingTitle: false,
+        originalText: $scope.entry.text
+      };
+    }
+  };
+}])
+
 .directive('nikkiEntryTitle', [function() {
   return {
     templateUrl: 'templates/nikki-entry-title.html',
