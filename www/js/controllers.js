@@ -38,6 +38,13 @@ angular.module('nikki.controllers', [])
     var html = converter.makeHtml(text);
     return html;
   };
+  $scope.startTitleEditor = function() {
+    $scope.state.editingTitle = true;
+    $scope.originalTitle = $scope.entry.title
+  };
+  $scope.saveTitleChanges = function() {
+    $scope.state.editingTitle = false
+  };
   $scope.startEditor = function() {
     $scope.state.editingText = true;
     $scope.state.originalText = $scope.entry.text;
