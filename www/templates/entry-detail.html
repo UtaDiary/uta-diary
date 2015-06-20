@@ -1,12 +1,6 @@
 <ion-view view-title="{{ entry.date | date:'MMMM dd, yyyy' }}">
   <ion-content class="padding">
-    <h2 ng-hide="state.editingTitle" ng-bind="entry.title" ng-click="startTitleEditor()"></h2>
-    <form name="titleForm" ng-show="state.editingTitle">
-      <input type="text" ng-model="entry.title" ng-blur="saveTitleChanges()"/>
-      <button class="button button-balanced button-small" ng-click="saveTitleChanges()">
-        <i class="icon ion-checkmark-round"></i>
-      </button>
-    </form>
+    <nikki-entry-title state="state" entry="entry"></nikki-entry-title>
     <div ng-hide="state.editingText" ng-click="startEditor()"
          ng-bind-html="renderMarkdown(entry.text)">
     </div>

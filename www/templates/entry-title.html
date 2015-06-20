@@ -1,0 +1,7 @@
+<h2 ng-hide="state.editingTitle" ng-bind="entry.title" ng-click="startTitleEditor()"></h2>
+<form name="titleForm" ng-show="state.editingTitle">
+  <input type="text" ng-model="entry.title" ng-blur="saveTitleChanges()"/>
+  <button class="button button-balanced button-small" ng-click="saveTitleChanges()">
+    <i class="icon ion-checkmark-round"></i>
+  </button>
+</form>

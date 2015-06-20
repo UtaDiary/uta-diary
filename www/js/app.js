@@ -1,6 +1,6 @@
 // Nikki
 
-angular.module('nikki', ['ionic', 'nikki.controllers', 'nikki.services'])
+angular.module('nikki', ['ionic', 'nikki.controllers', 'nikki.services', 'nikki.directives'])
 
 .run(function($ionicPlatform, Entries) {
   $ionicPlatform.ready(function() {
