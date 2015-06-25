@@ -12,18 +12,18 @@ angular.module('nikki', ['ionic', 'nikki.controllers', 'nikki.services', 'nikki.
       // Requires org.apache.cordova.statusbar
       StatusBar.styleLightContent();
     }
+
+    // Load entries from storage
+    Entries.reload();
+
+    // Check for existing entries
+    if (Entries.all().length == 0) {
+
+      // Add a welcome entry
+      Entries.create(Entries.examples.welcome);
+      Entries.commit();
+    }
   });
-
-  // Load entries from storage
-  Entries.reload();
-
-  // Check for existing entries
-  if (Entries.all().length == 0) {
-
-    // Add a welcome entry
-    Entries.create(Entries.examples.welcome);
-    Entries.commit();
-  }
 })
 
 .config(function($stateProvider, $urlRouterProvider) {
