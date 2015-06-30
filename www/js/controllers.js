@@ -2,7 +2,7 @@ angular.module('nikki.controllers', [])
 
 .controller('DashCtrl', function($scope) {})
 
-.controller('EntriesCtrl', function($scope, Entries) {
+.controller('EntriesCtrl', function($scope, Entries, db) {
   $scope.entries = Entries.all();
   $scope.create = function() {
     var options = {
@@ -16,6 +16,14 @@ angular.module('nikki.controllers', [])
   $scope.remove = function(chat) {
     Entries.remove(chat);
   };
+  $scope.$watch(
+    function() {
+      return Entries.all();
+    },
+    function() {
+      $scope.entries = Entries.all();
+    }
+  );
 })
 
 .controller('EntryDetailCtrl', function($scope, $stateParams, Entries) {

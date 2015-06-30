@@ -12,17 +12,6 @@ angular.module('nikki', ['ionic', 'nikki.controllers', 'nikki.services', 'nikki.
       // Requires org.apache.cordova.statusbar
       StatusBar.styleLightContent();
     }
-
-    // Load entries from storage
-    Entries.reload();
-
-    // Check for existing entries
-    if (Entries.all().length == 0) {
-
-      // Add a welcome entry
-      Entries.create(Entries.examples.welcome);
-      Entries.commit();
-    }
   });
 })
 
@@ -35,7 +24,45 @@ angular.module('nikki', ['ionic', 'nikki.controllers', 'nikki.services', 'nikki.
   .state('tab', {
     url: "/tab",
     abstract: true,
-    templateUrl: "templates/tabs.html"
+    templateUrl: "templates/tabs.html",
+    resolve: {
+      db: function($q, Entries) {
+        console.log("Waiting for database...");
+
+        var deferred = $q.defer();
+        var waited = 0;
+        var waitForFS = function() {
+          setTimeout(function() {
+            console.log("Waiting for filesystem...")
+            if (!window.requestFileSystem && waited < 9000) {
+              waited += 500;
+              waitForFS();
+            }
+            else {
+              startDB();
+            }
+          }, 500);
+        };
+
+        var startDB = function() {
+          Entries.start(function() {
+            console.log("Entries.all(): ", Entries.all());
+
+            // Check for existing entries
+            if (Entries.all().length == 0) {
+              // Add a welcome entry
+              Entries.create(Entries.examples.welcome);
+              Entries.commit();
+            }
+
+            deferred.resolve(Entries.db());
+          });
+        };
+
+        waitForFS();
+        return deferred.promise;
+      }
+    }
   })
 
   //
