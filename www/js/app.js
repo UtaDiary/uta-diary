@@ -46,7 +46,7 @@ angular.module('nikki', ['ionic', 'nikki.controllers', 'nikki.services', 'nikki.
 
         var startDB = function() {
           Entries.start(function() {
-            console.log("Entries.all(): ", Entries.all());
+            console.log("Initial entries: ", Entries.all());
 
             // Check for existing entries
             if (Entries.all().length == 0) {

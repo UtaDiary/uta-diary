@@ -33,8 +33,8 @@ angular.module('nikki.services', [])
       return db;
     },
 
-    // Gets database default values.
-    dbDefaults: function() {
+    // Gets default database values.
+    defaults: function() {
       var defaults = {
         lastWrittenAt: null,
         entries: []
@@ -44,8 +44,8 @@ angular.module('nikki.services', [])
 
     // Resets entries database.
     reset: function(callback) {
-      console.log("Initialising database...");
-      db = Entries.dbDefaults();
+      console.log("Resetting database...");
+      db = Entries.defaults();
       return callback(null);
     },
 

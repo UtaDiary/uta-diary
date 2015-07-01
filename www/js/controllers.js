@@ -16,11 +16,7 @@ angular.module('nikki.controllers', [])
   $scope.remove = function(chat) {
     Entries.remove(chat);
   };
-  $scope.$watch(
-    function() {
-      return Entries.all();
-    },
-    function() {
+  $scope.$watch('Entries.all()', function() {
       $scope.entries = Entries.all();
     }
   );
