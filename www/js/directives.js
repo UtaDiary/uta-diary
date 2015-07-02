@@ -37,7 +37,7 @@ angular.module('nikki.directives', [])
   };
 }])
 
-.directive('nikkiEntryText', [function() {
+.directive('nikkiEntryText', ['Entries', function(Entries) {
   return {
     templateUrl: 'templates/nikki-entry-text.html',
     restrict: 'AE',

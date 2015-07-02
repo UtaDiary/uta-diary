@@ -1,6 +1,6 @@
 angular.module('nikki.services', [])
 
-.factory('Entries', function() {
+.factory('Entries', function($cordovaFile) {
 
   var db = {};
 
@@ -137,8 +137,20 @@ angular.module('nikki.services', [])
     // Commits all entries to storage.
     commit: function() {
       console.log("Committing entries!");
-      // Write file
-      // var fileWriter = fileEntry.createWriter();
+
+      db.lastWrittenAt = new Date();
+      var json = JSON.stringify(db);
+
+      $cordovaFile.writeFile(cordova.file.externalDataDirectory, "entries.json", json, true)
+      .then(
+        function (success) {
+          console.log("Finished saving database!");
+          console.log("json: ", json);
+        },
+        function (error) {
+          console.error("Error saving database: ", error);
+        }
+      );
     },
 
     // Gets all journal entries as an array.
