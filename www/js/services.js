@@ -52,7 +52,30 @@ angular.module('nikki.services', [])
     // Starts entries database.
     start: function(callback) {
       console.log("Starting database");
-      Entries.reload(callback);
+
+      ionic.Platform.ready(function() {
+
+        console.log("Checking for entries file");
+        $cordovaFile.checkFile(cordova.file.externalDataDirectory, "entries.json")
+        .then(
+          function (success) {
+            Entries.reload(callback);
+          },
+          function (error) {
+            console.log("Creating new entries file...")
+            $cordovaFile.createFile(cordova.file.externalDataDirectory, "entries.json", false)
+            .then(
+              function (success) {
+                Entries.reload(callback);
+              },
+              function (error) {
+                console.error("Failed creating entries.json");
+                return callback(error);
+              }
+            );
+          }
+        );
+      });
     },
 
     // Reloads all entries from storage.
