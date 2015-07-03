@@ -34,7 +34,9 @@ angular.module('nikki', ['ionic', 'ngCordova', 'nikki.controllers', 'nikki.servi
         var waitForFS = function() {
           setTimeout(function() {
             console.log("Waiting for filesystem...")
-            if (!window.requestFileSystem && waited < 9000) {
+            var isMobile = ionic.Platform.isWebView();
+
+            if (isMobile && !window.requestFileSystem && waited < 9000) {
               waited += 500;
               waitForFS();
             }
