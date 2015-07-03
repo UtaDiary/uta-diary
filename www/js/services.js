@@ -55,6 +55,11 @@ angular.module('nikki.services', [])
 
       ionic.Platform.ready(function() {
 
+        if (!window.cordova) {
+          console.log("Skipping entries file detection in browser");
+          return Entries.reset(callback);
+        }
+
         console.log("Checking for entries file");
         $cordovaFile.checkFile(cordova.file.externalDataDirectory, "entries.json")
         .then(
@@ -81,6 +86,11 @@ angular.module('nikki.services', [])
     // Reloads all entries from storage.
     reload: function(callback) {
       console.log("Reloading entries!");
+
+      if (!window.cordova) {
+        console.log("Skipping database reload in browser");
+        return callback(null);
+      }
 
       $cordovaFile.readAsText(cordova.file.externalDataDirectory, "entries.json")
       .then(
@@ -117,6 +127,11 @@ angular.module('nikki.services', [])
     // Commits all entries to storage.
     commit: function() {
       console.log("Committing entries!");
+
+      if (!window.cordova) {
+        console.log("Skipping database commit in browser");
+        return;
+      }
 
       db.lastWrittenAt = new Date();
       var json = JSON.stringify(db);
