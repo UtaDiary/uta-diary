@@ -58,80 +58,37 @@ angular.module('nikki.services', [])
     // Reloads all entries from storage.
     reload: function(callback) {
       console.log("Reloading entries!");
-      var sdPath = "/Android/data/com.ionicframework.utanikki207884/files/";
-      var name = "entries.json";
-      var fullname = sdPath + name;
-      var isMobile = window.requestFileSystem;
 
-      var fsSuccess = function(fs) {
-        console.log("Got file system: ", fs);
-        console.log("Creating entries file...");
-        var options = {
-          create: true,
-          exclusive: false
-        };
-        fs.root.getFile(fullname, options, fileEntrySuccess, fileEntryFail);
-      };
-      var fileEntrySuccess = function(fileEntry) {
-        console.log("Got file entry: ", fileEntry);
-        fileEntry.file(fileSuccess, fileFail);
-      };
-      var fileSuccess = function(file) {
-        console.log("Got file: ", file);
+      $cordovaFile.readAsText(cordova.file.externalDataDirectory, "entries.json")
+      .then(
+        function (success) {
+          console.log("Read entries file: ", success);
+          var json = success;
+          var result = JSON.parse(success);
 
-        // Read file
-        var reader = new FileReader();
+          // Deserialize dates
+          var timestamp = Date.parse(result.lastWrittenAt);
+          var isValid = !isNaN(timestamp);
 
-        reader.onloadend = function(event) {
-          var result = event.target.result;
-          console.log("Finished loading file!");
-          console.log(result);
+          result.lastWrittenAt = isValid
+            ? new Date(timestamp)
+            : null;
 
-          if (result == "" && db.lastWrittenAt == null) {
-            console.warn("Found empty entries file");
-            return Entries.reset(callback);
+          if (result.lastWrittenAt > db.lastWrittenAt || !db.lastWrittenAt) {
+            db = result;
+            console.log("Loaded entries database: ", db);
+            return callback(null);
           }
           else {
-            try {
-              var data = JSON.parse(result);
-              if (data.entries) {
-                console.log("Updating entries from file");
-                db.entries = data.entries;
-                return callback(null);
-              }
-            }
-            catch (error) {
-              console.error("Failed parsing entries.json, file may be corrupt");
-              return callback(new Error());
-            }
+            console.error("Failed loading entries. File older than current data: ", result);
+            return callback(new Error);
           }
-        };
-        reader.readAsText(file);
-      };
-      var fsFail = function() {
-        console.log("Failed reading filesystem.");
-        fail();
-      };
-      var fileEntryFail = function(error) {
-        console.log("Failed getting file entry: ", error);
-        fail();
-      };
-      var fileFail = function(error) {
-        console.log("Failed reading file: ", error);
-        fail();
-      };
-      var fail = function(error) {
-        console.log("Failed with error: ", error);
-        return callback(new Error());
-      };
-
-      if (isMobile) {
-        console.log("Loading mobile filesystem...");
-        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, fsSuccess, fsFail);
-      }
-      else {
-        console.log("Skipping persistence in the browser for now...");
-      }
+        },
+        function (error) {
+          console.error("Failed reading entries: ", error);
+          return callback(error);
+        }
+      );
     },
 
     // Commits all entries to storage.
