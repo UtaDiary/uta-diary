@@ -7,16 +7,19 @@ angular.module('nikki.services', [])
   // Example entries
   var examples = {
     welcome: {
+      id: 0,
       date: new Date(2015, 06, 17),
       title: 'Welcome!',
       text: "Thanks for using Uta Nikki!\n\nHopefully, these notes will help you get started."
     },
     first: {
+      id: 1,
       date: new Date(2015, 06, 02),
       title: 'Looking Forward',
       text: "A few notes to myself on where I'd like to go."
     },
     second: {
+      id: 2,
       date: new Date(2015, 06, 01),
       title: 'A New Journal',
       text: "It's nice to start fresh every once in a while!"
@@ -37,7 +40,7 @@ angular.module('nikki.services', [])
     defaults: function() {
       var defaults = {
         lastWrittenAt: null,
-        entries: []
+        entries: [ examples.welcome ]
       };
       return defaults;
     },
