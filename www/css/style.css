@@ -12,7 +12,6 @@ $royal:                           #886aea !default;
 $dark:                            #444 !default;
 */
 
-
 .nikki.new-entry, .nikki.new-entry * {
   background: #11c1f3;
   color: #fff;
@@ -21,6 +20,10 @@ $dark:                            #444 !default;
   color: #fff;
 }
 
-.nikki.entry-text-editor {
+nikki-entry-title .nikki.entry-title,
+nikki-entry-title .nikki.entry-title-editor {
+  font-size: 30px;
+}
+nikki-entry-text .nikki.entry-text-editor {
   width: 100%;
 }
