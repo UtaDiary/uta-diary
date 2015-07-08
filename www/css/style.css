@@ -22,4 +22,5 @@ $dark:                            #444 !default;
 }
 
 .nikki.entry-text-editor {
+  width: 100%;
 }
