@@ -17,7 +17,7 @@ angular.module('nikki.directives', [])
   };
 }])
 
-.directive('nikkiEntryTitle', [function() {
+.directive('nikkiEntryTitle', ['Entries', function(Entries) {
   return {
     templateUrl: 'templates/nikki-entry-title.html',
     restrict: 'AE',
@@ -32,6 +32,7 @@ angular.module('nikki.directives', [])
       };
       $scope.saveTitleChanges = function() {
         $scope.state.editingTitle = false;
+        Entries.commit();
       };
     }
   };
