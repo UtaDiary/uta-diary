@@ -10,11 +10,11 @@ angular.module('nikki.controllers', [])
       title: "Title"
     };
     var entry = Entries.create(options);
-    console.log("Creating entry!");
-    console.log("entry: ", entry);
+    Entries.commit();
   };
   $scope.remove = function(chat) {
     Entries.remove(chat);
+    Entries.commit();
   };
   $scope.$watch('Entries.all()', function() {
       $scope.entries = Entries.all();

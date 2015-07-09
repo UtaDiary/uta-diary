@@ -170,6 +170,7 @@ angular.module('nikki.services', [])
 
     // Creates a new journal entry.
     create: function(options) {
+      console.log("Creating entry!");
       options = arguments[0] || {};
       var entry = {
         id: options.id || Entries.nextId(),
@@ -177,6 +178,7 @@ angular.module('nikki.services', [])
         text: options.text || "What's on my mind today?",
         title: options.title || "Title"
       };
+      console.log("entry: ", entry);
       db.entries.push(entry);
       return entry;
     },
