@@ -100,7 +100,7 @@ angular.module('nikki.services', [])
         function (success) {
           console.log("Read entries file: ", success);
           var json = success;
-          var result = JSON.parse(success);
+          var result = angular.fromJson(success);
 
           // Deserialize dates
           var timestamp = Date.parse(result.lastWrittenAt);
@@ -137,7 +137,7 @@ angular.module('nikki.services', [])
       }
 
       db.lastWrittenAt = new Date();
-      var json = JSON.stringify(db);
+      var json = angular.toJson(db);
 
       $cordovaFile.writeFile(cordova.file.externalDataDirectory, "entries.json", json, true)
       .then(
