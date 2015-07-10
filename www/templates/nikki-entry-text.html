@@ -1,4 +1,5 @@
-<div ng-hide="state.editingText" ng-click="startEditor()"
+<div class="nikki entry-text"
+     ng-hide="state.editingText" ng-click="startEditor()"
      ng-bind-html="renderMarkdown(entry.text)">
 </div>
 <form ng-show="state.editingText">

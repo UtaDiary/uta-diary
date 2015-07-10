@@ -24,6 +24,26 @@ nikki-entry-title .nikki.entry-title,
 nikki-entry-title .nikki.entry-title-editor {
   font-size: 30px;
 }
+
+nikki-entry-text .nikki.entry-text h1 { font-size: 30px; }
+nikki-entry-text .nikki.entry-text h2 { font-size: 25px; }
+nikki-entry-text .nikki.entry-text h3 { font-size: 20px; }
+nikki-entry-text .nikki.entry-text h4 { font-size: 16px; }
+
+nikki-entry-text .nikki.entry-text blockquote {
+  margin: 10px 0px;
+  border-left: 5px solid #ccc;
+  font-style: italic;
+}
+nikki-entry-text .nikki.entry-text code {
+  font-family: "Droid Sans Mono", "Menlo-Regular", "DejaVu Sans Mono", Monospace;
+}
+nikki-entry-text .nikki.entry-text ol {
+  list-style: decimal inside none;
+}
+nikki-entry-text .nikki.entry-text ul {
+  list-style: disc inside none;
+}
 nikki-entry-text .nikki.entry-text-editor {
   width: 100%;
 }
