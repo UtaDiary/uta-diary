@@ -26,7 +26,7 @@ angular.module('nikki', ['ionic', 'ngCordova', 'monospaced.elastic', 'nikki.cont
     abstract: true,
     templateUrl: "templates/tabs.html",
     resolve: {
-      db: function($q, Entries) {
+      db: function($q, Entries, welcomeText) {
         console.log("Waiting for database...");
 
         var deferred = $q.defer();
@@ -47,6 +47,7 @@ angular.module('nikki', ['ionic', 'ngCordova', 'monospaced.elastic', 'nikki.cont
         };
 
         var startDB = function() {
+          Entries.examples.welcome.text = welcomeText;
           Entries.start(function() {
             console.log("Initial entries: ", Entries.all());
 
@@ -63,6 +64,12 @@ angular.module('nikki', ['ionic', 'ngCordova', 'monospaced.elastic', 'nikki.cont
 
         waitForFS();
         return deferred.promise;
+      },
+      welcomeText: function($http) {
+        console.log("Loading welcome text...");
+        return $http.get('/templates/welcome.md').then(function(response) {
+          return response.data;
+        });
       }
     }
   })
