@@ -3892,9 +3892,7 @@ function keyboardOnKeyDown(e) {
  * elements outside the scroll view while the keyboard is open.
  */
 function keyboardPreventDefault(e) {
-  if (e.target.tagName !== 'TEXTAREA') {
-    e.preventDefault();
-  }
+  e.preventDefault();
 }
 
                               /* Private API */
@@ -5180,8 +5178,7 @@ ionic.views.Scroll = ionic.views.View.inherit({
 
     self.touchMove = function(e) {
       if (self.options.freeze || !self.__isDown ||
-        (!self.__isDown && e.defaultPrevented) ||
-        (e.target.tagName === 'TEXTAREA' && e.target.parentElement.querySelector(':focus')) ) {
+        (!self.__isDown && e.defaultPrevented)) {
         return;
       }
 
