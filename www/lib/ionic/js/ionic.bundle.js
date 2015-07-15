@@ -5137,7 +5137,7 @@ ionic.views.Scroll = ionic.views.View.inherit({
 
     //Broadcasted when keyboard is shown on some platforms.
     //See js/utils/keyboard.js
-    container.addEventListener('scrollChildIntoView', self.scrollChildIntoView);
+    // container.addEventListener('scrollChildIntoView', self.scrollChildIntoView);
 
     // Listen on document because container may not have had the last
     // keyboardActiveElement, for example after closing a modal with a focused
