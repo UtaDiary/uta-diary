@@ -1,26 +1,51 @@
-<ion-view view-title="Dashboard">
+<ion-view view-title="Statistics">
   <ion-content class="padding">
     <div class="list card">
-      <div class="item item-divider">Recent Updates</div>
+      <div class="item item-divider">Today</div>
       <div class="item item-body">
         <div>
-          There is a fire in <b>sector 3</b>
+          <b>{{stats.daily.entries}}</b> entries,
+          <b>{{stats.daily.words}}</b> words,
+          <b>{{stats.daily.bytes / 1000}}</b> KB
+        </div>
+      </div>
+    </div>
+      <div class="item item-divider">This Week</div>
+      <div class="item item-body">
+        <div>
+          <b>{{stats.weekly.entries}}</b> entries,
+          <b>{{stats.weekly.words}}</b> words,
+          <b>{{stats.weekly.bytes / 1000}}</b> KB
         </div>
       </div>
     </div>
     <div class="list card">
-      <div class="item item-divider">Health</div>
+      <div class="item item-divider">This Month</div>
       <div class="item item-body">
         <div>
-          You ate an apple today!
+          <b>{{stats.monthly.entries}}</b> entries,
+          <b>{{stats.monthly.words}}</b> words,
+          <b>{{stats.monthly.bytes / 1000}}</b> KB
         </div>
       </div>
     </div>
     <div class="list card">
-      <div class="item item-divider">Upcoming</div>
+      <div class="item item-divider">This Year</div>
       <div class="item item-body">
         <div>
-          You have <b>29</b> meetings on your calendar tomorrow.
+          <b>{{stats.yearly.entries}}</b> entries,
+          <b>{{stats.yearly.words}}</b> words,
+          <b>{{stats.yearly.bytes / 1000}}</b> KB
+        </div>
+      </div>
+    </div>
+    <div class="list card">
+      <div class="item item-divider">All Time</div>
+      <div class="item item-body">
+        <div>
+          <b>{{stats.allTime.entries}}</b> entries,
+          <b>{{stats.allTime.words}}</b> words,
+          <b>{{stats.allTime.bytes / 1000}}</b> KB
         </div>
       </div>
     </div>

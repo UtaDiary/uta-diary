@@ -1,6 +1,8 @@
 angular.module('nikki.controllers', [])
 
-.controller('DashCtrl', function($scope) {})
+.controller('DashCtrl', function($scope, Entries, db) {
+  $scope.stats = Entries.getStats();
+})
 
 .controller('EntriesCtrl', function($scope, Entries, db) {
   $scope.entries = Entries.all();

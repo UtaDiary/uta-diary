@@ -196,6 +196,61 @@ angular.module('nikki.services', [])
         }
       }
       return null;
+    },
+
+    // Gets statistics for series of entries.
+    getStatsForSeries: function(series) {
+      var stats = {
+        bytes: 0,
+        entries: 0,
+        words: 0
+      };
+      for (var i = 0; i < series.length; i++) {
+        var entry = series[i];
+        var text = entry.text;
+        var words = text.split(/ +/);
+        stats.bytes += text.length;
+        stats.entries += 1;
+        stats.words += words.length;
+      }
+      return stats;
+    },
+
+    // Gets statistics for database entries.
+    getStats: function() {
+      var stats = {
+        daily: {},
+        weekly: {},
+        monthly: {},
+        yearly: {},
+        allTime: {}
+      };
+      var groups = {
+        daily: [],
+        weekly: [],
+        monthly: [],
+        yearly: [],
+        allTime: []
+      };
+      for (var i = 0; i < db.entries.length; i++) {
+        var today = new Date();
+        var entry = db.entries[i];
+        var date = entry.date;
+        var days = 24 * 3600 * 1000;
+
+        // Naive rolling stats, for now...
+        if (today - date < 1 * days) groups.daily.push(entry);
+        if (today - date < 7 * days) groups.weekly.push(entry);
+        if (today - date < 30 * days) groups.monthly.push(entry);
+        if (today - date < 365 * days) groups.yearly.push(entry);
+        groups.allTime.push(entry);
+      }
+      stats.daily   = Entries.getStatsForSeries(groups.daily);
+      stats.weekly  = Entries.getStatsForSeries(groups.weekly);
+      stats.monthly = Entries.getStatsForSeries(groups.monthly);
+      stats.yearly  = Entries.getStatsForSeries(groups.yearly);
+      stats.allTime = Entries.getStatsForSeries(groups.allTime);
+      return stats;
     }
   };
 
