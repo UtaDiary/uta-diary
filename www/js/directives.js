@@ -56,6 +56,7 @@ angular.module('nikki.directives', [])
         // Open links in new window
         if ($event.target.tagName == "A") {
           $window.open($event.target.href, '_system', 'location=yes');
+          $event.preventDefault();
           return false;
         }
         $scope.state.editingText = true;
