@@ -29,15 +29,19 @@ angular.module('nikki.controllers', [])
   $scope.entry = Entries.get($stateParams.entryId);
 })
 
-.controller('ChatsCtrl', function($scope, Chats) {
-  $scope.chats = Chats.all();
-  $scope.remove = function(chat) {
-    Chats.remove(chat);
-  };
+.controller('KitsuneCtrl', function($scope, Kitsune) {
+  $scope.entries = Kitsune.all();
+  $scope.avatarURL = "https://pbs.twimg.com/media/CKBfWLqUkAAaD6V.png:large";
 })
 
-.controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
-  $scope.chat = Chats.get($stateParams.chatId);
+.controller('KitsuneDetailCtrl', function($scope, $stateParams, Kitsune) {
+  $scope.renderMarkdown = function(text) {
+    var converter = new showdown.Converter();
+    var html = converter.makeHtml(text);
+    return html;
+  };
+  $scope.entry = Kitsune.get($stateParams.kitsuneId);
+  $scope.avatarURL = "https://pbs.twimg.com/media/CKBfWLqUkAAaD6V.png:large";
 })
 
 .controller('AccountCtrl', function($scope) {

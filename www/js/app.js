@@ -108,22 +108,22 @@ angular.module('nikki', ['ionic', 'ngCordova', 'monospaced.elastic', 'nikki.cont
     }
   })
 
- .state('tab.chats', {
-      url: '/chats',
+ .state('tab.kitsune', {
+      url: '/kitsune',
       views: {
-        'tab-chats': {
-          templateUrl: 'templates/tab-chats.html',
-          controller: 'ChatsCtrl'
+        'tab-kitsune': {
+          templateUrl: 'templates/tab-kitsune.html',
+          controller: 'KitsuneCtrl'
         }
       }
     })
 
-  .state('tab.chat-detail', {
-    url: '/chats/:chatId',
+  .state('tab.kitsune-detail', {
+    url: '/kitsune/:kitsuneId',
     views: {
-      'tab-chats': {
-        templateUrl: 'templates/chat-detail.html',
-        controller: 'ChatDetailCtrl'
+      'tab-kitsune': {
+        templateUrl: 'templates/kitsune-detail.html',
+        controller: 'KitsuneDetailCtrl'
       }
     }
   })
