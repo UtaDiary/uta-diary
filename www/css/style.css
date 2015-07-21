@@ -48,6 +48,7 @@ nikki-entry-text .nikki.entry-text-editor {
   width: 100%;
 }
 
+.nikki.entry-meta,
 .nikki.kitsune-meta {
   color: #888;
   margin: -12px 0 10px 0;

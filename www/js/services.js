@@ -8,18 +8,21 @@ angular.module('nikki.services', [])
   var examples = {
     welcome: {
       id: 0,
+      author: 'Kitsune',
       date: new Date(2015, 06, 17),
       title: 'Welcome!',
       text: "Thanks for using Uta Nikki!\n\nHopefully, these notes will help you get started."
     },
     first: {
       id: 1,
+      author: null,
       date: new Date(2015, 06, 02),
       title: 'Looking Forward',
       text: "A few notes to myself on where I'd like to go."
     },
     second: {
       id: 2,
+      author: null,
       date: new Date(2015, 06, 01),
       title: 'A New Journal',
       text: "It's nice to start fresh every once in a while!"
@@ -174,6 +177,7 @@ angular.module('nikki.services', [])
       options = arguments[0] || {};
       var entry = {
         id: options.id || Entries.nextId(),
+        author: null,
         date: options.date || new Date(),
         text: options.text || "What's on my mind today?",
         title: options.title || "Title"
