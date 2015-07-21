@@ -98,12 +98,12 @@ angular.module('nikki', ['ionic', 'ngCordova', 'monospaced.elastic', 'nikki.cont
     }
   })
 
-  .state('tab.dash', {
-    url: '/dash',
+  .state('tab.stats', {
+    url: '/stats',
     views: {
-      'tab-dash': {
-        templateUrl: 'templates/tab-dash.html',
-        controller: 'DashCtrl'
+      'tab-stats': {
+        templateUrl: 'templates/tab-stats.html',
+        controller: 'StatsCtrl'
       }
     }
   })

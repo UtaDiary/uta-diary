@@ -40,7 +40,7 @@ angular.module('nikki.controllers', [])
   $scope.avatarURL = "https://pbs.twimg.com/media/CKBfWLqUkAAaD6V.png:large";
 })
 
-.controller('DashCtrl', function($scope, Entries, db) {
+.controller('StatsCtrl', function($scope, Entries, db) {
   $scope.stats = Entries.getStats();
 })
 
