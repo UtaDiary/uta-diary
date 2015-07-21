@@ -1,8 +1,9 @@
 <!-- Kitsune Detail -->
 <ion-view view-title="{{entry.title}}">
   <ion-content class="padding">
-    <h2 class="nikki entry-title">{{ entry.title }}</h2>
-    <img ng-src="{{avatarURL}}" style="width: 64px; height: 64px">
+    <img ng-src="{{avatarURL}}" style="width: 30%; height: 30%;">
+    <h2 class="nikki kitsune-title">{{ entry.title }}</h2>
+    <div class="nikki kitsune-meta">By Kitsune, {{ entry.date | date:'MMMM dd, yyyy' }}</div>
     <p ng-bind-html="renderMarkdown(entry.text)"></p>
   </ion-content>
 </ion-view>

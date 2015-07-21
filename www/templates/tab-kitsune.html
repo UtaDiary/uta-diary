@@ -3,7 +3,7 @@
   <ion-content>
     <ion-list>
       <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="entry in entries" type="item-text-wrap" href="#/tab/kitsune/{{entry.id}}">
-        <img height="30%" width="30%" ng-src="{{avatarURL}}">
+        <img ng-src="{{avatarURL}}">
         <h2>{{ entry.title }}</h2>
         <p>{{ entry.text.substr(0, 140) }}</p>
         <i class="icon ion-chevron-right icon-accessory"></i>
