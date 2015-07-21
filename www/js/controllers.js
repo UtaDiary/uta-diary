@@ -44,7 +44,7 @@ angular.module('nikki.controllers', [])
   $scope.stats = Entries.getStats();
 })
 
-.controller('AccountCtrl', function($scope) {
+.controller('SettingsCtrl', function($scope) {
   $scope.settings = {
     enableFriends: true
   };
