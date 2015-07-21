@@ -1,9 +1,5 @@
 angular.module('nikki.controllers', [])
 
-.controller('DashCtrl', function($scope, Entries, db) {
-  $scope.stats = Entries.getStats();
-})
-
 .controller('EntriesCtrl', function($scope, Entries, db) {
   $scope.entries = Entries.all();
   $scope.create = function() {
@@ -42,6 +38,10 @@ angular.module('nikki.controllers', [])
   };
   $scope.entry = Kitsune.get($stateParams.kitsuneId);
   $scope.avatarURL = "https://pbs.twimg.com/media/CKBfWLqUkAAaD6V.png:large";
+})
+
+.controller('DashCtrl', function($scope, Entries, db) {
+  $scope.stats = Entries.getStats();
 })
 
 .controller('AccountCtrl', function($scope) {
