@@ -78,22 +78,22 @@ angular.module('nikki', ['ionic', 'ngCordova', 'monospaced.elastic', 'nikki.cont
   // Tabs
   //
 
- .state('tab.entries', {
-      url: '/entries',
+ .state('tab.journal', {
+      url: '/journal',
       views: {
-        'tab-entries': {
-          templateUrl: 'templates/tab-entries.html',
-          controller: 'EntriesCtrl'
+        'tab-journal': {
+          templateUrl: 'templates/tab-journal.html',
+          controller: 'JournalCtrl'
         }
       }
     })
 
-  .state('tab.entry-detail', {
-    url: '/entries/:entryId',
+  .state('tab.journal-detail', {
+    url: '/journal/:entryId',
     views: {
-      'tab-entries': {
-        templateUrl: 'templates/entry-detail.html',
-        controller: 'EntryDetailCtrl'
+      'tab-journal': {
+        templateUrl: 'templates/journal-detail.html',
+        controller: 'JournalDetailCtrl'
       }
     }
   })
@@ -139,6 +139,6 @@ angular.module('nikki', ['ionic', 'ngCordova', 'monospaced.elastic', 'nikki.cont
   });
 
   // Default Route
-  $urlRouterProvider.otherwise('/tab/entries');
+  $urlRouterProvider.otherwise('/tab/journal');
 
 });

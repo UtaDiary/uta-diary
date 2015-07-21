@@ -1,6 +1,6 @@
 angular.module('nikki.controllers', [])
 
-.controller('EntriesCtrl', function($scope, Entries, db) {
+.controller('JournalCtrl', function($scope, Entries, db) {
   $scope.entries = Entries.all();
   $scope.create = function() {
     var options = {
@@ -20,7 +20,7 @@ angular.module('nikki.controllers', [])
   );
 })
 
-.controller('EntryDetailCtrl', function($scope, $stateParams, Entries) {
+.controller('JournalDetailCtrl', function($scope, $stateParams, Entries) {
   $scope.Entries = Entries;
   $scope.entry = Entries.get($stateParams.entryId);
 })

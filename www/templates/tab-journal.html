@@ -8,7 +8,7 @@
         <i class="icon ion-plus icon-accessory"></i>
       </ion-item>
       <ion-item class="item-remove-animate item-avatar item-icon-right"
-                ng-repeat="entry in entries | orderBy:'-id' track by entry.id" type="item-text-wrap" href="#/tab/entries/{{entry.id}}">
+                ng-repeat="entry in entries | orderBy:'-id' track by entry.id" type="item-text-wrap" href="#/tab/journal/{{entry.id}}">
         <h2>{{ entry.title }}</h2>
         <p>{{ entry.date | date:'MMMM dd, yyyy' }}</p>
         <i class="icon ion-chevron-right icon-accessory"></i>
