@@ -1,9 +1,42 @@
 <ion-view view-title="Settings">
   <ion-content>
     <ion-list>
-    <ion-toggle  ng-model="settings.enableFriends">
-        Enable Friends
-    </ion-toggle>
+      <!--
+      <div class="item item-divider">
+        Security
+      </div>
+      <ion-toggle  ng-model="settings.enableEncryption">
+        Enable Encryption
+      </ion-toggle>
+
+      <div class="item item-divider">
+        Account
+      </div>
+      <label class="item item-input">
+        <span class="input-label">Username</span>
+        <input type="text" ng-model="settings.username">
+      </label>
+      <label class="item item-input">
+        <span class="input-label">Password</span>
+        <input type="password" ng-model="settings.password">
+      </label>
+      <label class="item item-input">
+        <span class="input-label">Email</span>
+        <input type="text" ng-model="settings.email">
+      </label>
+      -->
+
+      <div class="item item-divider">
+        Profile
+      </div>
+      <label class="item item-input">
+        <span class="input-label">First Name</span>
+        <input type="text" ng-model="settings.firstName">
+      </label>
+      <label class="item item-input">
+        <span class="input-label">Last Name</span>
+        <input type="text" ng-model="settings.lastName">
+      </label>
     </ion-list>
   </ion-content>
 </ion-view>

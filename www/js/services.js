@@ -43,7 +43,15 @@ angular.module('nikki.services', [])
     defaults: function() {
       var defaults = {
         lastWrittenAt: null,
-        entries: [ examples.welcome ]
+        entries: [ examples.welcome ],
+        settings: {
+          username: "",
+          password: "",
+          email: "",
+          firstName: "",
+          lastName: "",
+          enableEncryption: true
+        }
       };
       return defaults;
     },
