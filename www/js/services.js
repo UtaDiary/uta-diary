@@ -269,7 +269,49 @@ angular.module('nikki.services', [])
   return Entries;
 })
 
-.factory('Kitsune', function(Entries) {
+.factory('Markov', function() {
+
+  // Markov generates human-readable content which is derived
+  // probabilistically from any text sources provided as training input.
+  //
+  // Example:
+  //
+  //    // Create a new markov instance.
+  //    var markov = new Markov();
+  //
+  //    // Seed the random number generator.
+  //    // This optional step allows deterministic output.
+  //    markov.seed(123);
+  //
+  //    // Provide some training texts.
+  //    markov.train("The first text is short");
+  //    markov.train("The second text is slightly longer");
+  //
+  //    // Generate text of average input length.
+  //    var result1 = markov.generate();
+  //
+  //    // Generate text with length of 20 words.
+  //    var result2 = markov.generate(20);
+  //
+  var Markov = function() {};
+
+  // Seeds the random number generator with given number.
+  Markov.prototype.seed = function(seedNumber) {};
+
+  // Trains the generator with given source text.
+  Markov.prototype.train = function(sourceText) {};
+
+  // Generates an entry with given number of words.
+  Markov.prototype.generate = function(wordCount) {};
+
+  // Clears training data and number generator.
+  Markov.prototype.reset = function() {};
+
+  return Markov;
+})
+
+.factory('Kitsune', function(Entries, Markov) {
+
   var Kitsune = {
     all: function() {
       return Entries.all();
