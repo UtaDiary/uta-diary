@@ -271,6 +271,31 @@ angular.module('nikki.services', [])
 
 .factory('Markov', function() {
 
+  var Random = function(seed) {
+    this.reseed(seed || 1);
+  };
+
+  Random.prototype.random = function() {
+    var m = 0x1000000000000; // 2 ^ 48
+    var a = 25214903917;
+    var c = 11;
+    this.seed = (this.seed * a + c) % m;
+    return this.seed / m;
+  };
+
+  Random.seedFor = function(string) {
+    var number = 0;
+    for (var i = 0; i < string.length; i++)
+      number += string.charCodeAt(i) << i * 8 % 32;
+    return number;
+  };
+
+  Random.prototype.reseed = function(seed) {
+    this.seed = (typeof seed == 'string')
+      ? Random.seedFor(seed)
+      : seed;
+  };
+
   // Markov generates human-readable content which is derived
   // probabilistically from any text sources provided as training input.
   //
@@ -293,10 +318,14 @@ angular.module('nikki.services', [])
   //    // Generate text with length of 20 words.
   //    var result2 = markov.generate(20);
   //
-  var Markov = function() {};
+  var Markov = function() {
+    this.randomGenerator = new Random();
+  };
 
-  // Seeds the random number generator with given number.
-  Markov.prototype.seed = function(seedNumber) {};
+  // Seeds the random number generator with given number or string.
+  Markov.prototype.seed = function(seed) {
+    this.randomGenerator.reseed(seed);
+  };
 
   // Trains the generator with given source text.
   Markov.prototype.train = function(sourceText) {};
