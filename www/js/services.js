@@ -320,6 +320,13 @@ angular.module('nikki.services', [])
   //
   var Markov = function() {
     this.randomGenerator = new Random();
+    this.unigrams = {};        // Maps each word to an array of next possible words.
+    this.bigrams = {};         // Maps each word to next possible words, through previous words.
+    this.tokens = [];          // All words seen so far, in order of appearance in training data.
+    this.sentences = [];       // All sentences seen so far, as strings.
+    this.sentencesTokens = []; // All sentences seen so far, as arrays of tokens.
+    this.sentencesTikis = [];  // All sentences seen so far, as arrays of token indices.
+    this.tikis = {};           // Reverse map of words to their numeric token index.
   };
 
   // Seeds the random number generator with given number or string.
@@ -328,7 +335,79 @@ angular.module('nikki.services', [])
   };
 
   // Trains the generator with given source text.
-  Markov.prototype.train = function(sourceText) {};
+  Markov.prototype.train = function(sourceText) {
+    var sentences = sourceText.split(/([.!?]+)\B\s*/);
+
+    for (var i = 0; i < sentences.length; i++) {
+      var sentence = sentences[i];
+
+      // Keep punctuation at sentence end.
+      while (/^[.!?]+$/.test(sentences[i + 1])) {
+        sentence += sentences[i + 1];
+        i++;
+      }
+
+      if (sentence) {
+        this.addSentence(sentence);
+      }
+    }
+  };
+
+  // Adds given sentence to the Markov model.
+  Markov.prototype.addSentence = function(sentence) {
+    var self = this;
+    var tokens = sentence.split(/\s+/);
+
+    // Split words followed by punctuation into two tokens.
+    for (var i = 0; i < tokens.length; i++) {
+      var token = tokens[i];
+      var parts = token.match(/(\S*\w+)([,:.!?]+)$/);
+      if (parts) {
+        var word = parts[1];
+        var punctuation = parts[2];
+        tokens.splice(i, 1, word, punctuation);
+      }
+    }
+
+    // Add each token.
+    for (var i = 0; i < tokens.length; i++) {
+      var token = tokens[i];
+      var nextToken = tokens[i + 1];
+      var prevToken = tokens[i - 1];
+      self.addToken(token, nextToken, prevToken);
+      console.log("token: " + token);
+    }
+
+    // Build token indices for sentence.
+    var tikis = tokens.map(function(t) { return self.tikis[t] });
+
+    // Add sentence in various forms.
+    this.sentences.push(sentence);
+    this.sentencesTokens.push(tokens);
+    this.sentencesTikis.push(tikis);
+  };
+
+  // Adds given token to the Markov model.
+  Markov.prototype.addToken = function(token, nextToken, prevToken) {
+    var START = '_START';
+    var END = '_END';
+    nextToken = nextToken || END;
+    prevToken = prevToken || START;
+
+    // Add new tokens on first encounter
+    var index = this.tikis[token];
+    if (!index) {
+      this.tokens.push(token);
+      this.tikis[token] = this.tokens.length - 1;
+      this.unigrams[token] = [];
+      this.bigrams[token] = {};
+    }
+
+    // Add unigram and bigram entries.
+    this.unigrams[token].push(nextToken);
+    this.bigrams[token][prevToken] = this.bigrams[token][prevToken] || [];
+    this.bigrams[token][prevToken].push(nextToken);
+  };
 
   // Generates an entry with given number of words.
   Markov.prototype.generate = function(wordCount) {};
