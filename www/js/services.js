@@ -323,11 +323,11 @@ angular.module('nikki.services', [])
     this.unigrams = {};        // Maps each word to an array of next possible words.
     this.bigrams = {};         // Maps each word to next possible words, through previous words.
     this.tokens = [];          // All words seen so far, in order of appearance in training data.
-    this.sentences = [];       // All sentences seen so far, as strings.
+    this.sentenceTexts = [];   // All sentences seen so far, as strings.
     this.sentencesTokens = []; // All sentences seen so far, as arrays of tokens.
-    this.sentencesTikis = [];  // All sentences seen so far, as arrays of token indices.
-    this.paragraphs = [];      // All paragraphs, as strings.
-    this.paragraphsSikis = []; // All paragraphs, as arrays of sentence indices.
+    this.sentences = [];       // All sentences seen so far, as arrays of token indices.
+    this.paragraphTexts = [];  // All paragraphs, as strings.
+    this.paragraphs = [];      // All paragraphs, as arrays of sentence indices.
     this.tikis = {};           // Reverse map of words to their numeric token index.
   };
 
@@ -338,17 +338,17 @@ angular.module('nikki.services', [])
 
   // Trains the generator with given source text.
   Markov.prototype.train = function(sourceText) {
-    var paragraphs = sourceText.split(/\n\n+/);
+    var paragraphTexts = sourceText.split(/\n\n+/);
 
-    for (var i = 0; i < paragraphs.length; i++) {
-      this.addParagraph(paragraphs[i]);
+    for (var i = 0; i < paragraphTexts.length; i++) {
+      this.addParagraph(paragraphTexts[i]);
     }
   };
 
   // Adds given paragraph to the Markov model.
-  Markov.prototype.addParagraph = function(paragraph) {
-    var sentences = paragraph.split(/([.!?]+)\B\s*/);
-    var paragraphSikis = [];
+  Markov.prototype.addParagraph = function(paragraphText) {
+    var sentences = paragraphText.split(/([.!?]+)\B\s*/);
+    var paragraph = [];
 
     for (var i = 0; i < sentences.length; i++) {
       var sentence = sentences[i];
@@ -361,12 +361,12 @@ angular.module('nikki.services', [])
 
       if (sentence) {
         this.addSentence(sentence);
-        paragraphSikis.push(this.sentencesTikis.length - 1);
+        paragraph.push(this.sentences.length - 1);
       }
     }
     // Add paragraph entries.
+    this.paragraphTexts.push(paragraphText);
     this.paragraphs.push(paragraph);
-    this.paragraphsSikis.push(paragraphSikis);
   };
 
   // Adds given sentence to the Markov model.
@@ -398,9 +398,9 @@ angular.module('nikki.services', [])
     var tikis = tokens.map(function(t) { return self.tikis[t] });
 
     // Add sentence in various forms.
-    this.sentences.push(sentence);
+    this.sentenceTexts.push(sentence);
     this.sentencesTokens.push(tokens);
-    this.sentencesTikis.push(tikis);
+    this.sentences.push(tikis);
   };
 
   // Adds given token to the Markov model.
@@ -436,16 +436,16 @@ angular.module('nikki.services', [])
 
     // Select a random paragraph.
     var piki = this.randomPiki();
-    var paragraphSikis = this.paragraphsSikis[piki];
+    var paragraph = this.paragraphs[piki];
 
     // Get token indices for paragraph sentences.
-    var sentencesTikis = paragraphSikis.map(function(siki) {
-      return self.sentencesTikis[siki].slice();
+    var sentences = paragraph.map(function(siki) {
+      return self.sentences[siki].slice();
     });
 
     // Loop through sentences
-    for (var i = 0; i < sentencesTikis.length; i++) {
-      var sentenceTikis = sentencesTikis[i];
+    for (var i = 0; i < sentences.length; i++) {
+      var sentenceTikis = sentences[i];
 
       // Loop through token indices
       for (var j = 1; j < sentenceTikis.length; j++) {
@@ -464,15 +464,15 @@ angular.module('nikki.services', [])
       }
     }
 
-    var paragraph = this.buildParagraph(sentencesTikis);
-    return paragraph;
+    var paragraphText = this.buildParagraph(sentences);
+    return paragraphText;
   };
 
   // Builds a paragraph string from token indices for sentences.
-  Markov.prototype.buildParagraph = function(sentencesTikis) {
+  Markov.prototype.buildParagraph = function(sentences) {
     var paragraph = "";
-    for (var i = 0; i < sentencesTikis.length; i++) {
-      var sentenceTikis = sentencesTikis[i];
+    for (var i = 0; i < sentences.length; i++) {
+      var sentenceTikis = sentences[i];
 
       for (var j = 0; j < sentenceTikis.length; j++) {
         var tiki = sentenceTikis[j];
@@ -495,7 +495,7 @@ angular.module('nikki.services', [])
 
   // Selects a random paragraph index.
   Markov.prototype.randomPiki = function() {
-    return Math.floor(this.randomGenerator.random() * (this.paragraphsSikis.length - 1));
+    return Math.floor(this.randomGenerator.random() * (this.paragraphs.length - 1));
   };
 
   // Selects a word.
