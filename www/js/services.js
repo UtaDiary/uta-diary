@@ -326,6 +326,8 @@ angular.module('nikki.services', [])
     this.sentences = [];       // All sentences seen so far, as strings.
     this.sentencesTokens = []; // All sentences seen so far, as arrays of tokens.
     this.sentencesTikis = [];  // All sentences seen so far, as arrays of token indices.
+    this.paragraphs = [];      // All paragraphs, as strings.
+    this.paragraphsSikis = []; // All paragraphs, as arrays of sentence indices.
     this.tikis = {};           // Reverse map of words to their numeric token index.
   };
 
@@ -336,7 +338,17 @@ angular.module('nikki.services', [])
 
   // Trains the generator with given source text.
   Markov.prototype.train = function(sourceText) {
-    var sentences = sourceText.split(/([.!?]+)\B\s*/);
+    var paragraphs = sourceText.split(/\n\n+/);
+
+    for (var i = 0; i < paragraphs.length; i++) {
+      this.addParagraph(paragraphs[i]);
+    }
+  };
+
+  // Adds given paragraph to the Markov model.
+  Markov.prototype.addParagraph = function(paragraph) {
+    var sentences = paragraph.split(/([.!?]+)\B\s*/);
+    var paragraphSikis = [];
 
     for (var i = 0; i < sentences.length; i++) {
       var sentence = sentences[i];
@@ -349,8 +361,12 @@ angular.module('nikki.services', [])
 
       if (sentence) {
         this.addSentence(sentence);
+        paragraphSikis.push(this.sentencesTikis.length - 1);
       }
     }
+    // Add paragraph entries.
+    this.paragraphs.push(paragraph);
+    this.paragraphsSikis.push(paragraphSikis);
   };
 
   // Adds given sentence to the Markov model.
@@ -410,7 +426,84 @@ angular.module('nikki.services', [])
   };
 
   // Generates an entry with given number of words.
-  Markov.prototype.generate = function(wordCount) {};
+  Markov.prototype.generate = function(wordCount) {
+    return this.generateParagraph();
+  };
+
+  // Generates a paragraph with given number of words.
+  Markov.prototype.generateParagraph = function(wordCount) {
+    var self = this;
+
+    // Select a random paragraph.
+    var piki = this.randomPiki();
+    var paragraphSikis = this.paragraphsSikis[piki];
+
+    // Get token indices for paragraph sentences.
+    var sentencesTikis = paragraphSikis.map(function(siki) {
+      return self.sentencesTikis[siki].slice();
+    });
+
+    // Loop through sentences
+    for (var i = 0; i < sentencesTikis.length; i++) {
+      var sentenceTikis = sentencesTikis[i];
+
+      // Loop through token indices
+      for (var j = 1; j < sentenceTikis.length; j++) {
+        var tiki = sentenceTikis[j];
+        var word = this.tokens[tiki];
+        var isPunctuation = /^[,:.!?]+$/.test(word);
+
+        // Replace words before punctuation
+        if (isPunctuation) {
+          var lastTiki = sentenceTikis[j-1];
+          var prevWord = this.tokens[lastTiki];
+          var replacement = this.randomWord();
+          var replacementTiki = this.tikis[replacement];
+          sentenceTikis[j-1] = replacementTiki;
+        }
+      }
+    }
+
+    var paragraph = this.buildParagraph(sentencesTikis);
+    return paragraph;
+  };
+
+  // Builds a paragraph string from token indices for sentences.
+  Markov.prototype.buildParagraph = function(sentencesTikis) {
+    var paragraph = "";
+    for (var i = 0; i < sentencesTikis.length; i++) {
+      var sentenceTikis = sentencesTikis[i];
+
+      for (var j = 0; j < sentenceTikis.length; j++) {
+        var tiki = sentenceTikis[j];
+        var word = this.tokens[tiki];
+        var nextTiki = sentenceTikis[j + 1];
+        var nextToken = this.tokens[nextTiki];
+        var isPunctuation = /^[,:.!?]+$/.test(nextToken);
+
+        if (isPunctuation) {
+          paragraph += word + nextToken + ' ';
+          j++;
+        }
+        else {
+          paragraph += word + ' ';
+        }
+      }
+    }
+    return paragraph;
+  }
+
+  // Selects a random paragraph index.
+  Markov.prototype.randomPiki = function() {
+    return Math.floor(this.randomGenerator.random() * (this.paragraphsSikis.length - 1));
+  };
+
+  // Selects a word.
+  Markov.prototype.randomWord = function() {
+    var tiki = Math.floor(this.randomGenerator.random() * (this.tokens.length - 1));
+    var word = this.tokens[tiki];
+    return word;
+  };
 
   // Clears training data and number generator.
   Markov.prototype.reset = function() {};
