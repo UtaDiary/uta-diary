@@ -1,5 +1,13 @@
 angular.module('nikki.controllers', [])
 
+.filter('renderMarkdown', function() {
+  return function(text) {
+    var converter = new showdown.Converter();
+    var html = converter.makeHtml(text);
+    return html;
+  }
+})
+
 .controller('JournalCtrl', function($scope, Entries, db) {
   $scope.entries = Entries.all();
   $scope.create = function() {
@@ -31,11 +39,6 @@ angular.module('nikki.controllers', [])
 })
 
 .controller('KitsuneDetailCtrl', function($scope, $stateParams, Kitsune) {
-  $scope.renderMarkdown = function(text) {
-    var converter = new showdown.Converter();
-    var html = converter.makeHtml(text);
-    return html;
-  };
   $scope.entry = Kitsune.get($stateParams.kitsuneId);
   $scope.avatarURL = "https://pbs.twimg.com/media/CKBfWLqUkAAaD6V.png:large";
 })

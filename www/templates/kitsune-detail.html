@@ -4,6 +4,6 @@
     <img ng-src="{{avatarURL}}" style="width: 30%; height: 30%;">
     <h2 class="nikki kitsune-title">{{ entry.title }}</h2>
     <div class="nikki kitsune-meta">By {{entry.author}}, {{ entry.date | date:'MMMM dd, yyyy' }}</div>
-    <p ng-bind-html="renderMarkdown(entry.text)"></p>
+    <p ng-bind-html="entry.text | renderMarkdown"></p>
   </ion-content>
 </ion-view>

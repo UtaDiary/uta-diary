@@ -1,6 +1,6 @@
 <div class="nikki entry-text"
      ng-hide="state.editingText" ng-click="startEditor($event)"
-     ng-bind-html="renderMarkdown(entry.text)">
+     ng-bind-html="entry.text | renderMarkdown">
 </div>
 <form ng-show="state.editingText">
   <textarea msd-elastic="\n" class="nikki entry-text-editor" ng-model="entry.text" placeholder="What's on my mind today?"></textarea>
