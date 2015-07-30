@@ -319,6 +319,11 @@ angular.module('nikki.services', [])
   //    var result2 = markov.generate(20);
   //
   var Markov = function() {
+    this.init();
+  };
+
+  // Initialises the instance.
+  Markov.prototype.init = function() {
     this.randomGenerator = new Random();
     this.unigrams = {};        // Maps each word to an array of next possible words.
     this.bigrams = {};         // Maps each word to next possible words, through previous words.
@@ -329,6 +334,11 @@ angular.module('nikki.services', [])
     this.paragraphTexts = [];  // All paragraphs, as strings.
     this.paragraphs = [];      // All paragraphs, as arrays of sentence indices.
     this.tikis = {};           // Reverse map of words to their numeric token index.
+  };
+
+  // Resets the instance, including training data and number generator.
+  Markov.prototype.reset = function() {
+    this.init();
   };
 
   // Seeds the random number generator with given number or string.
@@ -391,7 +401,6 @@ angular.module('nikki.services', [])
       var nextToken = tokens[i + 1];
       var prevToken = tokens[i - 1];
       self.addToken(token, nextToken, prevToken);
-      console.log("token: " + token);
     }
 
     // Build token indices for sentence.
@@ -505,17 +514,34 @@ angular.module('nikki.services', [])
     return word;
   };
 
-  // Clears training data and number generator.
-  Markov.prototype.reset = function() {};
-
   return Markov;
 })
 
 .factory('Kitsune', function(Entries, Markov) {
-
+  var markov = new Markov();
   var Kitsune = {
     all: function() {
-      return Entries.all();
+      return Kitsune.regenerate();
+    },
+    regenerate: function() {
+      markov.reset();
+      return Kitsune.generate();
+    },
+    generate: function() {
+      return Entries.all().map(function(entry, i) {
+        if (entry.author == 'Kitsune') {
+          return entry;
+        }
+        else {
+          markov.train(entry.text);
+          var clone = angular.copy(entry);
+          var text = markov.generate();
+          clone.author = 'Kitsune';
+          clone.text = text;
+          console.log("Markov text: ", text);
+          return clone;
+        }
+      });
     },
     get: function(entryId) {
       var entries = Kitsune.all();
@@ -530,6 +556,5 @@ angular.module('nikki.services', [])
       console.log("Skipping removal of auto-generated entry...")
     }
   };
-
   return Kitsune;
 });
