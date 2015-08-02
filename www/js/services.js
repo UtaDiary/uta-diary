@@ -351,6 +351,8 @@ angular.module('nikki.services', [])
     this.sentences = [];       // All sentences seen so far, as arrays of token indices.
     this.paragraphTexts = [];  // All paragraphs, as strings.
     this.paragraphs = [];      // All paragraphs, as arrays of sentence indices.
+    this.entries = [];         // All entries, as strings.
+    this.entryTexts = [];      // All entries, as arrays of paragraph indices.
     this.tikis = {};           // Reverse map of words to their numeric token index.
   };
 
@@ -366,11 +368,22 @@ angular.module('nikki.services', [])
 
   // Trains the generator with given source text.
   Markov.prototype.train = function(sourceText) {
-    var paragraphTexts = sourceText.split(/\n\n+/);
+    this.addEntry(sourceText);
+  };
 
-    for (var i = 0; i < paragraphTexts.length; i++) {
-      this.addParagraph(paragraphTexts[i]);
-    }
+  // Adds given entry to the Markov model.
+  Markov.prototype.addEntry = function(entryText) {
+    var self = this;
+    var paragraphs = entryText.split(/\n\n+/);
+    var entry = [];
+
+    paragraphs.forEach(function(paragraph) {
+      self.addParagraph(paragraph);
+      entry.push(self.paragraphs.length - 1);
+    });
+
+    self.entries.push(entry);
+    self.entryTexts.push(entryText);
   };
 
   // Adds given paragraph to the Markov model.
