@@ -467,7 +467,13 @@ angular.module('nikki.services', [])
 
   // Generates an entry with given number of words.
   Markov.prototype.generate = function(wordCount) {
-    return this.generateParagraph();
+    var entry = '';
+    var averageParagraphs = this.paragraphs.length / (this.entries.length || 1);
+
+    for (var i = 0; i < averageParagraphs; i++) {
+      entry += this.generateParagraph() + "\n\n";
+    }
+    return entry;
   };
 
   // Generates a paragraph with given number of words.
