@@ -68,98 +68,116 @@ angular.module('nikki.services', [])
       console.log("Starting database");
 
       ionic.Platform.ready(function() {
-
         if (!window.cordova) {
-          console.log("Skipping entries file detection in browser");
-          return Entries.reset(callback);
-        }
-
-        console.log("Checking for entries file");
-        $cordovaFile.checkFile(cordova.file.externalDataDirectory, "entries.json")
-        .then(
-          function (success) {
-            Entries.reload(callback);
-          },
-          function (error) {
-            console.log("Creating new entries file...")
-            $cordovaFile.createFile(cordova.file.externalDataDirectory, "entries.json", false)
-            .then(
-              function (success) {
-                Entries.reload(callback);
-              },
-              function (error) {
-                console.error("Failed creating entries.json");
-                return callback(error);
-              }
-            );
+          console.log("Checking for entries in localStorage...");
+          if (window.localStorage['nikkiDB']) {
+            return Entries.reload(callback);
           }
-        );
+          else {
+            return Entries.reset(callback);
+          }
+        }
+        else {
+          console.log("Checking for entries in external storage...");
+          $cordovaFile.checkFile(cordova.file.externalDataDirectory, "entries.json")
+          .then(
+            function (success) {
+              return Entries.reload(callback);
+            },
+            function (error) {
+              console.log("Creating new entries file...")
+              $cordovaFile.createFile(cordova.file.externalDataDirectory, "entries.json", false)
+              .then(
+                function (success) {
+                  return Entries.reload(callback);
+                },
+                function (error) {
+                  console.error("Failed creating entries.json");
+                  return callback(error);
+                }
+              );
+            }
+          );
+        }
       });
     },
 
     // Reloads all entries from storage.
     reload: function(callback) {
-      console.log("Reloading entries!");
-
       if (!window.cordova) {
-        console.log("Skipping database reload in browser");
+        console.log("Reloading entries from localStorage...");
+        var json = window.localStorage['nikkiDB'];
+        if (!json) {
+          return callback(new Error("No database found in localStorage"));
+        }
+        else {
+          return Entries.loadJSON(json, callback);
+        }
+      }
+      else {
+        console.log("Reloading entries from external storage...");
+        $cordovaFile.readAsText(cordova.file.externalDataDirectory, "entries.json")
+        .then(
+          function (success) {
+            return Entries.loadJSON(success, callback);
+          },
+          function (error) {
+            console.error("Failed reading entries: ", error);
+            return callback(error);
+          }
+        );
+      }
+    },
+
+    // Loads entries database from given JSON string.
+    loadJSON: function(json, callback) {
+      console.log("Loading JSON entries: ", json);
+      var result = angular.fromJson(json);
+
+      // Deserialize dates
+      var timestamp = Date.parse(result.lastWrittenAt);
+      var isValid = !isNaN(timestamp);
+
+      result.lastWrittenAt = isValid
+        ? new Date(timestamp)
+        : null;
+
+      if (result.lastWrittenAt > db.lastWrittenAt || !db.lastWrittenAt) {
+        db = result;
+        console.log("Loaded entries database: ", db);
         return callback(null);
       }
-
-      $cordovaFile.readAsText(cordova.file.externalDataDirectory, "entries.json")
-      .then(
-        function (success) {
-          console.log("Read entries file: ", success);
-          var json = success;
-          var result = angular.fromJson(success);
-
-          // Deserialize dates
-          var timestamp = Date.parse(result.lastWrittenAt);
-          var isValid = !isNaN(timestamp);
-
-          result.lastWrittenAt = isValid
-            ? new Date(timestamp)
-            : null;
-
-          if (result.lastWrittenAt > db.lastWrittenAt || !db.lastWrittenAt) {
-            db = result;
-            console.log("Loaded entries database: ", db);
-            return callback(null);
-          }
-          else {
-            console.error("Failed loading entries. File older than current data: ", result);
-            return callback(new Error);
-          }
-        },
-        function (error) {
-          console.error("Failed reading entries: ", error);
-          return callback(error);
-        }
-      );
+      else {
+        console.error("Failed loading entries. File older than current data: ", result);
+        return callback(new Error);
+      }
     },
 
     // Commits all entries to storage.
     commit: function() {
       console.log("Committing entries!");
 
-      if (!window.cordova) {
-        console.log("Skipping database commit in browser");
-        return;
-      }
-
       db.lastWrittenAt = new Date();
       var json = angular.toJson(db);
 
-      $cordovaFile.writeFile(cordova.file.externalDataDirectory, "entries.json", json, true)
-      .then(
-        function (success) {
-          console.log("Finished saving database!");
-          console.log("json: ", json);
-        },
-        function (error) {
-          console.error("Error saving database: ", error);
-        }
-      );
+      if (!window.cordova) {
+        console.log("Saving to localStorage...");
+        window.localStorage['nikkiDB'] = json;
+        return;
+      }
+      else {
+        console.log("Saving to external storage...");
+        $cordovaFile.writeFile(cordova.file.externalDataDirectory, "entries.json", json, true)
+        .then(
+          function (success) {
+            console.log("Finished saving database!");
+            console.log("json: ", json);
+          },
+          function (error) {
+            console.error("Error saving database: ", error);
+          }
+        );
+      }
     },
 
     // Gets all journal entries as an array.
