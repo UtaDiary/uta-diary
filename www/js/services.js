@@ -289,10 +289,12 @@ angular.module('nikki.services', [])
 
 .factory('Markov', function() {
 
+  // Random generates pseudo-random numbers deterministically from a given seed.
   var Random = function(seed) {
     this.reseed(seed || 1);
   };
 
+  // Generates a floating point value between [0, 1).
   Random.prototype.random = function() {
     var m = 0x1000000000000; // 2 ^ 48
     var a = 25214903917;
@@ -301,6 +303,12 @@ angular.module('nikki.services', [])
     return this.seed / m;
   };
 
+  // Generates an integer value between [0, max).
+  Random.prototype.rand = function(max) {
+    return Math.floor(max * this.random());
+  };
+
+  // Seeds the generator with given string.
   Random.seedFor = function(string) {
     var number = 0;
     for (var i = 0; i < string.length; i++)
@@ -308,6 +316,7 @@ angular.module('nikki.services', [])
     return number;
   };
 
+  // Reseeds the generator with a number or string.
   Random.prototype.reseed = function(seed) {
     this.seed = (typeof seed == 'string')
       ? Random.seedFor(seed)
