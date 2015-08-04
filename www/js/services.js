@@ -374,8 +374,9 @@ angular.module('nikki.services', [])
   // Adds given entry to the Markov model.
   Markov.prototype.addEntry = function(entryText) {
     var self = this;
-    var paragraphs = entryText.split(/\n\n+/);
     var entry = [];
+    var normalized = entryText.replace(/^([#].*)$/gm, "$1\n");
+    var paragraphs = normalized.split(/\n\n+/);
 
     paragraphs.forEach(function(paragraph) {
       self.addParagraph(paragraph);
