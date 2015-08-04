@@ -351,7 +351,7 @@ angular.module('nikki.services', [])
 
   // Initialises the instance.
   Markov.prototype.init = function() {
-    this.randomGenerator = new Random();
+    this.PRNG = new Random();
     this.unigrams = {};        // Maps each word to an array of next possible words.
     this.bigrams = {};         // Maps each word to next possible words, through previous words.
     this.tokens = [];          // All words seen so far, in order of appearance in training data.
@@ -372,7 +372,7 @@ angular.module('nikki.services', [])
 
   // Seeds the random number generator with given number or string.
   Markov.prototype.seed = function(seed) {
-    this.randomGenerator.reseed(seed);
+    this.PRNG.reseed(seed);
   };
 
   // Trains the generator with given source text.
@@ -489,38 +489,27 @@ angular.module('nikki.services', [])
   // Generates a paragraph with given number of words.
   Markov.prototype.generateParagraph = function(wordCount) {
     var self = this;
-
-    // Select a random paragraph.
-    var piki = this.randomPiki();
-    var paragraph = this.paragraphs[piki];
-
-    // Get token indices for paragraph sentences.
-    var sentences = paragraph.map(function(siki) {
-      return self.sentences[siki].slice();
+    var index = self.PRNG.rand(self.paragraphs.length);
+    var paragraph = self.paragraphs[index];
+    var sentences = paragraph.map(function(sentenceIndex) {
+      return self.sentences[sentenceIndex].slice();
     });
 
-    // Loop through sentences
-    for (var i = 0; i < sentences.length; i++) {
-      var sentenceTikis = sentences[i];
-
-      // Loop through token indices
-      for (var j = 1; j < sentenceTikis.length; j++) {
-        var tiki = sentenceTikis[j];
-        var word = this.tokens[tiki];
+    sentences.forEach(function(sentence, i) {
+      sentence.forEach(function(tiki, j) {
+        var word = self.tokens[tiki];
         var isPunctuation = /^[,:.!?]+$/.test(word);
 
-        // Replace words before punctuation
         if (isPunctuation) {
-          var lastTiki = sentenceTikis[j-1];
-          var prevWord = this.tokens[lastTiki];
-          var replacement = this.randomWord();
-          var replacementTiki = this.tikis[replacement];
-          sentenceTikis[j-1] = replacementTiki;
+          var lastTiki = sentence[j-1];
+          var prevWord = self.tokens[lastTiki];
+          var replacement = self.randomWord();
+          var replacementTiki = self.tikis[replacement];
+          sentence[j-1] = replacementTiki;
         }
-      }
-    }
-
-    var paragraphText = this.buildParagraph(sentences);
+      });
+    });
+    var paragraphText = self.buildParagraph(sentences);
     return paragraphText;
   };
 
@@ -551,12 +540,12 @@ angular.module('nikki.services', [])
 
   // Selects a random paragraph index.
   Markov.prototype.randomPiki = function() {
-    return Math.floor(this.randomGenerator.random() * (this.paragraphs.length - 1));
+    return this.PRNG.rand(this.paragraphs.length);
   };
 
   // Selects a word.
   Markov.prototype.randomWord = function() {
-    var tiki = Math.floor(this.randomGenerator.random() * (this.tokens.length - 1));
+    var tiki = this.PRNG.rand(this.tokens.length);
     var word = this.tokens[tiki];
     return word;
   };
@@ -572,6 +561,7 @@ angular.module('nikki.services', [])
     },
     regenerate: function() {
       markov.reset();
+      markov.seed("abcdefghi");
       return Kitsune.generate();
     },
     generate: function() {
