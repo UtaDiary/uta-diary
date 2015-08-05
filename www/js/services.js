@@ -265,7 +265,7 @@ angular.module('nikki.services', [])
       for (var i = 0; i < db.entries.length; i++) {
         var today = new Date();
         var entry = db.entries[i];
-        var date = entry.date;
+        var date = new Date(entry.date);
         var days = 24 * 3600 * 1000;
 
         // Naive rolling stats, for now...
