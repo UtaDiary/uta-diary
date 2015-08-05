@@ -203,7 +203,7 @@ angular.module('nikki.services', [])
       options = arguments[0] || {};
       var entry = {
         id: options.id || Entries.nextId(),
-        author: null,
+        author: options.author || null,
         date: options.date || new Date(),
         text: options.text || "What's on my mind today?",
         title: options.title || "Title"
