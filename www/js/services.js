@@ -119,7 +119,10 @@ angular.module('nikki.services', [])
         $cordovaFile.readAsText(cordova.file.externalDataDirectory, "entries.json")
         .then(
           function (success) {
-            return Entries.loadJSON(success, callback);
+            var json = success;
+            console.log("Current db: '" + JSON.stringify(db, null, 2) + "'");
+            console.log("entries.json: '" + json + "'");
+            return Entries.loadJSON(json, callback);
           },
           function (error) {
             console.error("Failed reading entries: ", error);
@@ -131,7 +134,7 @@ angular.module('nikki.services', [])
 
     // Loads entries database from given JSON string.
     loadJSON: function(json, callback) {
-      console.log("Loading JSON entries: ", json);
+      console.log("Loading JSON entries: '" + json + "'");
       var result = angular.fromJson(json);
 
       // Deserialize dates
@@ -144,7 +147,7 @@ angular.module('nikki.services', [])
 
       if (result.lastWrittenAt > db.lastWrittenAt || !db.lastWrittenAt) {
         db = result;
-        console.log("Loaded entries database: ", db);
+        console.log("Loaded entries database: ", JSON.stringify(db, null, 2));
         return callback(null);
       }
       else {
