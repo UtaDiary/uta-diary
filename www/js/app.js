@@ -48,7 +48,8 @@ angular.module('nikki', ['ionic', 'ngCordova', 'monospaced.elastic', 'nikki.cont
 
         var startDB = function() {
           Entries.examples.welcome.text = welcomeText;
-          Entries.start(function() {
+          Entries.start(function(err) {
+            if (err) return console.error(err.message);
             console.log("Initial entries: ", Entries.all());
 
             // Check for existing entries
