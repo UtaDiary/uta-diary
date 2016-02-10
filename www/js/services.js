@@ -60,7 +60,7 @@ angular.module('nikki.services', [])
     reset: function(callback) {
       console.log("Resetting database...");
       db = Entries.defaults();
-      return callback(null);
+      Entries.commit(callback);
     },
 
     // Starts entries database.
