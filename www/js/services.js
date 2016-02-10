@@ -89,7 +89,7 @@ angular.module('nikki.services', [])
               $cordovaFile.createFile(cordova.file.externalDataDirectory, "entries.json", false)
               .then(
                 function (success) {
-                  return Entries.reload(callback);
+                  return Entries.reset(callback);
                 },
                 function (error) {
                   console.error("Failed creating entries.json");
