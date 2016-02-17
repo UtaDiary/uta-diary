@@ -1,3 +1,5 @@
+window.Uta = window.Uta || {};
+
 angular.module('nikki.services', [])
 
 .factory('Entries', function($cordovaFile) {
@@ -287,6 +289,7 @@ angular.module('nikki.services', [])
     }
   };
 
+  Uta.Entries = Entries;
   return Entries;
 })
 
@@ -553,6 +556,7 @@ angular.module('nikki.services', [])
     return word;
   };
 
+  Uta.Markov = Markov;
   return Markov;
 })
 
@@ -596,5 +600,6 @@ angular.module('nikki.services', [])
       console.log("Skipping removal of auto-generated entry...")
     }
   };
+  Uta.Kitsune = Kitsune;
   return Kitsune;
 });
