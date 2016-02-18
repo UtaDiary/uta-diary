@@ -41,6 +41,12 @@ angular.module('nikki.services', [])
       return db;
     },
 
+    // Imports a database object.
+    importDB: function(database, callback) {
+      db = database;
+      Entries.commit(callback);
+    },
+
     // Gets default database values.
     defaults: function() {
       var defaults = {
