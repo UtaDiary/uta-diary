@@ -43,8 +43,67 @@ angular.module('nikki.services', [])
 
     // Imports a database object.
     importDB: function(database, callback) {
-      db = database;
-      Entries.commit(callback);
+      var isValid = Entries.validateDB(database);
+      if (isValid) {
+        db = database;
+        return Entries.commit(callback);
+      }
+      else {
+        return callback(new Error("Invalid database"));
+      }
+    },
+
+    // Imports a database file.
+    importFile: function(path, file, callback) {
+      console.log("Importing file: " + file);
+
+      $cordovaFile.readAsText(path, file).then(
+      function(success) {
+        var json = success;
+        var imported = angular.fromJson(json);
+        console.log("Imported JSON: " + json);
+        console.log("Imported object: " + JSON.stringify(imported, null, 2));
+
+        Entries.importDB(imported, function(err) {
+          if (err)
+            return callback(new Error("Error importing database: " + error));
+          else
+            return callback(null);
+        });
+      },
+      function(error) {
+        return callback(new Error("Error reading file: " + error));
+      });
+    },
+
+    // Exports database to file.
+    exportFile: function(path, file, callback) {
+      console.log("Exporting file: " + file);
+
+      $cordovaFile.createDir(path, 'UtaDiary', true).then(
+      function(success) {
+
+        var data = angular.toJson(db);
+
+        $cordovaFile.writeFile(path, file, data, true).then(
+        function(success) {
+          return callback(null);
+        },
+        function(error) {
+          return callback(new Error("Error reading file: " + error));
+        });
+      },
+      function(error) {
+        return callback(new Error("Error creating parent directory: " + error));
+      });
+    },
+
+    // Validates a database object.
+    validateDB: function(database) {
+      var isObject = _.isObject(database);
+      var hasEntries = _.isArray(database.entries);
+      var isValid = isObject && hasEntries;
+      return isValid;
     },
 
     // Gets default database values.
