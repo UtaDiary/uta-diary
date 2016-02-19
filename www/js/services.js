@@ -165,8 +165,9 @@ angular.module('nikki.services', [])
     },
 
     // Commits all entries to storage.
-    commit: function() {
+    commit: function(callback) {
       console.log("Committing entries!");
+      callback = callback || function () {};
 
       db.lastWrittenAt = new Date();
       var json = angular.toJson(db);
@@ -174,7 +175,7 @@ angular.module('nikki.services', [])
       if (!window.cordova) {
         console.log("Saving to localStorage...");
         window.localStorage['nikkiDB'] = json;
-        return;
+        return callback(null);
       }
       else {
         console.log("Saving to external storage...");
@@ -183,9 +184,11 @@ angular.module('nikki.services', [])
           function (success) {
             console.log("Finished saving database!");
             console.log("json: ", json);
+            return callback(null);
           },
           function (error) {
             console.error("Error saving database: ", error);
+            return callback(new Error("Error saving database: " + error));
           }
         );
       }
