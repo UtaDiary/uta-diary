@@ -47,7 +47,7 @@ angular.module('nikki.controllers', [])
   $scope.stats = Entries.getStats();
 })
 
-.controller('SettingsCtrl', function($scope, $ionicPopup, db, FileBrowser, Entries) {
+.controller('SettingsCtrl', function($scope, $ionicActionSheet, $ionicPopup, db, FileBrowser, Entries) {
   $scope.settings = db.settings;
 
   $scope.alert = function(options) {
@@ -57,16 +57,41 @@ angular.module('nikki.controllers', [])
     });
   };
 
+  $scope.selectBackup = function(callback) {
+    Entries.listBackupFiles(function(files) {
+      var fileIcon = '<i class="icon ion-document-text calm"></i>';
+      var closeIcon = '<i class="icon ion-close-round assertive"></i>';
+      var actionSheet = $ionicActionSheet.show({
+        titleText: 'Select backup file',
+        buttons: files.map(function(file) {return { text: fileIcon + file }}),
+        destructiveText: closeIcon + 'Cancel',
+        destructiveButtonClicked: function() {
+          console.log("Cancelled import");
+          return true;
+        },
+        buttonClicked: function(index) {
+          var file = files[index];
+          console.log("Selected backup file: " + file);
+          callback(file);
+          return true;
+        }
+      });
+    });
+  };
+
   $scope.import = function() {
-    var path = cordova.file.externalRootDirectory;
-    var file = 'UtaDiary/journal.json';
-    $scope.importFile(path, file);
+    var root = cordova.file.externalRootDirectory;
+    var path = 'UtaDiary/';
+    $scope.selectBackup(function(file) {
+      $scope.importFile(root, path + file);
+    });
   };
 
   $scope.export = function() {
-    var path = cordova.file.externalRootDirectory;
-    var file = 'UtaDiary/journal.json';
-    $scope.exportFile(path, file);
+    var root = cordova.file.externalRootDirectory;
+    var path = 'UtaDiary/';
+    var file = 'journal.json';
+    $scope.exportFile(root, path + file);
   };
 
   $scope.importFile = function(path, file) {

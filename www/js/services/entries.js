@@ -40,6 +40,46 @@ angular.module('nikki.services')
       return db;
     },
 
+    // Lists files within a directory.
+    listDir: function(path, callback) {
+
+      window.resolveLocalFileSystemURL(path,
+      function (fileSystem) {
+
+        var reader = fileSystem.createReader();
+
+        reader.readEntries(
+        function (entries) {
+          console.log("Read entries: " + JSON.stringify(entries, null, 2));
+          return callback(null, entries);
+        },
+        function (err) {
+          console.error("Error reading directory entries: " + err.message);
+          return callback(err);
+        });
+      },
+      function (err) {
+        console.error("Error listing directory: " + err.message);
+        return callback(err);
+      });
+    },
+
+    // Lists all available backup files by name.
+    listBackupFiles: function(callback) {
+      var backupRoot = cordova.file.externalRootDirectory;
+      var backupDir = 'UtaDiary';
+      Entries.listDir(backupRoot + backupDir, function(err, entries) {
+        if (err) {
+          console.error("Error listing backups: ", backups);
+          return callback([]);
+        }
+        else {
+          var files = entries.map(function(entry) {return entry.name});
+          return callback(files);
+        }
+      });
+    },
+
     // Imports a database object.
     importDB: function(database, callback) {
       var isValid = Entries.validateDB(database);
