@@ -73,7 +73,7 @@ angular.module('nikki.controllers', [])
     console.log("Importing file from: " + file);
     Entries.importFile(path, file, function(err) {
       if (err)
-        $scope.alert({ title: "Error", template: "Error importing from " + file + "<br>\n" + err });
+        $scope.alert({ title: "Error", template: "Error importing from " + file + "<br>\n" + err.message });
       else
         $scope.alert({ title: "Success!", template: "Imported database from " + file });
     });
@@ -83,7 +83,7 @@ angular.module('nikki.controllers', [])
     console.log("Exporting file to: " + file);
     Entries.exportFile(path, file, function(err) {
       if (err)
-        $scope.alert({ title: "Error", template: "Error exporting to " + file + "<br>\n" + err });
+        $scope.alert({ title: "Error", template: "Error exporting to " + file + "<br>\n" + err.message });
       else
         $scope.alert({ title: "Success!", template: "Exported database to " + file });
     });

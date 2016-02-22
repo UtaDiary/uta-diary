@@ -65,13 +65,13 @@ angular.module('nikki.services')
 
         Entries.importDB(imported, function(err) {
           if (err)
-            return callback(new Error("Error importing database: " + error));
+            return callback(new Error("Error importing database: " + err.message));
           else
             return callback(null);
         });
       },
       function(error) {
-        return callback(new Error("Error reading file: " + error));
+        return callback(new Error("Error reading file: " + error.message));
       });
     },
 
@@ -89,11 +89,11 @@ angular.module('nikki.services')
           return callback(null);
         },
         function(error) {
-          return callback(new Error("Error reading file: " + error));
+          return callback(new Error("Error reading file: " + error.message));
         });
       },
       function(error) {
-        return callback(new Error("Error creating parent directory: " + error));
+        return callback(new Error("Error creating parent directory: " + error.message));
       });
     },
 
