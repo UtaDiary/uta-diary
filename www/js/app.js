@@ -68,7 +68,7 @@ angular.module('nikki', ['ionic', 'ngCordova', 'monospaced.elastic', 'nikki.cont
       },
       welcomeText: function($http) {
         console.log("Loading welcome text...");
-        return $http.get('/templates/welcome.md').then(function(response) {
+        return $http.get('./templates/welcome.md').then(function(response) {
           return response.data;
         });
       }
