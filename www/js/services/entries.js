@@ -111,7 +111,7 @@ angular.module('nikki.services')
         });
       },
       function(error) {
-        return callback(new Error("Error reading file: " + error.message));
+        return callback(new Error("Error reading file: " + JSON.stringify(error, null, 2)));
       });
     },
 
@@ -129,7 +129,7 @@ angular.module('nikki.services')
           return callback(null);
         },
         function(error) {
-          return callback(new Error("Error reading file: " + error.message));
+          return callback(new Error("Error reading file: " + JSON.stringify(error, null, 2)));
         });
       },
       function(error) {
@@ -285,8 +285,8 @@ angular.module('nikki.services')
             return callback(null);
           },
           function (error) {
-            console.error("Error saving database: ", error);
-            return callback(new Error("Error saving database: " + error));
+            console.error("Error saving database to external storage: " + JSON.stringify(error, null, 2));
+            return callback(new Error("Error saving database: " + JSON.stringify(error)));
           }
         );
       }
