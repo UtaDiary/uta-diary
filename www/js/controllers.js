@@ -9,6 +9,7 @@ angular.module('nikki.controllers', [])
 })
 
 .controller('JournalCtrl', function($scope, Entries, db) {
+  $scope.Entries = Entries;
   $scope.entries = Entries.all();
   $scope.create = function() {
     var options = {
@@ -47,8 +48,9 @@ angular.module('nikki.controllers', [])
   $scope.stats = Entries.getStats();
 })
 
-.controller('SettingsCtrl', function($scope, $ionicActionSheet, $ionicPopup, db, FileBrowser, Entries) {
-  $scope.settings = db.settings;
+.controller('SettingsCtrl', function($scope, $ionicActionSheet, $ionicPopup, FileBrowser, Entries, db) {
+  $scope.Entries = Entries;
+  $scope.settings = Entries.db().settings;
 
   $scope.alert = function(options) {
     var alertPopup = $ionicPopup.alert(options);
