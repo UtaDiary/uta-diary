@@ -40,6 +40,20 @@ angular.module('nikki.services')
       return db;
     },
 
+    // Gets the directory for application data.
+    getDataDirectory: function() {
+      if (ionic.Platform.isAndroid()) {
+        return cordova.file.dataDirectory;
+      }
+    },
+
+    // Gets the directory for database backups.
+    getBackupDirectory: function() {
+      if (ionic.Platform.isAndroid()) {
+        return cordova.file.externalDataDirectory;
+      }
+    },
+
     // Lists files within a directory.
     listDir: function(path, callback) {
 
@@ -184,15 +198,16 @@ angular.module('nikki.services')
           }
         }
         else {
-          console.log("Checking for entries in external storage...");
-          $cordovaFile.checkFile(cordova.file.externalDataDirectory, "entries.json")
+          console.log("Checking for entries in data directory...");
+          var dataDir = Entries.getDataDirectory();
+          $cordovaFile.checkFile(dataDir, "entries.json")
           .then(
             function (success) {
               return Entries.reload(callback);
             },
             function (error) {
               console.log("Creating new entries file...")
-              $cordovaFile.createFile(cordova.file.externalDataDirectory, "entries.json", false)
+              $cordovaFile.createFile(dataDir, "entries.json", false)
               .then(
                 function (success) {
                   return Entries.reset(callback);
@@ -276,8 +291,9 @@ angular.module('nikki.services')
         return callback(null);
       }
       else {
-        console.log("Saving to external storage...");
-        $cordovaFile.writeFile(cordova.file.externalDataDirectory, "entries.json", json, true)
+        console.log("Saving to data directory...");
+        var dataDir = Entries.getDataDirectory();
+        $cordovaFile.writeFile(dataDir, "entries.json", json, true)
         .then(
           function (success) {
             console.log("Finished saving database!");
@@ -285,7 +301,7 @@ angular.module('nikki.services')
             return callback(null);
           },
           function (error) {
-            console.error("Error saving database to external storage: " + JSON.stringify(error, null, 2));
+            console.error("Error saving database to data directory: " + JSON.stringify(error, null, 2));
             return callback(new Error("Error saving database: " + JSON.stringify(error)));
           }
         );
