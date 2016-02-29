@@ -142,21 +142,32 @@ angular.module('nikki.services')
     exportFile: function(path, file, callback) {
       console.log("Exporting file: " + file);
 
-      $cordovaFile.createDir(path, 'UtaDiary', true).then(
+      $cordovaFile.createDir(Entries.getBackupRoot(), 'UtaDiary', true)
+      .then(
       function(success) {
-
+        return $cordovaFile.createDir(Entries.getBackupParent(), 'backups', true);
+      })
+      .then(
+      function(success) {
         var data = angular.toJson(db);
-
-        $cordovaFile.writeFile(path, file, data, true).then(
-        function(success) {
-          return callback(null);
-        },
-        function(error) {
-          return callback(new Error("Error reading file: " + JSON.stringify(error, null, 2)));
-        });
+        return $cordovaFile.writeFile(path, file, data, true);
+      })
+      .then(
+      function(success) {
+        return callback(null);
       },
       function(error) {
-        return callback(new Error("Error creating parent directory: " + error.message));
+        if (error.code == 6) {
+          console.warn("Ignoring buggy NO_MODIFICATION_ALLOWED_ERR for now...");
+          return callback(null);
+        }
+        else {
+          return callback(new Error("Error writing file: " + JSON.stringify(error)));
+        }
+      })
+      .catch(
+      function(error) {
+        return callback(new Error("Error creating backup directories: " + error.message));
       });
     },
 
@@ -310,8 +321,14 @@ angular.module('nikki.services')
             return callback(null);
           },
           function (error) {
-            console.error("Error saving database to data directory: " + JSON.stringify(error, null, 2));
-            return callback(new Error("Error saving database: " + JSON.stringify(error)));
+            if (error.code == 6) {
+              console.warn("Ignoring buggy NO_MODIFICATION_ALLOWED_ERR for now...");
+              return callback(null);
+            }
+            else {
+              console.error("Error saving database to data directory: " + JSON.stringify(error));
+              return callback(new Error("Error saving database: " + JSON.stringify(error)));
+            }
           }
         );
       }
