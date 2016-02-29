@@ -47,11 +47,21 @@ angular.module('nikki.services')
       }
     },
 
+    // Gets root of the directory for backups.
+    getBackupRoot: function() {
+      if (ionic.Platform.isAndroid()) {
+        return cordova.file.dataDirectory;
+      }
+    },
+
+    // Gets parent of the directory for backups.
+    getBackupParent: function() {
+      return Entries.getBackupRoot() + 'UtaDiary/';
+    },
+
     // Gets the directory for database backups.
     getBackupDirectory: function() {
-      if (ionic.Platform.isAndroid()) {
-        return cordova.file.externalDataDirectory;
-      }
+      return Entries.getBackupParent() + 'backups/';
     },
 
     // Lists files within a directory.
@@ -80,9 +90,8 @@ angular.module('nikki.services')
 
     // Lists all available backup files by name.
     listBackupFiles: function(callback) {
-      var backupRoot = cordova.file.externalRootDirectory;
-      var backupDir = 'UtaDiary';
-      Entries.listDir(backupRoot + backupDir, function(err, entries) {
+      var backupDir = Entries.getBackupDirectory();
+      Entries.listDir(backupDir, function(err, entries) {
         if (err) {
           console.error("Error listing backups: ", backups);
           return callback([]);
@@ -236,8 +245,8 @@ angular.module('nikki.services')
         }
       }
       else {
-        console.log("Reloading entries from external storage...");
-        $cordovaFile.readAsText(cordova.file.externalDataDirectory, "entries.json")
+        console.log("Reloading entries from data directory...");
+        $cordovaFile.readAsText(Entries.getDataDirectory(), "entries.json")
         .then(
           function (success) {
             var json = success;

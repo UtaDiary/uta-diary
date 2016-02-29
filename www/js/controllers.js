@@ -82,16 +82,16 @@ angular.module('nikki.controllers', [])
   };
 
   $scope.import = function() {
-    var root = cordova.file.externalRootDirectory;
-    var path = 'UtaDiary/';
+    var root = Entries.getBackupDirectory();
+    var path = '';
     $scope.selectBackup(function(file) {
       $scope.importFile(root, path + file);
     });
   };
 
   $scope.export = function() {
-    var root = cordova.file.externalRootDirectory;
-    var path = 'UtaDiary/';
+    var root = Entries.getBackupRoot();
+    var path = 'UtaDiary/backups/';
     var file = 'journal.json';
     $scope.exportFile(root, path + file);
   };
