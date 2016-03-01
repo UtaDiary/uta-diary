@@ -177,8 +177,7 @@ angular.module('nikki.services')
     exportFile: function(path, file, callback) {
       console.log("Exporting file: " + file);
 
-      $cordovaFile.createDir(Entries.getBackupRoot(), 'UtaDiary', true)
-      .then(
+      $cordovaFile.createDir(Entries.getBackupRoot(), 'UtaDiary', true).then(
       function(success) {
         return $cordovaFile.createDir(Entries.getBackupParent(), 'backups', true);
       })
@@ -193,8 +192,20 @@ angular.module('nikki.services')
       },
       function(error) {
         if (error.code == 6) {
-          console.warn("Ignoring buggy NO_MODIFICATION_ALLOWED_ERR for now...");
-          return callback(null);
+          // Sometimes NO_MODIFICATION_ALLOWED_ERR is incorrect,
+          // so check if the file was actually updated!
+          Entries.readFileMetadata(path, file).then(
+          function(metadata) {
+            if (Date.now() - metadata.lastModified < 5000) {
+              return callback(null);
+            }
+            else {
+              return callback(new Error("Error checking file metadata: " + JSON.stringify(metadata)));
+            }
+          },
+          function(err) {
+            return callback(new Error("Error reading file metadata: " + JSON.stringify(err)));
+          });
         }
         else {
           return callback(new Error("Error writing file: " + JSON.stringify(error)));
