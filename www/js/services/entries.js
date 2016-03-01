@@ -1,7 +1,7 @@
 
 angular.module('nikki.services')
 
-.factory('Entries', function($cordovaFile) {
+.factory('Entries', function($cordovaFile, $cordovaFileError, $q, $window) {
 
   var db = {};
 
@@ -67,7 +67,7 @@ angular.module('nikki.services')
     // Lists files within a directory.
     listDir: function(path, callback) {
 
-      window.resolveLocalFileSystemURL(path,
+      $window.resolveLocalFileSystemURL(path,
       function (fileSystem) {
 
         var reader = fileSystem.createReader();
@@ -86,6 +86,41 @@ angular.module('nikki.services')
         console.error("Error listing directory: " + err.message);
         return callback(err);
       });
+    },
+
+    // Reads metadata for given file.
+    readFileMetadata: function(path, file) {
+      var q = $q.defer();
+
+      if ((/^\//.test(file))) {
+        q.reject('directory cannot start with \/');
+      }
+
+      try {
+        var directory = path + file;
+
+        $window.resolveLocalFileSystemURL(directory,
+        function(fileEntry) {
+
+          fileEntry.file(
+          function(result) {
+            q.resolve(result);
+          },
+          function(error) {
+            error.message = $cordovaFileError[error.code];
+            q.reject(error);
+          });
+        },
+        function(err) {
+          err.message = $cordovaFileError[err.code];
+          q.reject(err);
+        });
+      } catch (e) {
+        e.message = $cordovaFileError[e.code];
+        q.reject(e);
+      }
+
+      return q.promise;
     },
 
     // Lists all available backup files by name.
