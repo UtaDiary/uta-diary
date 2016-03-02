@@ -50,7 +50,7 @@ angular.module('nikki.services')
     // Gets root of the directory for backups.
     getBackupRoot: function() {
       if (ionic.Platform.isAndroid()) {
-        return cordova.file.dataDirectory;
+        return cordova.file.externalRootDirectory;
       }
     },
 
