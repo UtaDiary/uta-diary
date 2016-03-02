@@ -67,7 +67,7 @@ angular.module('nikki.services')
     // Lists all available backup files by name.
     listBackupFiles: function(callback) {
       var backupDir = Entries.getBackupDirectory();
-      Entries.listDir(backupDir, function(err, entries) {
+      FileUtils.listDir(backupDir, function(err, entries) {
         if (err) {
           console.error("Error listing backups: ", backups);
           return callback([]);
