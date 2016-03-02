@@ -274,24 +274,18 @@ angular.module('nikki.services')
       else {
         console.log("Saving to data directory...");
         var dataDir = Entries.getDataDirectory();
-        $cordovaFile.writeFile(dataDir, "entries.json", json, true)
-        .then(
-          function (success) {
+        FileUtils.writeFile(dataDir, "entries.json", json, true, function(err) {
+          if (err) {
+            var message = "Error saving database: " + JSON.stringify(err);
+            console.error(message);
+            return callback(new Error(message));
+          }
+          else {
             console.log("Finished saving database!");
             console.log("json: ", json);
             return callback(null);
-          },
-          function (error) {
-            if (error.code == 6) {
-              console.warn("Ignoring buggy NO_MODIFICATION_ALLOWED_ERR for now...");
-              return callback(null);
-            }
-            else {
-              console.error("Error saving database to data directory: " + JSON.stringify(error));
-              return callback(new Error("Error saving database: " + JSON.stringify(error)));
-            }
           }
-        );
+        });
       }
     },
 
