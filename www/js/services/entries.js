@@ -1,7 +1,7 @@
 
 angular.module('nikki.services')
 
-.factory('Entries', function($cordovaFile, $cordovaFileError, $q, $window) {
+.factory('Entries', function($cordovaFile, FileUtils) {
 
   var db = {};
 
@@ -64,65 +64,6 @@ angular.module('nikki.services')
       return Entries.getBackupParent() + 'backups/';
     },
 
-    // Lists files within a directory.
-    listDir: function(path, callback) {
-
-      $window.resolveLocalFileSystemURL(path,
-      function (fileSystem) {
-
-        var reader = fileSystem.createReader();
-
-        reader.readEntries(
-        function (entries) {
-          console.log("Read entries: " + JSON.stringify(entries, null, 2));
-          return callback(null, entries);
-        },
-        function (err) {
-          console.error("Error reading directory entries: " + err.message);
-          return callback(err);
-        });
-      },
-      function (err) {
-        console.error("Error listing directory: " + err.message);
-        return callback(err);
-      });
-    },
-
-    // Reads metadata for given file.
-    readFileMetadata: function(path, file) {
-      var q = $q.defer();
-
-      if ((/^\//.test(file))) {
-        q.reject('directory cannot start with \/');
-      }
-
-      try {
-        var directory = path + file;
-
-        $window.resolveLocalFileSystemURL(directory,
-        function(fileEntry) {
-
-          fileEntry.file(
-          function(result) {
-            q.resolve(result);
-          },
-          function(error) {
-            error.message = $cordovaFileError[error.code];
-            q.reject(error);
-          });
-        },
-        function(err) {
-          err.message = $cordovaFileError[err.code];
-          q.reject(err);
-        });
-      } catch (e) {
-        e.message = $cordovaFileError[e.code];
-        q.reject(e);
-      }
-
-      return q.promise;
-    },
-
     // Lists all available backup files by name.
     listBackupFiles: function(callback) {
       var backupDir = Entries.getBackupDirectory();
@@ -180,40 +121,14 @@ angular.module('nikki.services')
       $cordovaFile.createDir(Entries.getBackupRoot(), 'UtaDiary', true).then(
       function(success) {
         return $cordovaFile.createDir(Entries.getBackupParent(), 'backups', true);
+      },
+      function(error) {
+        return callback(new Error("Error creating backup directories: " + error.message));
       })
       .then(
       function(success) {
         var data = angular.toJson(db);
-        return $cordovaFile.writeFile(path, file, data, true);
-      })
-      .then(
-      function(success) {
-        return callback(null);
-      },
-      function(error) {
-        if (error.code == 6) {
-          // Sometimes NO_MODIFICATION_ALLOWED_ERR is incorrect,
-          // so check if the file was actually updated!
-          Entries.readFileMetadata(path, file).then(
-          function(metadata) {
-            if (Date.now() - metadata.lastModified < 5000) {
-              return callback(null);
-            }
-            else {
-              return callback(new Error("Error checking file metadata: " + JSON.stringify(metadata)));
-            }
-          },
-          function(err) {
-            return callback(new Error("Error reading file metadata: " + JSON.stringify(err)));
-          });
-        }
-        else {
-          return callback(new Error("Error writing file: " + JSON.stringify(error)));
-        }
-      })
-      .catch(
-      function(error) {
-        return callback(new Error("Error creating backup directories: " + error.message));
+        return FileUtils.writeFile(path, file, data, true, callback);
       });
     },
 
