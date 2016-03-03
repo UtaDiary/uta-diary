@@ -1,9 +1,9 @@
 
 angular.module('nikki.services')
 
-.factory('Entries', function($cordovaFile, FileUtils) {
+.factory('Entries', function($cordovaFile, FileUtils, Database) {
 
-  var db = {};
+  var Uta = null;
 
   // Example entries
   var examples = {
@@ -37,130 +37,19 @@ angular.module('nikki.services')
 
     // Gets database object.
     db: function() {
-      return db;
+      return Uta.db;
     },
 
-    // Gets the directory for application data.
-    getDataDirectory: function() {
-      if (ionic.Platform.isAndroid()) {
-        return cordova.file.dataDirectory;
-      }
-    },
-
-    // Gets root of the directory for backups.
-    getBackupRoot: function() {
-      if (ionic.Platform.isAndroid()) {
-        return cordova.file.externalRootDirectory;
-      }
-    },
-
-    // Gets parent of the directory for backups.
-    getBackupParent: function() {
-      return Entries.getBackupRoot() + 'UtaDiary/';
-    },
-
-    // Gets the directory for database backups.
-    getBackupDirectory: function() {
-      return Entries.getBackupParent() + 'backups/';
-    },
-
-    // Lists all available backup files by name.
-    listBackupFiles: function(callback) {
-      var backupDir = Entries.getBackupDirectory();
-      FileUtils.listDir(backupDir, function(err, entries) {
-        if (err) {
-          console.error("Error listing backups: ", backups);
-          return callback([]);
-        }
-        else {
-          var files = entries.map(function(entry) {return entry.name});
-          return callback(files);
-        }
-      });
-    },
-
-    // Imports a database object.
-    importDB: function(database, callback) {
-      var isValid = Entries.validateDB(database);
-      if (isValid) {
-        db = database;
-        return Entries.commit(callback);
-      }
-      else {
-        return callback(new Error("Invalid database"));
-      }
-    },
-
-    // Imports a database file.
-    importFile: function(path, file, callback) {
-      console.log("Importing file: " + file);
-
-      $cordovaFile.readAsText(path, file).then(
-      function(success) {
-        var json = success;
-        var imported = angular.fromJson(json);
-        console.log("Imported JSON: " + json);
-        console.log("Imported object: " + JSON.stringify(imported, null, 2));
-
-        Entries.importDB(imported, function(err) {
-          if (err)
-            return callback(new Error("Error importing database: " + err.message));
-          else
-            return callback(null);
-        });
-      },
-      function(error) {
-        return callback(new Error("Error reading file: " + JSON.stringify(error, null, 2)));
-      });
-    },
-
-    // Exports database to file.
-    exportFile: function(path, file, callback) {
-      console.log("Exporting file: " + file);
-
-      $cordovaFile.createDir(Entries.getBackupRoot(), 'UtaDiary', true).then(
-      function(success) {
-        return $cordovaFile.createDir(Entries.getBackupParent(), 'backups', true);
-      },
-      function(error) {
-        return callback(new Error("Error creating backup directories: " + error.message));
-      })
-      .then(
-      function(success) {
-        var data = angular.toJson(db);
-        return FileUtils.writeFile(path, file, data, true, callback);
-      });
-    },
-
-    // Validates a database object.
-    validateDB: function(database) {
-      var isObject = _.isObject(database);
-      var hasEntries = _.isArray(database.entries);
-      var isValid = isObject && hasEntries;
-      return isValid;
-    },
-
-    // Gets default database values.
-    defaults: function() {
-      var defaults = {
-        lastWrittenAt: null,
-        entries: [ examples.welcome ],
-        settings: {
-          username: "",
-          password: "",
-          email: "",
-          firstName: "",
-          lastName: "",
-          enableEncryption: true
-        }
-      };
-      return defaults;
+    // Initialises the module.
+    init: function(uta) {
+      Uta = uta;
+      return this;
     },
 
     // Resets entries database.
     reset: function(callback) {
       console.log("Resetting database...");
-      db = Entries.defaults();
+      Uta.db = Database.defaults();
       Entries.commit(callback);
     },
 
@@ -180,7 +69,7 @@ angular.module('nikki.services')
         }
         else {
           console.log("Checking for entries in data directory...");
-          var dataDir = Entries.getDataDirectory();
+          var dataDir = Uta.getDataDirectory();
           $cordovaFile.checkFile(dataDir, "entries.json")
           .then(
             function (success) {
@@ -218,11 +107,11 @@ angular.module('nikki.services')
       }
       else {
         console.log("Reloading entries from data directory...");
-        $cordovaFile.readAsText(Entries.getDataDirectory(), "entries.json")
+        $cordovaFile.readAsText(Uta.getDataDirectory(), "entries.json")
         .then(
           function (success) {
             var json = success;
-            console.log("Current db: '" + JSON.stringify(db, null, 2) + "'");
+            console.log("Current db: '" + JSON.stringify(Uta.db, null, 2) + "'");
             console.log("entries.json: '" + json + "'");
             return Entries.loadJSON(json, callback);
           },
@@ -247,9 +136,9 @@ angular.module('nikki.services')
         ? new Date(timestamp)
         : null;
 
-      if (result.lastWrittenAt > db.lastWrittenAt || !db.lastWrittenAt) {
-        db = result;
-        console.log("Loaded entries database: ", JSON.stringify(db, null, 2));
+      if (result.lastWrittenAt > Uta.db.lastWrittenAt || !Uta.db.lastWrittenAt) {
+        Uta.db = result;
+        console.log("Loaded entries database: ", JSON.stringify(Uta.db, null, 2));
         return callback(null);
       }
       else {
@@ -263,8 +152,8 @@ angular.module('nikki.services')
       console.log("Committing entries!");
       callback = callback || function () {};
 
-      db.lastWrittenAt = new Date();
-      var json = angular.toJson(db);
+      Uta.db.lastWrittenAt = new Date();
+      var json = angular.toJson(Uta.db);
 
       if (!window.cordova) {
         console.log("Saving to localStorage...");
@@ -273,7 +162,7 @@ angular.module('nikki.services')
       }
       else {
         console.log("Saving to data directory...");
-        var dataDir = Entries.getDataDirectory();
+        var dataDir = Uta.getDataDirectory();
         FileUtils.writeFile(dataDir, "entries.json", json, true, function(err) {
           if (err) {
             var message = "Error saving database: " + JSON.stringify(err);
@@ -291,17 +180,17 @@ angular.module('nikki.services')
 
     // Gets all journal entries as an array.
     all: function() {
-      return db.entries;
+      return Uta.db.entries;
     },
 
     // Gets the most recently created journal entry.
     last: function() {
-      return db.entries[db.entries.length - 1];
+      return Uta.db.entries[Uta.db.entries.length - 1];
     },
 
     // Gets the next journal entry id.
     nextId: function() {
-      return db.entries.length > 0
+      return Uta.db.entries.length > 0
         ? Entries.last().id + 1
         : 0;
     },
@@ -318,20 +207,20 @@ angular.module('nikki.services')
         title: options.title || "Title"
       };
       console.log("entry: ", entry);
-      db.entries.push(entry);
+      Uta.db.entries.push(entry);
       return entry;
     },
 
     // Removes a given entry object.
     remove: function(entry) {
-      db.entries.splice(db.entries.indexOf(entry), 1);
+      Uta.db.entries.splice(Uta.db.entries.indexOf(entry), 1);
     },
 
     // Gets a journal entry by id.
     get: function(entryId) {
-      for (var i = 0; i < db.entries.length; i++) {
-        if (db.entries[i].id === parseInt(entryId)) {
-          return db.entries[i];
+      for (var i = 0; i < Uta.db.entries.length; i++) {
+        if (Uta.db.entries[i].id === parseInt(entryId)) {
+          return Uta.db.entries[i];
         }
       }
       return null;
@@ -371,9 +260,9 @@ angular.module('nikki.services')
         yearly: [],
         allTime: []
       };
-      for (var i = 0; i < db.entries.length; i++) {
+      for (var i = 0; i < Uta.db.entries.length; i++) {
         var today = new Date();
-        var entry = db.entries[i];
+        var entry = Uta.db.entries[i];
         var date = new Date(entry.date);
         var days = 24 * 3600 * 1000;
 
@@ -393,6 +282,5 @@ angular.module('nikki.services')
     }
   };
 
-  Uta.Entries = Entries;
   return Entries;
 });

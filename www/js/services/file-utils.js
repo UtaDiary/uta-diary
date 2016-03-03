@@ -94,6 +94,5 @@ angular.module('nikki.services')
     }
   };
 
-  Uta.FileUtils = FileUtils;
   return FileUtils;
 });

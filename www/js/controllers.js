@@ -48,7 +48,7 @@ angular.module('nikki.controllers', [])
   $scope.stats = Entries.getStats();
 })
 
-.controller('SettingsCtrl', function($scope, $ionicActionSheet, $ionicPopup, FileBrowser, Entries, db) {
+.controller('SettingsCtrl', function($scope, $ionicActionSheet, $ionicPopup, Uta, FileBrowser, Entries, db) {
   $scope.Entries = Entries;
   $scope.settings = Entries.db().settings;
 
@@ -60,7 +60,7 @@ angular.module('nikki.controllers', [])
   };
 
   $scope.selectBackup = function(callback) {
-    Entries.listBackupFiles(function(files) {
+    Uta.listBackupFiles(function(files) {
       var fileIcon = '<i class="icon ion-document-text calm"></i>';
       var closeIcon = '<i class="icon ion-close-round assertive"></i>';
       var actionSheet = $ionicActionSheet.show({
@@ -82,7 +82,7 @@ angular.module('nikki.controllers', [])
   };
 
   $scope.import = function() {
-    var root = Entries.getBackupDirectory();
+    var root = Uta.getBackupDirectory();
     var path = '';
     $scope.selectBackup(function(file) {
       $scope.importFile(root, path + file);
@@ -90,7 +90,7 @@ angular.module('nikki.controllers', [])
   };
 
   $scope.export = function() {
-    var root = Entries.getBackupRoot();
+    var root = Uta.getBackupRoot();
     var path = 'UtaDiary/backups/';
     var file = 'journal.json';
     $scope.exportFile(root, path + file);
@@ -98,7 +98,7 @@ angular.module('nikki.controllers', [])
 
   $scope.importFile = function(path, file) {
     console.log("Importing file from: " + file);
-    Entries.importFile(path, file, function(err) {
+    Uta.importFile(path, file, function(err) {
       if (err)
         $scope.alert({ title: "Error", template: "Error importing from " + file + "<br>\n" + err.message });
       else
@@ -108,7 +108,7 @@ angular.module('nikki.controllers', [])
 
   $scope.exportFile = function(path, file) {
     console.log("Exporting file to: " + file);
-    Entries.exportFile(path, file, function(err) {
+    Uta.exportFile(path, file, function(err) {
       if (err)
         $scope.alert({ title: "Error", template: "Error exporting to " + file + "<br>\n" + err.message });
       else

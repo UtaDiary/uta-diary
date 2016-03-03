@@ -2,7 +2,7 @@
 
 angular.module('nikki', ['ionic', 'ngCordova', 'monospaced.elastic', 'nikki.controllers', 'nikki.services', 'nikki.directives'])
 
-.run(function($ionicPlatform, Entries) {
+.run(function($ionicPlatform, Uta, Entries) {
   $ionicPlatform.ready(function() {
     if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
       // Hide the input accessory bar
