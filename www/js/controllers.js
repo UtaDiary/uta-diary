@@ -81,6 +81,41 @@ angular.module('nikki.controllers', [])
     });
   };
 
+  $scope.selectExportOptions = function(callback) {
+    var date = new Date();
+    var timestamp = date.toISOString().slice(0, 10);
+    $scope.exportOptions = {
+      filename: 'journal-' + timestamp + '.json'
+    };
+    var popup = $ionicPopup.show({
+      template: '<input type="text" ng-model="exportOptions.filename">',
+      title: 'Backup File',
+      subTitle: 'Choose a name for your backup',
+      scope: $scope,
+      buttons: [
+        {
+          text: 'Cancel',
+          onTap: function(e) {
+            console.log("Cancelled export");
+          }
+        },
+        {
+          text: '<b>Save</b>',
+          type: 'button-positive',
+          onTap: function(event) {
+            var options = $scope.exportOptions;
+            if (!options.filename) {
+              event.preventDefault();
+            } else {
+              console.log("Selected export options: " + JSON.stringify(options));
+              return callback(options);
+            }
+          }
+        }
+      ]
+    });
+  };
+
   $scope.import = function() {
     var root = Uta.getBackupDirectory();
     var path = '';
@@ -92,8 +127,15 @@ angular.module('nikki.controllers', [])
   $scope.export = function() {
     var root = Uta.getBackupRoot();
     var path = 'UtaDiary/backups/';
-    var file = 'journal.json';
-    $scope.exportFile(root, path + file);
+    $scope.selectExportOptions(function(options) {
+      if (options.filename) {
+        var file = options.filename;
+        $scope.exportFile(root, path + file);
+      }
+      else {
+        $scope.alert({ title: "Error", template: "Invalid name for backup file" });
+      }
+    });
   };
 
   $scope.importFile = function(path, file) {
