@@ -49,8 +49,7 @@ angular.module('nikki.controllers', [])
 })
 
 .controller('SettingsCtrl', function($scope, $ionicActionSheet, $ionicPopup, Uta, FileBrowser, Entries, db) {
-  $scope.Entries = Entries;
-  $scope.settings = Entries.db().settings;
+  $scope.Uta = Uta;
 
   $scope.alert = function(options) {
     var alertPopup = $ionicPopup.alert(options);
