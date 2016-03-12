@@ -15,16 +15,18 @@ angular.module('nikki.services')
 
         reader.readEntries(
         function (entries) {
-          console.log("Read entries: " + JSON.stringify(entries, null, 2));
+          var names = entries.map(function(e) { return e.name });
+          console.log("Read files in directory: " + path);
+          console.log(JSON.stringify(names, null, 2));
           return callback(null, entries);
         },
         function (err) {
-          console.error("Error reading directory entries: " + err.message);
+          console.error("Error reading directory entries: " + JSON.stringify(err));
           return callback(err);
         });
       },
       function (err) {
-        console.error("Error listing directory: " + err.message);
+        console.error("Error listing directory: " + JSON.stringify(err));
         return callback(err);
       });
     },
@@ -71,6 +73,7 @@ angular.module('nikki.services')
         return callback(null);
       },
       function(error) {
+        console.warn("Error on $cordovaFile.writeFile(): " + JSON.stringify(error));
         // Sometimes NO_MODIFICATION_ALLOWED_ERR is incorrect,
         // so check if the file was actually updated!
         if (error.code == 6) {

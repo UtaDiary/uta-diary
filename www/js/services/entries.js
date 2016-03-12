@@ -70,12 +70,16 @@ angular.module('nikki.services')
         else {
           console.log("Checking for entries in data directory...");
           var dataDir = Uta.getDataDirectory();
+
+          FileUtils.listDir(dataDir, function () {});
+
           $cordovaFile.checkFile(dataDir, "entries.json")
           .then(
             function (success) {
               return Entries.reload(callback);
             },
             function (error) {
+              console.warn("Error checking file: " + JSON.stringify(error));
               console.log("Creating new entries file...")
               $cordovaFile.createFile(dataDir, "entries.json", false)
               .then(
