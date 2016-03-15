@@ -137,7 +137,17 @@ angular.module('nikki', ['ionic', 'ngCordova', 'monospaced.elastic', 'nikki.cont
         controller: 'SettingsCtrl'
       }
     }
-  });
+  })
+
+  .state('tab.settings-backups', {
+    url: '/settings/backups',
+    views: {
+      'tab-settings': {
+        templateUrl: 'templates/backups.html',
+        controller: 'BackupsCtrl'
+      }
+    }
+  })
 
   // Default Route
   $urlRouterProvider.otherwise('/tab/journal');

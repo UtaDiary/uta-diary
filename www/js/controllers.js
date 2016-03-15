@@ -171,4 +171,100 @@ angular.module('nikki.controllers', [])
       }
     );
   };
+})
+
+.controller('BackupsCtrl', function($scope, $ionicActionSheet, $ionicPopup, Uta, Backups, db) {
+  $scope.Uta = Uta;
+  $scope.backups = [];
+
+  Uta.listBackupFiles(function(files) {
+    console.log('Backup files: ' + JSON.stringify(files, null, 2));
+    $scope.backups = files;
+  });
+
+  $scope.alert = function(options) {
+    var alertPopup = $ionicPopup.alert(options);
+    alertPopup.then(function(res) {
+      console.log(options.template);
+    });
+  };
+
+  $scope.selectExportOptions = function(callback) {
+    var date = new Date();
+    var timestamp = date.toISOString().slice(0, 10);
+    $scope.exportOptions = {
+      filename: 'journal-' + timestamp + '.json'
+    };
+    var popup = $ionicPopup.show({
+      template: '<input type="text" ng-model="exportOptions.filename">',
+      title: 'Backup File',
+      subTitle: 'Choose a name for your backup',
+      scope: $scope,
+      buttons: [
+        {
+          text: 'Cancel',
+          onTap: function(e) {
+            console.log("Cancelled export");
+          }
+        },
+        {
+          text: '<b>Save</b>',
+          type: 'button-positive',
+          onTap: function(event) {
+            var options = $scope.exportOptions;
+            if (!options.filename) {
+              event.preventDefault();
+            } else {
+              console.log("Selected export options: " + JSON.stringify(options));
+              return callback(options);
+            }
+          }
+        }
+      ]
+    });
+  };
+
+  $scope.export = function() {
+    var root = Uta.getBackupRoot();
+    var path = 'UtaDiary/backups/';
+    $scope.selectExportOptions(function(options) {
+      if (options.filename) {
+        var file = options.filename;
+        $scope.exportBackup(file);
+      }
+      else {
+        $scope.alert({ title: "Error", template: "Invalid name for backup file" });
+      }
+    });
+  };
+
+  $scope.importBackup = function(backup) {
+    console.log("Importing backup: " + backup);
+    Uta.Backups.import(backup, function(err) {
+      if (err)
+        $scope.alert({ title: "Error", template: "Error importing from " + backup + "<br>\n" + err.message });
+      else
+        $scope.alert({ title: "Success!", template: "Imported database from " + backup });
+    });
+  };
+
+  $scope.exportBackup = function(backup) {
+    console.log("Exporting backup: " + backup);
+    Uta.Backups.export(backup, function(err) {
+      if (err)
+        $scope.alert({ title: "Error", template: "Error exporting to " + backup + "<br>\n" + err.message });
+      else
+        $scope.alert({ title: "Success!", template: "Exported database to " + backup });
+    });
+  };
+
+  $scope.deleteBackup = function(backup) {
+    console.log("Deleting backup: " + backup);
+    Uta.Backups.delete(backup, function(err) {
+      if (err)
+        $scope.alert({ title: "Error", template: "Error deleting " + backup + "<br>\n" + err.message });
+      else
+        $scope.alert({ title: "Success!", template: "Deleted backup " + backup });
+    });
+  };
 });

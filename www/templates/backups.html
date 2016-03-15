@@ -1,0 +1,22 @@
+<ion-view view-title="Backups">
+  <ion-content>
+    <ion-list>
+      <ion-item class="item-icon-left item-icon-right" ng-click="export()">
+        <i class="icon ion-document balanced"></i>
+        <h2>New Backup</h2>
+        <p>Save database to backup file</p>
+        <i class="icon ion-plus icon-accessory"></i>
+      </ion-item>
+      <ion-item class="item-icon-left item-icon-right item-remove-animate"
+                ng-repeat="backup in backups" ng-click="importBackup(backup)">
+        <i class="icon ion-document-text calm"></i>
+        <h2>{{ backup }}</h2>
+        <p>Load backup file</p>
+        <i class="icon ion-chevron-right icon-accessory"></i>
+        <ion-option-button class="button-assertive" ng-click="deleteBackup(backup)">
+          Delete
+        </ion-option-button>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>
