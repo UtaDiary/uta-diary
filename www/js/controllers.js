@@ -198,6 +198,35 @@ angular.module('nikki.controllers', [])
     });
   };
 
+  $scope.confirmImport = function(callback) {
+    $scope.importOptions = {};
+    var popup = $ionicPopup.show({
+      template: '',
+      title: "Import Backup",
+      subTitle: "This replaces your current journals and settings. Continue?",
+      scope: $scope,
+      buttons: [
+        {
+          text: 'Cancel',
+          onTap: function(e) {
+            console.log("Cancelled import");
+          }
+        },
+        {
+          text: '<b>Import</b>',
+          type: 'button-positive',
+          onTap: function(event) {
+            var options = $scope.importOptions;
+            if (options) {
+              console.log("Selected import options: " + JSON.stringify(options));
+              return callback(options);
+            }
+          }
+        }
+      ]
+    });
+  };
+
   $scope.selectExportOptions = function(callback) {
     var date = new Date();
     var timestamp = date.toISOString().slice(0, 10);
@@ -249,11 +278,13 @@ angular.module('nikki.controllers', [])
 
   $scope.importBackup = function(backup) {
     console.log("Importing backup: " + backup);
-    Uta.Backups.import(backup, function(err) {
-      if (err)
-        $scope.notify({ title: "Error", template: "Error importing from " + backup + "<br>\n" + err.message });
-      else
-        $scope.notify({ title: "Success!", template: "Imported database from " + backup });
+    $scope.confirmImport(function(options) {
+      Uta.Backups.import(backup, function(err) {
+        if (err)
+          $scope.notify({ title: "Error", template: "Error importing from " + backup + "<br>\n" + err.message });
+        else
+          $scope.notify({ title: "Success!", template: "Imported database from " + backup });
+      });
     });
   };
 
