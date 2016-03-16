@@ -227,6 +227,35 @@ angular.module('nikki.controllers', [])
     });
   };
 
+  $scope.confirmDelete = function(callback) {
+    $scope.deleteOptions = {};
+    var popup = $ionicPopup.show({
+      template: '',
+      title: "Delete Backup",
+      subTitle: "This deletes the selected backup file. Continue?",
+      scope: $scope,
+      buttons: [
+        {
+          text: 'Cancel',
+          onTap: function(e) {
+            console.log("Cancelled deletion");
+          }
+        },
+        {
+          text: '<b>Delete</b>',
+          type: 'button-assertive',
+          onTap: function(event) {
+            var options = $scope.deleteOptions;
+            if (options) {
+              console.log("Selected delete options: " + JSON.stringify(options));
+              return callback(options);
+            }
+          }
+        }
+      ]
+    });
+  };
+
   $scope.selectExportOptions = function(callback) {
     var date = new Date();
     var timestamp = date.toISOString().slice(0, 10);
@@ -300,11 +329,13 @@ angular.module('nikki.controllers', [])
 
   $scope.deleteBackup = function(backup) {
     console.log("Deleting backup: " + backup);
-    Uta.Backups.delete(backup, function(err) {
-      if (err)
-        $scope.notify({ title: "Error", template: "Error deleting " + backup + "<br>\n" + err.message });
-      else
-        $scope.notify({ title: "Success!", template: "Deleted backup " + backup });
+    $scope.confirmDelete(function(options) {
+      Uta.Backups.delete(backup, function(err) {
+        if (err)
+          $scope.notify({ title: "Error", template: "Error deleting " + backup + "<br>\n" + err.message });
+        else
+          $scope.notify({ title: "Success!", template: "Deleted backup " + backup });
+      });
     });
   };
 });
