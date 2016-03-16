@@ -98,6 +98,19 @@ angular.module('nikki.services')
         var data = angular.toJson(Uta.db);
        return FileUtils.writeFile(path, file, data, true, callback);
       });
+    },
+
+    // Deletes a given file.
+    deleteFile: function(path, file, callback) {
+      console.log("Deleting file: " + file);
+      $cordovaFile.removeFile(path, file).then(
+        function(success) {
+          return callback(null);
+        },
+        function(error) {
+          return callback(new Error("Error deleting file: " + JSON.stringify(error)));
+        }
+      );
     }
   };
 
