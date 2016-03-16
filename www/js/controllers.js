@@ -177,10 +177,19 @@ angular.module('nikki.controllers', [])
   $scope.Uta = Uta;
   $scope.backups = [];
 
-  Uta.listBackupFiles(function(files) {
-    console.log('Backup files: ' + JSON.stringify(files, null, 2));
-    $scope.backups = files;
-  });
+  $scope.refresh = function() {
+    Uta.listBackupFiles(function(files) {
+      console.log('Backup files: ' + JSON.stringify(files, null, 2));
+      $scope.backups = files;
+    });
+  };
+
+  $scope.refresh();
+
+  $scope.notify = function(options) {
+    $scope.alert(options);
+    $scope.refresh();
+  };
 
   $scope.alert = function(options) {
     var alertPopup = $ionicPopup.alert(options);
@@ -233,7 +242,7 @@ angular.module('nikki.controllers', [])
         $scope.exportBackup(file);
       }
       else {
-        $scope.alert({ title: "Error", template: "Invalid name for backup file" });
+        $scope.notify({ title: "Error", template: "Invalid name for backup file" });
       }
     });
   };
@@ -242,9 +251,9 @@ angular.module('nikki.controllers', [])
     console.log("Importing backup: " + backup);
     Uta.Backups.import(backup, function(err) {
       if (err)
-        $scope.alert({ title: "Error", template: "Error importing from " + backup + "<br>\n" + err.message });
+        $scope.notify({ title: "Error", template: "Error importing from " + backup + "<br>\n" + err.message });
       else
-        $scope.alert({ title: "Success!", template: "Imported database from " + backup });
+        $scope.notify({ title: "Success!", template: "Imported database from " + backup });
     });
   };
 
@@ -252,9 +261,9 @@ angular.module('nikki.controllers', [])
     console.log("Exporting backup: " + backup);
     Uta.Backups.export(backup, function(err) {
       if (err)
-        $scope.alert({ title: "Error", template: "Error exporting to " + backup + "<br>\n" + err.message });
+        $scope.notify({ title: "Error", template: "Error exporting to " + backup + "<br>\n" + err.message });
       else
-        $scope.alert({ title: "Success!", template: "Exported database to " + backup });
+        $scope.notify({ title: "Success!", template: "Exported database to " + backup });
     });
   };
 
@@ -262,9 +271,9 @@ angular.module('nikki.controllers', [])
     console.log("Deleting backup: " + backup);
     Uta.Backups.delete(backup, function(err) {
       if (err)
-        $scope.alert({ title: "Error", template: "Error deleting " + backup + "<br>\n" + err.message });
+        $scope.notify({ title: "Error", template: "Error deleting " + backup + "<br>\n" + err.message });
       else
-        $scope.alert({ title: "Success!", template: "Deleted backup " + backup });
+        $scope.notify({ title: "Success!", template: "Deleted backup " + backup });
     });
   };
 });
