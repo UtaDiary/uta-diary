@@ -233,6 +233,7 @@ angular.module('nikki.services')
 
   // Builds a paragraph string from token indices for sentences.
   Markov.prototype.buildParagraph = function(sentences) {
+    var self = this;
     var paragraph = "";
     for (var i = 0; i < sentences.length; i++) {
       var sentenceTikis = sentences[i];
@@ -245,12 +246,15 @@ angular.module('nikki.services')
         var nextTiki = sentenceTikis[j + 1];
         var nextToken = this.tokens[nextTiki];
         var isPunctuation = /^[,:.!?]+$/.test(nextToken);
+        var isProper = /^(I|I'.*)$/.test(word);
         var isFirst = j == 0;
 
         if (isFirst)
           word = capitalize(word);
-        else
+        else if (!isProper)
           word = downcase(word);
+        else
+          console.log("Preserving proper noun: " + word);
 
         if (isPunctuation) {
           paragraph += word + nextToken + ' ';
