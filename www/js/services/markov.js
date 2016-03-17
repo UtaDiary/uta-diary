@@ -211,14 +211,18 @@ angular.module('nikki.services')
 
     sentences.forEach(function(sentence, i) {
       sentence.forEach(function(tiki, j) {
+        var isPunctuation = function(word) { return /^[,:.!?]+$/.test(word); };
         var word = self.tokens[tiki];
-        var isPunctuation = /^[,:.!?]+$/.test(word);
+        var replacement, replacementTiki;
 
-        if (isPunctuation) {
-          var lastTiki = sentence[j-1];
-          var prevWord = self.tokens[lastTiki];
-          var replacement = self.randomWord();
-          var replacementTiki = self.tikis[replacement];
+        if (isPunctuation(word)) {
+          do {
+            var lastTiki = sentence[j-1];
+            var prevWord = self.tokens[lastTiki];
+            replacement = self.randomWord();
+            replacementTiki = self.tikis[replacement];
+          }
+          while (isPunctuation(replacement));
           sentence[j-1] = replacementTiki;
         }
       });
@@ -234,11 +238,19 @@ angular.module('nikki.services')
       var sentenceTikis = sentences[i];
 
       for (var j = 0; j < sentenceTikis.length; j++) {
+        var capitalize = function(word) { return word.charAt(0).toUpperCase() + word.slice(1); };
+        var downcase = function(word) { return word.toLowerCase(); };
         var tiki = sentenceTikis[j];
         var word = this.tokens[tiki];
         var nextTiki = sentenceTikis[j + 1];
         var nextToken = this.tokens[nextTiki];
         var isPunctuation = /^[,:.!?]+$/.test(nextToken);
+        var isFirst = j == 0;
+
+        if (isFirst)
+          word = capitalize(word);
+        else
+          word = downcase(word);
 
         if (isPunctuation) {
           paragraph += word + nextToken + ' ';
