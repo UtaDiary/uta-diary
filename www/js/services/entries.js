@@ -75,22 +75,43 @@ angular.module('nikki.services')
 
           $cordovaFile.checkFile(dataDir, "entries.json")
           .then(
-            function (success) {
+            function(success) {
               return Entries.reload(callback);
             },
-            function (error) {
-              console.warn("Error checking file: " + JSON.stringify(error));
-              console.log("Creating new entries file...")
-              $cordovaFile.createFile(dataDir, "entries.json", false)
+            function(error) {
+              console.warn("Error checking entries file: " + JSON.stringify(error));
+              $cordovaFile.checkFile(Uta.getBackupParent(), 'defaults.json')
               .then(
-                function (success) {
-                  return Entries.reset(callback);
-                },
-                function (error) {
-                  console.error("Failed creating entries.json");
-                  return callback(error);
+                function(success) {
+                  console.log("Copying default entries file...")
+                  return $cordovaFile.copyFile(
+                    Uta.getBackupParent(), 'defaults.json',
+                    Uta.getDataDirectory(), 'entries.json'
+                  );
                 }
-              );
+              )
+              .then(
+                function(success) {
+                  console.log("Finished copying default entries");
+                  return Entries.reload(callback);
+                }
+              )
+              .catch(
+                function(error) {
+                  console.log("Error checking defaults file: " + JSON.stringify(error));
+                  console.log("Creating new entries file...")
+                  $cordovaFile.createFile(dataDir, "entries.json", false)
+                  .then(
+                    function(success) {
+                      return Entries.reset(callback);
+                    },
+                    function(error) {
+                      console.error("Failed creating entries.json");
+                      return callback(error);
+                    }
+                  );
+                }
+              )
             }
           );
         }
