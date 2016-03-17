@@ -143,8 +143,18 @@ angular.module('nikki', ['ionic', 'ngCordova', 'monospaced.elastic', 'nikki.cont
     url: '/settings/backups',
     views: {
       'tab-settings': {
-        templateUrl: 'templates/backups.html',
+        templateUrl: 'templates/tab-settings-backups.html',
         controller: 'BackupsCtrl'
+      }
+    }
+  })
+
+  .state('tab.settings-profile', {
+    url: '/settings/profile',
+    views: {
+      'tab-settings': {
+        templateUrl: 'templates/tab-settings-profile.html',
+        controller: 'ProfileCtrl'
       }
     }
   })

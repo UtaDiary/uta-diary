@@ -48,7 +48,11 @@ angular.module('nikki.controllers', [])
   $scope.stats = Entries.getStats();
 })
 
-.controller('SettingsCtrl', function($scope, $ionicActionSheet, $ionicPopup, Uta, FileBrowser, Entries, db) {
+.controller('SettingsCtrl', function($scope, Uta, db) {
+  $scope.Uta = Uta;
+})
+
+.controller('ProfileCtrl', function($scope, Uta, db) {
   $scope.Uta = Uta;
 })
 

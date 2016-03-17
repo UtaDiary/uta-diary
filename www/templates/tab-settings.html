@@ -1,17 +1,11 @@
 <ion-view view-title="Settings">
   <ion-content>
     <ion-list>
-      <div class="item item-divider">
-        Profile
-      </div>
-      <label class="item item-input">
-        <span class="input-label">First Name</span>
-        <input type="text" ng-model="Uta.db.settings.firstName">
-      </label>
-      <label class="item item-input">
-        <span class="input-label">Last Name</span>
-        <input type="text" ng-model="Uta.db.settings.lastName">
-      </label>
+      <ion-item class="item-icon-left item-icon-right" href="#/tab/settings/profile">
+        <i class="icon ion-person"></i>
+        <h2>Profile</h2>
+        <i class="icon ion-chevron-right icon-accessory"></i>
+      </ion-item>
 
       <ion-item class="item-icon-left item-icon-right" href="#/tab/settings/backups">
         <i class="icon ion-ios-box"></i>
