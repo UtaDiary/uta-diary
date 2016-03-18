@@ -69,6 +69,8 @@ angular.module('nikki.services')
     this.unigrams = {};        // Maps each word to an array of next possible words.
     this.bigrams = {};         // Maps each word to next possible words, through previous words.
     this.tokens = [];          // All words seen so far, in order of appearance in training data.
+    this.tagDetails = {};      // All words seen so far, as part-of-speech tag details.
+    this.tokensForTag = {};    // All words seen so far, by part-of-speech tag.
     this.sentenceTexts = [];   // All sentences seen so far, as strings.
     this.sentencesTokens = []; // All sentences seen so far, as arrays of tokens.
     this.sentences = [];       // All sentences seen so far, as arrays of token indices.
@@ -92,6 +94,7 @@ angular.module('nikki.services')
   // Trains the generator with given source text.
   Markov.prototype.train = function(sourceText) {
     this.addEntry(sourceText);
+    console.log("Updated Markov model: ", this);
   };
 
   // Adds given entry to the Markov model.
@@ -108,6 +111,25 @@ angular.module('nikki.services')
 
     self.entries.push(entry);
     self.entryTexts.push(entryText);
+    self.analyse(entryText);
+  };
+
+  // Analyses a given body of text.
+  Markov.prototype.analyse = function(text) {
+    var self = this;
+    var analyses = compendium.analyse(text);
+    for (var analysis of analyses) {
+      for (var token of analysis.tokens) {
+        if (!self.tagDetails[token.raw])
+          self.tagDetails[token.raw] = token;
+
+        var isPunctuation = /^[,:.!?'#]+/.test(token.raw);
+        if (!isPunctuation) {
+          self.tokensForTag[token.pos] = self.tokensForTag[token.pos] || [];
+          self.tokensForTag[token.pos].push(token.raw);
+        }
+      }
+    }
   };
 
   // Adds given paragraph to the Markov model.
@@ -219,7 +241,7 @@ angular.module('nikki.services')
           do {
             var lastTiki = sentence[j-1];
             var prevWord = self.tokens[lastTiki];
-            replacement = self.randomWord();
+            replacement = self.replacementWord(prevWord);
             replacementTiki = self.tikis[replacement];
           }
           while (isPunctuation(replacement));
@@ -278,6 +300,20 @@ angular.module('nikki.services')
     var tiki = this.PRNG.rand(this.tokens.length);
     var word = this.tokens[tiki];
     return word;
+  };
+
+  // Selects a replacement word with matching part-of-speech.
+  Markov.prototype.replacementWord = function(word) {
+    var tag = this.tagDetails[word].pos;
+    var candidates = this.tokensForTag[tag];
+    if (candidates) {
+      var index = this.PRNG.rand(candidates.length);
+      var replacement = candidates[index];
+      return replacement;
+    }
+    else {
+      return this.randomWord();
+    }
   };
 
   Uta.Markov = Markov;
