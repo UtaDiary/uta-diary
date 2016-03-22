@@ -8,6 +8,24 @@ angular.module('nikki.controllers', [])
   }
 })
 
+.controller('IntroCtrl', function($scope, $state, $ionicSlideBoxDelegate) {
+  $scope.startApp = function() {
+    $state.go('tab.journal');
+  };
+
+  $scope.next = function() {
+    $ionicSlideBoxDelegate.next();
+  };
+
+  $scope.previous = function() {
+    $ionicSlideBoxDelegate.previous();
+  };
+
+  $scope.slideChanged = function(index) {
+    $scope.slideIndex = index;
+  };
+})
+
 .controller('JournalCtrl', function($scope, Entries, db) {
   $scope.Entries = Entries;
   $scope.entries = Entries.all();

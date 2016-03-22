@@ -1,0 +1,61 @@
+<ion-view view-title="Intro" class="nikki intro">
+  <ion-nav-buttons side="left">
+    <button class="button button-positive button-clear"
+            ng-click="startApp()" ng-hide="slideIndex > 0">
+      Skip
+    </button>
+    <button class="button button-positive button-clear"
+            ng-click="previous()" ng-show="slideIndex > 0">
+      Previous
+    </button>
+  </ion-nav-buttons>
+  <ion-nav-buttons side="right">
+    <button class="button button-positive button-clear"
+            ng-click="next()" ng-show="slideIndex != 4">
+      Next
+    </button>
+    <button class="button button-positive button-clear"
+            ng-click="startApp()" ng-show="slideIndex == 4">
+      Got it!
+    </button>
+  </ion-nav-buttons>
+
+  <ion-content>
+    <ion-slide-box on-slide-changed="slideChanged(index)" class="nikki slides">
+      <ion-slide class="nikki slide">
+        <h2>Welcome to Uta Diary!</h2>
+        <p>
+          Hopefully this tutorial will help you get started.
+          Swipe left to continue!
+        </p>
+      </ion-slide>
+      <ion-slide>
+        <h3><i class="icon ion-ios-bookmarks"></i> Journal</h3>
+        <p>
+          This is where you can create journal entries.
+          You'll find one entry already waiting for you!
+        </p>
+      </ion-slide>
+      <ion-slide>
+        <h3><i class="icon ion-ios-paw"></i> Kitsune</h3>
+        <p>
+          This is where fox spirit Kitsune posts their entries.
+          One is randomly generated in response to each of yours.
+        </p>
+      </ion-slide>
+      <ion-slide>
+        <h3><i class="icon ion-ios-pulse"></i> Statistics</h3>
+        <p>
+          This shows your recent writing stats, so you can track your journaling progress.
+        </p>
+      </ion-slide>
+      <ion-slide>
+        <h3><i class="icon ion-ios-gear"></i> Settings</h3>
+        <p>
+          This offers advanced options, such as backups.
+          Backups save journal data as a file on your device, which you can restore later.
+        </p>
+      </ion-slide>
+    </ion-slide-box>
+  </ion-content>
+</ion-view>

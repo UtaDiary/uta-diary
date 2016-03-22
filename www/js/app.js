@@ -20,6 +20,13 @@ angular.module('nikki', ['ionic', 'ngCordova', 'monospaced.elastic', 'nikki.cont
   // AngularUI Router States
   $stateProvider
 
+  // Tutorial
+  .state('intro', {
+    url: '/intro',
+    templateUrl: '/templates/intro.html',
+    controller: 'IntroCtrl'
+  })
+
   // An abstract tab state
   .state('tab', {
     url: "/tab",
@@ -160,6 +167,6 @@ angular.module('nikki', ['ionic', 'ngCordova', 'monospaced.elastic', 'nikki.cont
   })
 
   // Default Route
-  $urlRouterProvider.otherwise('/tab/journal');
+  $urlRouterProvider.otherwise('/intro');
 
 });
