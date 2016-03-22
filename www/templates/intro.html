@@ -11,11 +11,11 @@
   </ion-nav-buttons>
   <ion-nav-buttons side="right">
     <button class="button button-positive button-clear"
-            ng-click="next()" ng-show="slideIndex != 4">
+            ng-click="next()" ng-show="slideIndex != 5">
       Next
     </button>
     <button class="button button-positive button-clear"
-            ng-click="startApp()" ng-show="slideIndex == 4">
+            ng-click="startApp()" ng-show="slideIndex == 5">
       Got it!
     </button>
   </ion-nav-buttons>
@@ -25,7 +25,7 @@
       <ion-slide class="nikki slide">
         <h2>Welcome to Uta Diary!</h2>
         <p>
-          Hopefully this tutorial will help you get started.
+          This tutorial will help you get started quickly.
           Swipe left to continue!
         </p>
       </ion-slide>
@@ -55,6 +55,18 @@
           This offers advanced options, such as backups.
           Backups save journal data as a file on your device, which you can restore later.
         </p>
+      </ion-slide>
+      <ion-slide>
+        <h3><i class="icon ion-ios-gear"></i> Tutorial Complete</h3>
+        <p>
+          That's all you need to know for now.
+          Let's begin!
+        </p>
+        <button class="button button-positive button-block"
+                style="width: 90%; margin: auto"
+                ng-click="startApp()">
+          Okay!
+        </button>
       </ion-slide>
     </ion-slide-box>
   </ion-content>
