@@ -66,8 +66,11 @@ angular.module('nikki.controllers', [])
   $scope.stats = Entries.getStats();
 })
 
-.controller('SettingsCtrl', function($scope, Uta, db) {
+.controller('SettingsCtrl', function($scope, Uta, db, Entries) {
   $scope.Uta = Uta;
+  $scope.save = function() {
+    Entries.commit();
+  };
 })
 
 .controller('ProfileCtrl', function($scope, Uta, db) {
