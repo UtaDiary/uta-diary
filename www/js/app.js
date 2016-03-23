@@ -23,7 +23,7 @@ angular.module('nikki', ['ionic', 'ngCordova', 'monospaced.elastic', 'nikki.cont
   // Tutorial
   .state('intro', {
     url: '/intro',
-    templateUrl: '/templates/intro.html',
+    templateUrl: 'templates/intro.html',
     controller: 'IntroCtrl'
   })
 
