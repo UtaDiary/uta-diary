@@ -48,17 +48,19 @@ angular.module('nikki', ['ionic', 'ngCordova', 'monospaced.elastic', 'nikki.cont
               waitForFS();
             }
             else {
-              runTests();
-              startDB();
+              startDB(function(err, db) {
+                if (err) return console.error(err.message);
+                runTests();
+                deferred.resolve(db);
+              });
             }
           }, 500);
         };
 
-        var startDB = function() {
+        var startDB = function(callback) {
           Uta.Entries.examples.welcome.text = welcomeText;
           Uta.Entries.start(function(err) {
-            if (err) return console.error(err.message);
-            console.log("Initial entries: ", Uta.Entries.all());
+            if (err) return callback(err);
 
             // Check for existing entries
             if (Uta.Entries.all().length == 0) {
@@ -66,7 +68,9 @@ angular.module('nikki', ['ionic', 'ngCordova', 'monospaced.elastic', 'nikki.cont
               Uta.Entries.create(Uta.Entries.examples.welcome);
               Uta.Entries.commit();
             }
-            deferred.resolve(Uta.Entries.db());
+            console.log("Initial entries: ", Uta.Entries.all());
+
+            return callback(null, Uta.Entries.db());
           });
         };
 
@@ -74,7 +78,6 @@ angular.module('nikki', ['ionic', 'ngCordova', 'monospaced.elastic', 'nikki.cont
           if (Uta.db.settings.enableDebug == true) {
             Uta.Database.test();
           }
-          return true;
         };
 
         waitForFS();
