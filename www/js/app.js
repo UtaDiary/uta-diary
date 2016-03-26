@@ -33,7 +33,7 @@ angular.module('nikki', ['ionic', 'ngCordova', 'monospaced.elastic', 'nikki.cont
     abstract: true,
     templateUrl: "templates/tabs.html",
     resolve: {
-      db: function($q, Entries, welcomeText) {
+      db: function($q, Uta, welcomeText) {
         console.log("Waiting for database...");
 
         var deferred = $q.defer();
@@ -48,26 +48,33 @@ angular.module('nikki', ['ionic', 'ngCordova', 'monospaced.elastic', 'nikki.cont
               waitForFS();
             }
             else {
+              runTests();
               startDB();
             }
           }, 500);
         };
 
         var startDB = function() {
-          Entries.examples.welcome.text = welcomeText;
-          Entries.start(function(err) {
+          Uta.Entries.examples.welcome.text = welcomeText;
+          Uta.Entries.start(function(err) {
             if (err) return console.error(err.message);
-            console.log("Initial entries: ", Entries.all());
+            console.log("Initial entries: ", Uta.Entries.all());
 
             // Check for existing entries
-            if (Entries.all().length == 0) {
+            if (Uta.Entries.all().length == 0) {
               // Add a welcome entry
-              Entries.create(Entries.examples.welcome);
-              Entries.commit();
+              Uta.Entries.create(Uta.Entries.examples.welcome);
+              Uta.Entries.commit();
             }
-
-            deferred.resolve(Entries.db());
+            deferred.resolve(Uta.Entries.db());
           });
+        };
+
+        var runTests = function() {
+          if (Uta.db.settings.enableDebug == true) {
+            Uta.Database.test();
+          }
+          return true;
         };
 
         waitForFS();

@@ -8,7 +8,7 @@ angular.module('nikki.controllers', [])
   }
 })
 
-.controller('IntroCtrl', function($scope, $state, $ionicSlideBoxDelegate) {
+.controller('IntroCtrl', function($scope, $state, $ionicSlideBoxDelegate, Uta) {
   $scope.startApp = function() {
     $state.go('tab.journal');
   };
