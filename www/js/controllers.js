@@ -8,7 +8,7 @@ angular.module('nikki.controllers', [])
   }
 })
 
-.controller('IntroCtrl', function($scope, $state, $ionicSlideBoxDelegate, Uta) {
+.controller('IntroCtrl', function($scope, $state, $ionicSlideBoxDelegate, Uta, db) {
   $scope.startApp = function() {
     $state.go('tab.journal');
   };
@@ -26,7 +26,7 @@ angular.module('nikki.controllers', [])
   };
 })
 
-.controller('JournalCtrl', function($scope, Entries, db) {
+.controller('JournalCtrl', function($scope, Uta, Entries) {
   $scope.Entries = Entries;
   $scope.entries = Entries.all();
   $scope.create = function() {
@@ -62,22 +62,22 @@ angular.module('nikki.controllers', [])
   $scope.avatarURL = "https://pbs.twimg.com/media/CKBfWLqUkAAaD6V.png:large";
 })
 
-.controller('StatsCtrl', function($scope, Entries, db) {
+.controller('StatsCtrl', function($scope, Uta, Entries) {
   $scope.stats = Entries.getStats();
 })
 
-.controller('SettingsCtrl', function($scope, Uta, db, Entries) {
+.controller('SettingsCtrl', function($scope, Uta, Entries) {
   $scope.Uta = Uta;
   $scope.save = function() {
     Entries.commit();
   };
 })
 
-.controller('ProfileCtrl', function($scope, Uta, db) {
+.controller('ProfileCtrl', function($scope, Uta) {
   $scope.Uta = Uta;
 })
 
-.controller('BackupsCtrl', function($scope, $ionicActionSheet, $ionicPopup, Uta, Backups, db) {
+.controller('BackupsCtrl', function($scope, $ionicActionSheet, $ionicPopup, Uta, Backups) {
   $scope.Uta = Uta;
   $scope.backups = [];
 

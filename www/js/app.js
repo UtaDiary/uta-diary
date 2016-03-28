@@ -24,16 +24,9 @@ angular.module('nikki', ['ionic', 'ngCordova', 'monospaced.elastic', 'nikki.cont
   .state('intro', {
     url: '/intro',
     templateUrl: 'templates/intro.html',
-    controller: 'IntroCtrl'
-  })
-
-  // An abstract tab state
-  .state('tab', {
-    url: "/tab",
-    abstract: true,
-    templateUrl: "templates/tabs.html",
+    controller: 'IntroCtrl',
     resolve: {
-      db: function($q, Uta, welcomeText) {
+      db: function($q, Uta, welcomeText, $state) {
         console.log("Waiting for database...");
 
         var deferred = $q.defer();
@@ -53,6 +46,7 @@ angular.module('nikki', ['ionic', 'ngCordova', 'monospaced.elastic', 'nikki.cont
                 runTests();
                 runMigrations(function() {
                   resolveDB();
+                  navigate();
                 });
               });
             }
@@ -86,6 +80,11 @@ angular.module('nikki', ['ionic', 'ngCordova', 'monospaced.elastic', 'nikki.cont
           Uta.migrateUp(callback);
         };
 
+        var navigate = function() {
+          if (!Uta.db.settings.enableTutorial)
+            $state.go('tab.journal');
+        };
+
         var resolveDB = function() {
           deferred.resolve(Uta.db);
         };
@@ -100,6 +99,13 @@ angular.module('nikki', ['ionic', 'ngCordova', 'monospaced.elastic', 'nikki.cont
         });
       }
     }
+  })
+
+  // An abstract tab state
+  .state('tab', {
+    url: "/tab",
+    abstract: true,
+    templateUrl: "templates/tabs.html"
   })
 
   //
