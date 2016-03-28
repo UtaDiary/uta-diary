@@ -24,6 +24,13 @@ angular.module('nikki.controllers', [])
   $scope.slideChanged = function(index) {
     $scope.slideIndex = index;
   };
+
+  $scope.finishTutorial = function() {
+    Uta.db.settings.enableTutorial = false;
+    Uta.commit(function(err) {
+      $state.go('tab.journal');
+    });
+  };
 })
 
 .controller('JournalCtrl', function($scope, Uta, Entries) {
