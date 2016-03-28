@@ -137,7 +137,6 @@ angular.module('nikki.services')
           function (success) {
             var json = success;
             console.log("Current db: '" + JSON.stringify(Uta.db, null, 2) + "'");
-            console.log("entries.json: '" + json + "'");
             return Entries.loadJSON(json, callback);
           },
           function (error) {
@@ -150,7 +149,7 @@ angular.module('nikki.services')
 
     // Loads entries database from given JSON string.
     loadJSON: function(json, callback) {
-      console.log("Loading JSON entries: '" + json + "'");
+      console.log("Loading JSON: '" + json + "'");
       var result = angular.fromJson(json);
 
       // Deserialize dates
@@ -161,7 +160,10 @@ angular.module('nikki.services')
         ? new Date(timestamp)
         : null;
 
-      if (result.lastWrittenAt > Uta.db.lastWrittenAt || !Uta.db.lastWrittenAt) {
+      console.log("Current timestamp: " + Uta.db.lastWrittenAt);
+      console.log("JSON timestamp: " + result.lastWrittenAt);
+
+      if (result.lastWrittenAt >= Uta.db.lastWrittenAt || !Uta.db.lastWrittenAt) {
         Uta.db = result;
         console.log("Loaded entries database: ", JSON.stringify(Uta.db, null, 2));
         return callback(null);
