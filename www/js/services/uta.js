@@ -111,6 +111,29 @@ angular.module('nikki.services')
           return callback(new Error("Error deleting file: " + JSON.stringify(error)));
         }
       );
+    },
+
+    // Commits database.
+    commit: function(callback) {
+      return Uta.Entries.commit(callback);
+    },
+
+    // Migrates database up to latest version.
+    migrateUp: function(callback) {
+      var lastMigration = Uta.db.lastMigration;
+      var latestMigration = Uta.Database.migrations.slice(-1)[0];
+
+      console.log("Current database version: " + lastMigration.version);
+
+      if (lastMigration.id < latestMigration.id) {
+        console.log("Upgrading database to version: " + latestMigration.version);
+        Uta.Database.migrateUp(Uta.db, latestMigration.id);
+        return Uta.commit(callback);
+      }
+      else {
+        console.log("Database is up-to-date");
+        return callback(null);
+      }
     }
   };
 

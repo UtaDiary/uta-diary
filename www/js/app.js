@@ -51,7 +51,9 @@ angular.module('nikki', ['ionic', 'ngCordova', 'monospaced.elastic', 'nikki.cont
               startDB(function(err, db) {
                 if (err) return console.error(err.message);
                 runTests();
-                deferred.resolve(db);
+                runMigrations(function() {
+                  resolveDB();
+                });
               });
             }
           }, 500);
@@ -78,6 +80,14 @@ angular.module('nikki', ['ionic', 'ngCordova', 'monospaced.elastic', 'nikki.cont
           if (Uta.db.settings.enableDebug == true) {
             Uta.Database.test();
           }
+        };
+
+        var runMigrations = function(callback) {
+          Uta.migrateUp(callback);
+        };
+
+        var resolveDB = function() {
+          deferred.resolve(Uta.db);
         };
 
         waitForFS();
