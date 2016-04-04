@@ -123,10 +123,11 @@ angular.module('nikki.services')
         if (!self.tagDetails[token.raw])
           self.tagDetails[token.raw] = token;
 
+        var word = token.raw.replace(/\W+$/, '');
         var isPunctuation = /^[,:.!?'#]+/.test(token.raw);
         if (!isPunctuation) {
           self.tokensForTag[token.pos] = self.tokensForTag[token.pos] || [];
-          self.tokensForTag[token.pos].push(token.raw);
+          self.tokensForTag[token.pos].push(word);
         }
       }
     }
@@ -243,6 +244,9 @@ angular.module('nikki.services')
             var prevWord = self.tokens[lastTiki];
             replacement = self.replacementWord(prevWord);
             replacementTiki = self.tikis[replacement];
+            if (replacementTiki == null) {
+              console.warn("Got null tiki for ", replacement);
+            }
           }
           while (isPunctuation(replacement));
           sentence[j-1] = replacementTiki;
@@ -270,6 +274,11 @@ angular.module('nikki.services')
         var isPunctuation = /^[,:.!?]+$/.test(nextToken);
         var isProper = /^(I|I'.*)$/.test(word);
         var isFirst = j == 0;
+
+        if (word == null) {
+          console.warn("No word for tiki: " + tiki);
+          word = 'NULL';
+        }
 
         if (isFirst)
           word = capitalize(word);
