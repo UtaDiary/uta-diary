@@ -56,7 +56,7 @@ nikki-entry-title .nikki.entry-title-editor {
 }
 
 nikki-entry-text .nikki.entry-text {
-  min-height: 50em;
+  min-height: 20em;
 }
 
 nikki-entry-text .nikki.entry-text h1 { font-size: 30px; }
