@@ -38,7 +38,7 @@ angular.module('nikki.directives', [])
   };
 }])
 
-.directive('nikkiEntryText', ['Entries', '$window', '$cordovaInAppBrowser', function(Entries, $window, $cordovaInAppBrowser) {
+.directive('nikkiEntryText', function(Entries, $timeout, $window, $cordovaInAppBrowser) {
   return {
     templateUrl: 'templates/nikki-entry-text.html',
     restrict: 'AE',
@@ -59,8 +59,16 @@ angular.module('nikki.directives', [])
           $event.preventDefault();
           return false;
         }
+
+        // Show the editor
         $scope.state.editingText = true;
         $scope.state.originalText = $scope.entry.text;
+
+        // Focus the textarea
+        $timeout(function() {
+          var textarea = $element.find('form').find('textarea')[0];
+          textarea.focus();
+        }, 200);
       };
       $scope.saveChanges = function() {
         $scope.state.editingText = false;
@@ -72,4 +80,4 @@ angular.module('nikki.directives', [])
       };
     }
   };
-}]);
+});
