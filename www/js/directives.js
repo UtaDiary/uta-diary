@@ -47,6 +47,10 @@ angular.module('nikki.directives', [])
       entry: '='
     },
     link: function($scope, $element, $attrs) {
+      var textarea = $element.find('form').find('textarea')[0];
+      var lastSavedAt = new Date();
+      var lastChangedAt = new Date();
+
       $scope.renderMarkdown = function(text) {
         var converter = new showdown.Converter();
         var html = converter.makeHtml(text);
@@ -66,9 +70,25 @@ angular.module('nikki.directives', [])
 
         // Focus the textarea
         $timeout(function() {
-          var textarea = $element.find('form').find('textarea')[0];
           textarea.focus();
         }, 200);
+      };
+      $scope.textChanged = function() {
+        lastChangedAt = new Date();
+        // Schedule a save
+        $timeout(function() {
+          if (Date.now() - lastChangedAt >= 5000) {
+            $scope.autosave();
+          }
+        }, 5000);
+      };
+      $scope.autosave = function() {
+        // Add a checkpoint
+        // Save the entry
+        Entries.commit(function() {
+          // Show notification
+          console.log("Journal saved.");
+        });
       };
       $scope.saveChanges = function() {
         $scope.state.editingText = false;

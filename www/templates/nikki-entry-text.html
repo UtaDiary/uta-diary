@@ -3,7 +3,9 @@
      ng-bind-html="entry.text | renderMarkdown">
 </div>
 <form ng-show="state.editingText">
-  <textarea msd-elastic="\n" class="nikki entry-text-editor" ng-model="entry.text" placeholder="What's on my mind today?"></textarea>
+  <textarea msd-elastic="\n" class="nikki entry-text-editor"
+            ng-model="entry.text" placeholder="What's on my mind today?"
+            ng-change="textChanged()"></textarea>
   <button class="button button-balanced button-small" ng-click="saveChanges()">
     <i class="icon ion-checkmark-round"></i> Save entry
   </button>
