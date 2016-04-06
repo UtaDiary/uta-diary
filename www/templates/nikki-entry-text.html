@@ -13,3 +13,8 @@
     <i class="icon ion-close-round"></i> Cancel
   </button>
 </form>
+<div class="nikki notifications">
+  <div class="nikki notification" ng-repeat="notification in notifications">
+    <span class="nikki message" ng-bind="notification.message"></span>
+  </div>
+</div>

@@ -82,6 +82,18 @@ nikki-entry-text .nikki.entry-text-editor {
   width: 100%;
 }
 
+nikki-entry-text .nikki.notifications {
+  position: fixed;
+  top: 0px;
+  right: 0px;
+}
+nikki-entry-text .nikki.notifications .notification {
+}
+nikki-entry-text .nikki.notifications .notification .message {
+  background: #08f;
+  color: #fff;
+}
+
 .nikki.entry-meta,
 .nikki.kitsune-meta {
   color: #888;
