@@ -96,9 +96,14 @@ angular.module('nikki.directives', [])
         $scope.checkpoint++;
       };
       $scope.notify = function(message) {
-        $scope.notifications.push({
-          message: message
-        });
+        var notice = {
+          message: message,
+          hidden: false
+        };
+        $scope.notifications.push(notice);
+        $timeout(function() {
+          notice.hidden = true;
+        }, 3000);
         console.log(message);
       };
       $scope.saveChanges = function() {
