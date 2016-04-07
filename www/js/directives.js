@@ -79,10 +79,10 @@ angular.module('nikki.directives', [])
       $scope.textChanged = function() {
         lastChangedAt = new Date();
         $timeout(function() {
-          if (Date.now() - lastChangedAt >= 1000) {
+          if (Date.now() - lastChangedAt >= 3500) {
             $scope.autosave();
           }
-        }, 1000);
+        }, 3500);
       };
       $scope.autosave = function() {
         Entries.commit(function() {
