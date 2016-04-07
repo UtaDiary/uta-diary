@@ -93,9 +93,12 @@ nikki-entry-text .nikki.notifications .notification {
   height: 0;
   opacity: 0;
 }
-nikki-entry-text .nikki.notifications .notification.fadeIn {
-  transition: all 2s ease;
+nikki-entry-text .nikki.notifications .notification.visible {
+  transition: all 0s ease;
   height: 100%;
+}
+nikki-entry-text .nikki.notifications .notification.fadeIn {
+  transition: all 0.75s ease;
   opacity: 0.9;
 }
 nikki-entry-text .nikki.notifications .notification.fadeOut {
