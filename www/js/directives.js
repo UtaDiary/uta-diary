@@ -105,13 +105,9 @@ angular.module('nikki.directives', [])
         $timeout(function() { notice.fadeOut = true }, 2000);
         console.log(message);
       };
-      $scope.saveChanges = function() {
+      $scope.preview = function() {
         $scope.state.editingText = false;
-        Entries.commit();
-      };
-      $scope.cancelChanges = function() {
-        $scope.state.editingText = false;
-        $scope.entry.text = $scope.state.originalText;
+        $scope.autosave();
       };
     }
   };
