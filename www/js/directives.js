@@ -98,13 +98,11 @@ angular.module('nikki.directives', [])
       $scope.notify = function(message) {
         var notice = {
           message: message,
-          hidden: false
+          start: true
         };
         $scope.notifications.push(notice);
-        $timeout(function() { notice.fade = true });
-        $timeout(function() {
-          notice.hidden = true;
-        }, 2000);
+        $timeout(function() { notice.fadeIn = true });
+        $timeout(function() { notice.fadeOut = true }, 2000);
         console.log(message);
       };
       $scope.saveChanges = function() {

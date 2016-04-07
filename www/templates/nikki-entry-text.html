@@ -15,7 +15,7 @@
 </form>
 <div class="nikki notifications">
   <div class="nikki notification" ng-repeat="notification in notifications"
-       ng-class="{ visible: !notification.hidden, fadeIn: notification.fade, fadeOut: notification.hidden }" >
+       ng-class="{ start: notification.start, fadeIn: notification.fadeIn, fadeOut: notification.fadeOut }" >
     <span class="nikki message" ng-bind="notification.message"></span>
   </div>
 </div>
