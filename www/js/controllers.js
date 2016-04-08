@@ -8,7 +8,7 @@ angular.module('nikki.controllers', [])
   }
 })
 
-.controller('IntroCtrl', function($scope, $state, $ionicSlideBoxDelegate, Uta, db) {
+.controller('IntroCtrl', function($scope, $state, $ionicSlideBoxDelegate, Uta) {
   $scope.startApp = function() {
     $state.go('tab.journal');
   };
@@ -54,7 +54,7 @@ angular.module('nikki.controllers', [])
   );
 })
 
-.controller('JournalDetailCtrl', function($scope, $stateParams, Entries) {
+.controller('JournalDetailCtrl', function($scope, $stateParams, Uta, Entries) {
   $scope.Entries = Entries;
   $scope.entry = Entries.get($stateParams.entryId);
 })
