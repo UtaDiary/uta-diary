@@ -52,6 +52,8 @@ $dark:                            #444 !default;
 
 nikki-entry-title .nikki.entry-title,
 nikki-entry-title .nikki.entry-title-editor {
+  margin: 0px;
+  padding: 0px;
   font-size: 30px;
 }
 
@@ -121,5 +123,5 @@ nikki-entry-text .nikki.notifications .notification .message {
 .nikki.entry-meta,
 .nikki.kitsune-meta {
   color: #888;
-  margin: -12px 0 10px 0;
+  margin: 0px 0 8px 0;
 }
