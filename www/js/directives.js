@@ -17,7 +17,7 @@ angular.module('nikki.directives', [])
   };
 }])
 
-.directive('nikkiEntryTitle', ['Entries', function(Entries) {
+.directive('nikkiEntryTitle', function(Entries, $timeout) {
   return {
     templateUrl: 'templates/nikki-entry-title.html',
     restrict: 'AE',
@@ -26,9 +26,15 @@ angular.module('nikki.directives', [])
       entry: '='
     },
     link: function($scope, $element, $attrs) {
+      var input = $element.find('form').find('input')[0];
       $scope.startTitleEditor = function() {
         $scope.state.editingTitle = true;
         $scope.originalTitle = $scope.entry.title;
+
+        // Focus the input
+        $timeout(function() {
+          input.focus();
+        }, 200);
       };
       $scope.saveTitleChanges = function() {
         $scope.state.editingTitle = false;
@@ -36,7 +42,7 @@ angular.module('nikki.directives', [])
       };
     }
   };
-}])
+})
 
 .directive('nikkiEntryText', function(Entries, $timeout, $window, $cordovaInAppBrowser) {
   return {
