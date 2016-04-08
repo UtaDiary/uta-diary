@@ -120,8 +120,12 @@ nikki-entry-text .nikki.notifications .notification .message {
   text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.2);
 }
 
+.nikki.kitsune-title {
+  margin: 0px 0 0 0;
+}
+
 .nikki.entry-meta,
 .nikki.kitsune-meta {
   color: #888;
-  margin: 0px 0 8px 0;
+  margin: -4px 0 16px 0;
 }
