@@ -3,9 +3,18 @@
 
 **A magical journal for mobile devices**
 
-Uta Diary helps you journal daily on your mobile phone or tablet. With Markdown formatting, you can easily add headings, links, pictures, and more! All data is saved locally on your device, which you can freely import or export as backup files.
+```
+Uta Diary helps you write daily journals on your mobile device.
+With Markdown formatting, you can easily add headings, links,
+pictures, and more! All data is saved locally on your device,
+which you can freely import or export as backup files.
 
-For this journey, fox spirit Kitsune is your magical journaling companion! With each new entry, you'll be teaching this little A.I. how to journal in your style. Kitsune will generate a random entry for each one of yours. The results may surprise you!
+For this journey, fox spirit Kitsune is your magical journaling
+companion. With each new entry, you'll be teaching this little
+A.I. how to journal in your style. Kitsune will generate a random
+entry for each one of yours. The results may surprise you!
+```
+
 
 **Current Features**
 
