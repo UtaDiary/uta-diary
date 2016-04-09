@@ -1,20 +1,23 @@
 
 # Uta Diary
 
-**A journal app and poetic diary**
+**A magical journal for mobile devices**
 
-Uta Diary helps you journal daily on your mobile phone or tablet. With Markdown formatting, you can easily add headings, links, pictures, and more! All data is saved locally on your device, encrypted by your passphrase.
+Uta Diary helps you journal daily on your mobile phone or tablet. With Markdown formatting, you can easily add headings, links, pictures, and more! All data is saved locally on your device, which you can freely import or export as backup files.
 
-For this journey, fox spirit Kitsune is your journaling companion! With each new entry, you'll be teaching this little A.I. how to journal in your style. Kitsune will generate a random entry for each one of yours. The results may surprise you!
+For this journey, fox spirit Kitsune is your magical journaling companion! With each new entry, you'll be teaching this little A.I. how to journal in your style. Kitsune will generate a random entry for each one of yours. The results may surprise you!
 
-**Features**
+**Current Features**
 
 + Journal - Create daily entries in a full-screen editor.
 + Markdown - Easily add headings, links, pictures, and more!
 + Kitsune - Your journaling companion! (Chatbot-style A.I.)
 + Local Storage - Data is stored locally on your device.
++ Backups - Save your data to a backup file (JSON), which you can restore later.
+
+**Future development**
+
 + Encryption - Protect your privacy by encrypting data with a passphrase.
-+ Import / Export - Save your data to a backup file, which you can restore later.
 
 ## Milestones
 
@@ -26,10 +29,19 @@ For this journey, fox spirit Kitsune is your journaling companion! With each new
 + Clean filesystem API provided by Ng-Cordova
 + Journal entries are stored locally in JSON database
 
-### 1.0 Android
+### 0.9 Pre-release (Current)
+
++ Beta version preparing for Uta Diary release
++ New artwork for icon and splash screen
++ Tutorial introduction for first-time users
++ Auto-save feature for text editor
++ Part-of-speech tagging with [Compendium](https://github.com/Ulflander/compendium-js)
++ Improved interface for backup files
++ Database migrations run on startup
+
+### 1.0 Android (Next)
 
 + Public release for Android on Google Play!
-+ Import / Export - Save and load database from a file
 
 ### 1.1 Encryption
 
