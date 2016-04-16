@@ -138,6 +138,7 @@ angular.module('nikki.services')
   };
 
   Uta.Backups = Backups.init(Uta);
+  Uta.Crypto = Crypto.init(Uta);
   Uta.Entries = Entries.init(Uta);
   Uta.Database = Database.init(Uta);
   Uta.Test = Test.init(Uta);
