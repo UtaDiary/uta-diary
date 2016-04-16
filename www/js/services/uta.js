@@ -1,7 +1,7 @@
 
 angular.module('nikki.services')
 
-.factory('Uta', function($cordovaFile, Backups, Database, Entries, FileUtils) {
+.factory('Uta', function($cordovaFile, Backups, Crypto, Database, Entries, FileUtils, Test) {
 
   var Uta = {
 
@@ -140,6 +140,7 @@ angular.module('nikki.services')
   Uta.Backups = Backups.init(Uta);
   Uta.Entries = Entries.init(Uta);
   Uta.Database = Database.init(Uta);
+  Uta.Test = Test.init(Uta);
 
   window.Uta = Uta;
   return Uta;

@@ -26,9 +26,13 @@ angular.module('nikki.services')
       else {
         startDB(function(err, db) {
           if (err) return console.error(err.message);
-          runTests();
-          runMigrations(function() {
-            resolveDB();
+
+          runTests(function(err) {
+            if (err) console.error("Failed Uta tests: " + err.message);
+
+            runMigrations(function() {
+              resolveDB();
+            });
           });
         });
       }
@@ -52,9 +56,12 @@ angular.module('nikki.services')
     });
   };
 
-  var runTests = function() {
+  var runTests = function(callback) {
     if (Uta.db.settings.enableDebug == true) {
-      Uta.Database.test();
+      return Uta.Test.runAll(callback);
+    }
+    else {
+      return callback(null)
     }
   };
 

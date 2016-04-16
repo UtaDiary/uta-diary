@@ -1,7 +1,7 @@
 
 angular.module('nikki.services')
 
-.factory('Database', function() {
+.factory('Database', function(Test) {
 
   var Uta = null;
   var Database = {
@@ -180,41 +180,6 @@ angular.module('nikki.services')
       return result;
     },
 
-    // Runs a test.
-    runTest: function(test, description) {
-      var result = test();
-      if (result) console.log("Passed test: " + description);
-      else console.error("Failed test: " + description);
-      return result;
-    },
-
-    // Runs multiple tests.
-    runTests: function(tests) {
-      var status = true;
-      for (var t in tests) {
-        var test = tests[t][0];
-        var desc = tests[t][1];
-        var result = Database.runTest(test, desc);
-        if (!result)
-          status = false;
-      }
-      return status;
-    },
-
-    // Runs a module of tests.
-    runModule: function(module) {
-      var tests = module[0];
-      var name = module[1];
-      var result = Database.runTests(tests);
-      if (result) {
-        console.log("Passed module: " + name);
-      }
-      else {
-        console.error("Failed module: " + name);
-      }
-      return result;
-    },
-
     // Tests database migrations.
     testMigrations: function() {
       var tests = [
@@ -222,7 +187,7 @@ angular.module('nikki.services')
         [Database.testMigrateDown, "Should migrate down to initial version"]
       ];
       var module = [tests, "Database Migration"];
-      Database.runModule(module);
+      Uta.Test.runModule(module);
     },
 
     // Test this module.
