@@ -88,7 +88,7 @@ angular.module('nikki.services')
     },
 
     // Derives an encryption key from passphrase and salt.
-    deriveEncryptionKey: function(passphrase, salt, callback) {
+    deriveKey: function(passphrase, salt, callback) {
       var data = Crypto.encodeUTF8(passphrase);
       window.crypto.subtle.importKey('raw', data, 'PBKDF2', false, ['deriveKey'])
       .then(
@@ -106,6 +106,113 @@ angular.module('nikki.services')
       .then(
         function(derivedKey) {
           return callback(null, derivedKey);
+        }
+      )
+      .catch(
+        function(err) {
+          return callback(
+            new Error("Failed deriving encryption key: " + err.message)
+          );
+        }
+      );
+    },
+
+    // Derives encryption and signing keys from passphrase and salt.
+    deriveKeys: function(passphrase, salt, callback) {
+
+      Crypto.deriveParentKey(passphrase, salt, function(err, parentKey) {
+        if (err) return callback(new Error("Failed deriving keys: " + err.message));
+
+        Crypto.deriveEncryptionKey(parentKey, salt, function(err, encryptionKey) {
+          if (err) return callback(new Error("Failed deriving keys: " + err.message));
+
+          Crypto.deriveSigningKey(parentKey, salt, function(err, signingKey) {
+            if (err) return callback(new Error("Failed deriving keys: " + err.message));
+
+            var keys = {
+              parentKey: parentKey,
+              encryptionKey: encryptionKey,
+              signingKey: signingKey
+            };
+            return callback(null, keys);
+          });
+        });
+      });
+    },
+
+    // Derives a key from passphrase and salt.
+    deriveParentKey: function(passphrase, salt, callback) {
+      var data = Crypto.encodeUTF8(passphrase);
+      window.crypto.subtle.importKey('raw', data, 'PBKDF2', false, ['deriveKey', 'deriveBits'])
+      .then(
+        function(key) {
+          var derivationAlgo = { name: 'PBKDF2', salt: salt, iterations: 1e5, hash: 'SHA-256' };
+          var initialKey = key;
+          var length = 256;
+          return window.crypto.subtle.deriveBits(
+            derivationAlgo, initialKey, length
+          );
+        }
+      )
+      .then(
+        function(buffer) {
+          var array = new Uint8Array(buffer);
+          return window.crypto.subtle.importKey('raw', array, 'HKDF', true, ['deriveKey', 'deriveBits']);
+        }
+      )
+      .then(
+        function(parentKey) {
+          return callback(null, parentKey);
+        }
+      )
+      .catch(
+        function(err) {
+          return callback(
+            new Error("Failed deriving parent key: " + err.message)
+          );
+        }
+      );
+    },
+
+    // Derives signing key from a parent key.
+    deriveSigningKey: function(parentKey, salt, callback) {
+      var info = Crypto.encodeUTF8('MAC-Key');
+      var derivationAlgo = { name: 'HKDF', hash: 'SHA-256', salt: salt, info: info };
+      var initialKey = parentKey;
+      var derivedKeyAlgo = { name: 'HMAC', hash: 'SHA-256', length: 256 };
+      var extractable = true;
+      var usages = [ 'sign', 'verify' ];
+      window.crypto.subtle.deriveKey(
+        derivationAlgo, initialKey, derivedKeyAlgo, extractable, usages
+      )
+      .then(
+        function(encryptionKey) {
+          return callback(null, encryptionKey)
+        }
+      )
+      .catch(
+        function(err) {
+          return callback(
+            new Error("Failed deriving signing key: " + err.message)
+          );
+        }
+      );
+    },
+
+    // Derives encryption key from a parent key.
+    deriveEncryptionKey: function(parentKey, salt, callback) {
+      var info = Crypto.encodeUTF8('AES-Key');
+      var derivationAlgo = { name: 'HKDF', hash: 'SHA-256', salt: salt, info: info };
+      var initialKey = parentKey;
+      var derivedKeyAlgo = { name: 'AES-CBC', length: 256 };
+      var extractable = true;
+      var usages = [ 'encrypt', 'decrypt', 'wrapKey', 'unwrapKey' ];
+      window.crypto.subtle.deriveKey(
+        derivationAlgo, initialKey, derivedKeyAlgo, extractable, usages
+      )
+      .then(
+        function(encryptionKey) {
+          return callback(null, encryptionKey)
         }
       )
       .catch(
@@ -186,11 +293,34 @@ angular.module('nikki.services')
       return done();
     },
 
+    // Tests derivation of keys from passphrase and salt.
+    testDeriveKeys: function(done) {
+      var passphrase = 'test';
+      var salt = Crypto.generateSalt(16);
+      Crypto.deriveKeys(passphrase, salt, function(err, keys) {
+        if (err) return done(err);
+
+        if (! keys)
+          return done(new Error("The keys should be returned"));
+
+        if (! keys.parentKey instanceof CryptoKey)
+          return done(new Error("The parent key should be an instance of CryptoKey"));
+
+        if (! keys.encryptionKey instanceof CryptoKey)
+          return done(new Error("The encryption key should be an instance of CryptoKey"));
+
+        if (! keys.signingKey instanceof CryptoKey)
+          return done(new Error("The signing key should be an instance of CryptoKey"));
+
+        return done();
+      });
+    },
+
     // Tests derivation of encryption key from passphrase and salt.
     testDerive: function(done) {
       var passphrase = 'test';
       var salt = Crypto.generateSalt(16);
-      Crypto.deriveEncryptionKey(passphrase, salt, function(err, key) {
+      Crypto.deriveKey(passphrase, salt, function(err, key) {
         if (err) return done(err);
 
         if (! key instanceof CryptoKey)
@@ -227,10 +357,13 @@ angular.module('nikki.services')
       var passphrase = 'test';
       var salt = Crypto.generateSalt(16);
       var plaintext = 'Hello!';
-      Crypto.deriveEncryptionKey(passphrase, salt, function(er1, key) {
-        Crypto.encrypt(plaintext, key, function(er2, result) {
-          if (er1 || er2) return done(er1 || er2);
 
+      Crypto.deriveKeys(passphrase, salt, function(err, keys) {
+        if (err) return done(err);
+        var key = keys.encryptionKey;
+
+        Crypto.encrypt(plaintext, key, function(err, result) {
+          if (err) return done(err);
           var ciphertext = result.ciphertext;
 
           if (!ciphertext)
@@ -249,7 +382,7 @@ angular.module('nikki.services')
       var passphrase = 'test';
       var salt = Crypto.generateSalt(16);
       var plaintext = 'Hello!';
-      Crypto.deriveEncryptionKey(passphrase, salt, function(er1, key) {
+      Crypto.deriveKey(passphrase, salt, function(er1, key) {
         Crypto.encrypt(plaintext, key, function(er2, result) {
           Crypto.decrypt(result.ciphertext, key, result.algorithm, function(er3, decrypted) {
             if (er1 || er2 || er3) return done(er1 || er2 || er3);
@@ -276,7 +409,7 @@ angular.module('nikki.services')
         0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7,
         0x8, 0x9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf
       ]);
-      Crypto.deriveEncryptionKey(passphrase, salt, function(er1, key) {
+      Crypto.deriveKey(passphrase, salt, function(er1, key) {
         Crypto.exportKey(key, function(er2, exportedKey) {
           if (er1 || er2) return done(er1 || er2);
 
@@ -306,6 +439,7 @@ angular.module('nikki.services')
     testEncryption: function(callback) {
       var tests = [
         [Crypto.testSalt, "Should generate salt with given length in bytes"],
+        [Crypto.testDeriveKeys, "Should derive keys from passphrase and salt"],
         [Crypto.testDerive, "Should derive encryption key from passphrase and salt"],
         [Crypto.testEncode, "Should encode and decode an array buffer"],
         [Crypto.testEncrypt, "Should encrypt plaintext with key"],
