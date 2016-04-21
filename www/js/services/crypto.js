@@ -186,8 +186,8 @@ angular.module('nikki.services')
         derivationAlgo, initialKey, derivedKeyAlgo, extractable, usages
       )
       .then(
-        function(encryptionKey) {
-          return callback(null, encryptionKey)
+        function(signingKey) {
+          return callback(null, signingKey)
         }
       )
       .catch(
@@ -262,6 +262,43 @@ angular.module('nikki.services')
       .catch(
         function(err) {
           return callback(new Error("Failed decryption: " + err.message));
+        }
+      )
+    },
+
+    // Signs message with given key.
+    sign: function(key, message, callback) {
+      var algorithm = 'HMAC';
+      var messageData = Crypto.encodeBase64(message);
+      window.crypto.subtle.sign(algorithm, key, messageData)
+      .then(
+        function(buffer) {
+          var array = new Uint8Array(buffer);
+          var signature = Crypto.decodeBase64(array);
+          return callback(null, signature);
+        }
+      )
+      .catch(
+        function(err) {
+          return callback(new Error("Failed signing: " + err.message));
+        }
+      )
+    },
+
+    // Verifies signature for message with given key.
+    verify: function(key, message, signature, callback) {
+      var algorithm = 'HMAC';
+      var messageData = Crypto.encodeBase64(message);
+      var signatureData = Crypto.encodeBase64(signature);
+      window.crypto.subtle.verify(algorithm, key, signatureData, messageData)
+      .then(
+        function(isValid) {
+          return callback(null, isValid);
+        }
+      )
+      .catch(
+        function(err) {
+          return callback(new Error("Failed verification: " + err.message));
         }
       )
     },
@@ -402,6 +439,37 @@ angular.module('nikki.services')
       });
     },
 
+    // Tests signing and verification of message with key.
+    testSignAndVerify: function(done) {
+      var passphrase = 'test';
+      var salt = Crypto.generateSalt(16);
+      var plaintext = 'Hello!';
+
+      Crypto.deriveKeys(passphrase, salt, function(err, keys) {
+        if (err) return done(err);
+        var encryptionKey = keys.encryptionKey;
+        var signingKey = keys.signingKey;
+
+        Crypto.encrypt(plaintext, encryptionKey, function(err, result) {
+          if (err) return done(err);
+          var ciphertext = result.ciphertext;
+
+          Crypto.sign(signingKey, ciphertext, function(err, signature) {
+            if (err) return done(err);
+
+            Crypto.verify(signingKey, ciphertext, signature, function(err, isValid) {
+              if (err) return done(err);
+
+              if (! isValid)
+                return done(new Error("Valid signature should validate successfully"));
+
+              return done();
+            });
+          });
+        });
+      });
+    },
+
     // Tests export of encryption key.
     testExport: function(done) {
       var passphrase = 'test';
@@ -444,6 +512,7 @@ angular.module('nikki.services')
         [Crypto.testEncode, "Should encode and decode an array buffer"],
         [Crypto.testEncrypt, "Should encrypt plaintext with key"],
         [Crypto.testDecrypt, "Should decrypt ciphertext with key"],
+        [Crypto.testSignAndVerify, "Should sign and verify an encrypted message"],
         [Crypto.testExport, "Should export the key as a Base58 string"]
       ];
       var module = [tests, "Crypto Encryption Tests"];
