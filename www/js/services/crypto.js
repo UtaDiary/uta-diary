@@ -225,7 +225,7 @@ angular.module('nikki.services')
     },
 
     // Encrypts plaintext with given key.
-    encrypt: function(plaintext, key, callback) {
+    encrypt: function(key, plaintext, callback) {
       var iv = Crypto.generateIV(16);
       var algo = { name: 'AES-CBC', iv: iv };
       var data = Crypto.encodeUTF8(plaintext);
@@ -249,7 +249,7 @@ angular.module('nikki.services')
     },
 
     // Decrypts ciphertext with given key.
-    decrypt: function(ciphertext, key, algorithm, callback) {
+    decrypt: function(key, ciphertext, algorithm, callback) {
       var data = Crypto.encodeBase64(ciphertext);
       window.crypto.subtle.decrypt(algorithm, key, data)
       .then(
@@ -399,7 +399,7 @@ angular.module('nikki.services')
         if (err) return done(err);
         var key = keys.encryptionKey;
 
-        Crypto.encrypt(plaintext, key, function(err, result) {
+        Crypto.encrypt(key, plaintext, function(err, result) {
           if (err) return done(err);
           var ciphertext = result.ciphertext;
 
@@ -420,8 +420,8 @@ angular.module('nikki.services')
       var salt = Crypto.generateSalt(16);
       var plaintext = 'Hello!';
       Crypto.deriveKey(passphrase, salt, function(er1, key) {
-        Crypto.encrypt(plaintext, key, function(er2, result) {
-          Crypto.decrypt(result.ciphertext, key, result.algorithm, function(er3, decrypted) {
+        Crypto.encrypt(key, plaintext, function(er2, result) {
+          Crypto.decrypt(key, result.ciphertext, result.algorithm, function(er3, decrypted) {
             if (er1 || er2 || er3) return done(er1 || er2 || er3);
 
             if (!decrypted)
@@ -450,7 +450,7 @@ angular.module('nikki.services')
         var encryptionKey = keys.encryptionKey;
         var signingKey = keys.signingKey;
 
-        Crypto.encrypt(plaintext, encryptionKey, function(err, result) {
+        Crypto.encrypt(encryptionKey, plaintext, function(err, result) {
           if (err) return done(err);
           var ciphertext = result.ciphertext;
 
