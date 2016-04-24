@@ -39,20 +39,32 @@ angular.module('nikki.services')
     }, 500);
   };
 
-  var startDB = function(callback) {
-    Uta.Entries.examples.welcome.text = welcomeText;
-    Uta.Entries.start(function(err) {
-      if (err) return callback(err);
-
-      // Check for existing entries
-      if (Uta.Entries.all().length == 0) {
-        // Add a welcome entry
-        Uta.Entries.create(Uta.Entries.examples.welcome);
-        Uta.Entries.commit();
+  var loadWelcomeText = function(callback) {
+    welcomeText
+    .then(
+      function(text) {
+        Uta.Entries.examples.welcome.text = text;
+        return callback();
       }
-      console.log("Initial entries: ", Uta.Entries.all());
+    )
+  };
 
-      return callback(null, Uta.Entries.db());
+  var startDB = function(callback) {
+    loadWelcomeText(function() {
+      Uta.Entries.start(function(err) {
+        if (err) return callback(err);
+
+        // Check for existing entries
+        if (Uta.Entries.all().length == 0) {
+          // Add a welcome entry
+          var welcome = _.clone( Uta.Entries.examples.welcome );
+          Uta.Entries.create(welcome);
+          Uta.Entries.commit();
+        }
+        console.log("Initial entries: ", Uta.Entries.all());
+
+        return callback(null, Uta.Entries.db());
+      });
     });
   };
 

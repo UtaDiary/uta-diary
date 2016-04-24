@@ -155,8 +155,8 @@ angular.module('nikki.services')
     testMigrateUp: function() {
       var lastId = Database.migrations.slice(-1)[0].id;
       var db = Database.migrateUp(null, lastId);
-      var result1 = _.isMatch(db.entries, Database.defaults().entries);
-      var result2 = _.isMatch(db.settings, Database.defaults().settings);
+      var result1 = _.isEqual(db.entries, Database.defaults().entries);
+      var result2 = _.isEqual(db.settings, Database.defaults().settings);
       var result3 = _.isEqual(db.lastWrittenAt, Database.defaults().lastWrittenAt);
       return result1 && result2 && result3;
     },
