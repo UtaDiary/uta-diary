@@ -42,11 +42,9 @@ angular.module('nikki.services')
         version: Vault.version,
         encrypted: false
       },
-      metadata: {
-        salt: null,
-        encryptionAlgorithm: null,
-        signatureAlgorithm: null
-      },
+      salt: null,
+      encryptionAlgorithm: null,
+      signatureAlgorithm: null,
       ciphertext: null,
       signature: null
     },
@@ -56,7 +54,7 @@ angular.module('nikki.services')
 
     // Gets current salt value.
     salt: function() {
-      return this.storage.metadata.salt;
+      return this.storage.salt;
     },
 
     // Generates a new salt value;
@@ -74,10 +72,10 @@ angular.module('nikki.services')
       Crypto.deriveKeys(passphrase, salt, function(err, keys) {
         if (err) return q.reject(err);
 
-        Crypto.encrypt(keys.encryptionKey, plaintext, function(err, result) {
+        Crypto.encrypt(keys.encryptionKey, plaintext, function(err, message) {
           if (err) return q.reject(err);
 
-          Crypto.sign(keys.signingKey, result.ciphertext, function(err, signature) {
+          Crypto.sign(keys.signingKey, message.ciphertext, function(err, signature) {
             if (err) return q.reject(err);
 
             self.storage = {
@@ -85,12 +83,10 @@ angular.module('nikki.services')
                 version: Vault.version,
                 encrypted: true
               },
-              metadata: {
-                salt: salt,
-                encryptionAlgorithm: result.algorithm,
-                signatureAlgorithm: 'HMAC'
-              },
-              ciphertext: result.ciphertext,
+              salt: salt,
+              encryptionAlgorithm: message.algorithm,
+              signatureAlgorithm: 'HMAC',
+              ciphertext: message.ciphertext,
               signature: signature
             };
 
@@ -106,8 +102,8 @@ angular.module('nikki.services')
     retrieve: function(passphrase) {
       var q = $q.defer();
       var self = this;
-      var salt = self.storage.metadata.salt;
-      var algorithm = self.storage.metadata.encryptionAlgorithm;
+      var salt = self.storage.salt;
+      var algorithm = self.storage.encryptionAlgorithm;
       var ciphertext = self.storage.ciphertext;
       var signature = self.storage.signature;
 
@@ -149,14 +145,14 @@ angular.module('nikki.services')
 
     // Inflates deserialized salt.
     inflateSalt: function() {
-      var salt = this.storage.metadata.salt;
-      if (salt)  this.storage.metadata.salt = Vault.inflateTypedArray(salt);
+      var salt = this.storage.salt;
+      if (salt)  this.storage.salt = Vault.inflateTypedArray(salt);
     },
 
     // Inflates deserialized initialization vector.
     inflateIV: function() {
-      var iv = this.storage.metadata.encryptionAlgorithm.iv;
-      if (iv)  this.storage.metadata.encryptionAlgorithm.iv = Vault.inflateTypedArray(iv);
+      var iv = this.storage.encryptionAlgorithm.iv;
+      if (iv)  this.storage.encryptionAlgorithm.iv = Vault.inflateTypedArray(iv);
     },
 
     // Serializes this vault to JSON string.
@@ -205,16 +201,16 @@ angular.module('nikki.services')
           if (! vault.storage.vault.encrypted == true)
             return done(new Error("Encryption status should be true"));
 
-          if (! vault.storage.metadata.salt instanceof Uint8Array)
+          if (! vault.storage.salt instanceof Uint8Array)
             return done(new Error("Salt should be an typed array"));
 
-          if (! vault.storage.metadata.encryptionAlgorithm.name == 'AES-CBC')
+          if (! vault.storage.encryptionAlgorithm.name == 'AES-CBC')
             return done(new Error("Encryption algorithm should be AES"));
 
-          if (! vault.storage.metadata.encryptionAlgorithm.iv instanceof Uint8Array)
+          if (! vault.storage.encryptionAlgorithm.iv instanceof Uint8Array)
             return done(new Error("Encryption initialization vector should be a typed array"));
 
-          if (! vault.storage.metadata.signatureAlgorithm == 'HMAC')
+          if (! vault.storage.signatureAlgorithm == 'HMAC')
             return done(new Error("Signature algorithm should be HMAC"));
 
           if (! vault.storage.ciphertext.match(/[a-zA-Z0-9/+=]+/))
