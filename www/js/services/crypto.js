@@ -1,5 +1,5 @@
 
-angular.module('nikki.services')
+angular.module('diary.services')
 
 .factory('Base58', function() {
   var alphabet = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';

@@ -1,9 +1,9 @@
-<div class="nikki entry-text"
+<div class="diary entry-text"
      ng-hide="state.editingText" ng-click="startEditor($event)"
      ng-bind-html="entry.text | renderMarkdown">
 </div>
 <form ng-show="state.editingText">
-  <textarea msd-elastic="\n" class="nikki entry-text-editor"
+  <textarea msd-elastic="\n" class="diary entry-text-editor"
             ng-model="entry.text" placeholder="What's on my mind today?"
             ng-change="textChanged()"
             ng-blur="preview()"></textarea>
@@ -11,9 +11,9 @@
     <i class="icon ion-checkmark-round"></i> Preview
   </button>
 </form>
-<div class="nikki notifications">
-  <div class="nikki notification" ng-repeat="notification in notifications"
+<div class="diary notifications">
+  <div class="diary notification" ng-repeat="notification in notifications"
        ng-class="{ start: notification.start, fadeIn: notification.fadeIn, fadeOut: notification.fadeOut }" >
-    <span class="nikki message" ng-bind="notification.message"></span>
+    <span class="diary message" ng-bind="notification.message"></span>
   </div>
 </div>

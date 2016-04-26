@@ -1,5 +1,5 @@
 
-angular.module('nikki.services')
+angular.module('diary.services')
 
 .factory('FileBrowser', function($q) {
   var FileBrowser = {

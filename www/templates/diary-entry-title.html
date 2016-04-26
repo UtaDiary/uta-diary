@@ -1,0 +1,7 @@
+<h2 class="diary entry-title" ng-hide="state.editingTitle" ng-bind="entry.title" ng-click="startTitleEditor()"></h2>
+<form name="titleForm" ng-show="state.editingTitle">
+  <h2 class="diary entry-title">
+    <input class="diary entry-title-editor" type="text" ng-model="entry.title" ng-blur="saveTitleChanges()"/>
+  </h2>
+</form>
+<div class="diary entry-meta">By {{entry.author || "Kitsune's Dear Friend"}}, {{entry.date | date:'MMMM dd, yyyy'}}</div>

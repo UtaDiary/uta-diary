@@ -1,5 +1,5 @@
 
-angular.module('nikki.services')
+angular.module('diary.services')
 
 .factory('Vault', function($q, Crypto, Test) {
 

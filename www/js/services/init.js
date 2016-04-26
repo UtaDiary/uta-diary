@@ -1,5 +1,5 @@
 
-angular.module('nikki.services')
+angular.module('diary.services')
 
 .factory('welcomeText', function($http) {
     console.log("Loading welcome text...");

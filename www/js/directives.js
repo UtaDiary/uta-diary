@@ -1,8 +1,8 @@
-angular.module('nikki.directives', [])
+angular.module('diary.directives', [])
 
-.directive('nikkiEntry', [function() {
+.directive('diaryEntry', [function() {
   return {
-    templateUrl: 'templates/nikki-entry.html',
+    templateUrl: 'templates/diary-entry.html',
     restrict: 'AE',
     scope: {
       entry: '='
@@ -17,9 +17,9 @@ angular.module('nikki.directives', [])
   };
 }])
 
-.directive('nikkiEntryTitle', function(Entries, $timeout) {
+.directive('diaryEntryTitle', function(Entries, $timeout) {
   return {
-    templateUrl: 'templates/nikki-entry-title.html',
+    templateUrl: 'templates/diary-entry-title.html',
     restrict: 'AE',
     scope: {
       state: '=',
@@ -44,9 +44,9 @@ angular.module('nikki.directives', [])
   };
 })
 
-.directive('nikkiEntryText', function(Entries, $timeout, $window, $cordovaInAppBrowser) {
+.directive('diaryEntryText', function(Entries, $timeout, $window, $cordovaInAppBrowser) {
   return {
-    templateUrl: 'templates/nikki-entry-text.html',
+    templateUrl: 'templates/diary-entry-text.html',
     restrict: 'AE',
     scope: {
       state: '=',

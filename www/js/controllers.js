@@ -1,4 +1,4 @@
-angular.module('nikki.controllers', [])
+angular.module('diary.controllers', [])
 
 .filter('renderMarkdown', function() {
   return function(text) {

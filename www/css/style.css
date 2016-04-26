@@ -12,104 +12,104 @@ $royal:                           #886aea !default;
 $dark:                            #444 !default;
 */
 
-.nikki.intro .scroll {
+.diary.intro .scroll {
   height: 100%;
 }
-.nikki.intro .slider {
+.diary.intro .slider {
   height: 100%;
 }
-.nikki.intro .nikki.slides
+.diary.intro .diary.slides
 {
   background: url("../img/splash.png");
   background-size: cover;
   background-position: center;
 }
-.nikki.intro .nikki.slides ion-slide
+.diary.intro .diary.slides ion-slide
 {
   background: linear-gradient(to bottom, rgba(0,0,0,0.25), rgba(0,0,0,0) 33%);
 }
-.nikki.intro .nikki.slides ion-slide *
+.diary.intro .diary.slides ion-slide *
 {
   color: #fff;
   text-shadow: 0px 2px 2px rgba(0,0,0,0.5);
 }
-.nikki.intro .nikki.slides .slider-pager-page
+.diary.intro .diary.slides .slider-pager-page
 {
   color: #fff;
 }
-.nikki.intro .nikki.slides p
+.diary.intro .diary.slides p
 {
   font-size: 20px;
 }
 
-.nikki.new-entry, .nikki.new-entry * {
+.diary.new-entry, .diary.new-entry * {
   background: #11c1f3;
   color: #fff;
 }
-.nikki.new-entry-header {
+.diary.new-entry-header {
   color: #fff;
 }
 
-nikki-entry-title .nikki.entry-title,
-nikki-entry-title .nikki.entry-title-editor {
+diary-entry-title .diary.entry-title,
+diary-entry-title .diary.entry-title-editor {
   margin: 0px;
   padding: 0px;
   font-size: 30px;
 }
 
-nikki-entry-text .nikki.entry-text {
+diary-entry-text .diary.entry-text {
   min-height: 20em;
 }
 
-nikki-entry-text .nikki.entry-text h1 { font-size: 30px; }
-nikki-entry-text .nikki.entry-text h2 { font-size: 25px; }
-nikki-entry-text .nikki.entry-text h3 { font-size: 20px; }
-nikki-entry-text .nikki.entry-text h4 { font-size: 16px; }
+diary-entry-text .diary.entry-text h1 { font-size: 30px; }
+diary-entry-text .diary.entry-text h2 { font-size: 25px; }
+diary-entry-text .diary.entry-text h3 { font-size: 20px; }
+diary-entry-text .diary.entry-text h4 { font-size: 16px; }
 
-nikki-entry-text .nikki.entry-text blockquote {
+diary-entry-text .diary.entry-text blockquote {
   margin: 10px 0px;
   border-left: 5px solid #ccc;
   font-style: italic;
 }
-nikki-entry-text .nikki.entry-text code {
+diary-entry-text .diary.entry-text code {
   font-family: "Droid Sans Mono", "Menlo-Regular", "DejaVu Sans Mono", Monospace;
 }
-nikki-entry-text .nikki.entry-text ol {
+diary-entry-text .diary.entry-text ol {
   list-style: decimal inside none;
 }
-nikki-entry-text .nikki.entry-text ul {
+diary-entry-text .diary.entry-text ul {
   list-style: disc inside none;
 }
-nikki-entry-text .nikki.entry-text-editor {
+diary-entry-text .diary.entry-text-editor {
   width: 100%;
 }
 
-nikki-entry-text .nikki.notifications {
+diary-entry-text .diary.notifications {
   position: fixed;
   top: 0px;
   right: 0px;
 }
 
-nikki-entry-text .nikki.notifications .notification {
+diary-entry-text .diary.notifications .notification {
   transition: all 2s ease;
 }
-nikki-entry-text .nikki.notifications .notification.start {
+diary-entry-text .diary.notifications .notification.start {
   transition: all 2s ease;
   height: 0;
   opacity: 0;
 }
-nikki-entry-text .nikki.notifications .notification.fadeIn {
+diary-entry-text .diary.notifications .notification.fadeIn {
   transition: all 0.75s ease;
   height: 100%;
   opacity: 0.9;
 }
-nikki-entry-text .nikki.notifications .notification.fadeOut {
+diary-entry-text .diary.notifications .notification.fadeOut {
   transition: all 1.5s ease;
   height: 0;
   opacity: 0;
 }
 
-nikki-entry-text .nikki.notifications .notification .message {
+diary-entry-text .diary.notifications .notification .message {
   display: inline-block;
   margin: 1px;
   border: 1px solid #0da;
@@ -120,12 +120,12 @@ nikki-entry-text .nikki.notifications .notification .message {
   text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.2);
 }
 
-.nikki.kitsune-title {
+.diary.kitsune-title {
   margin: 0px 0 0 0;
 }
 
-.nikki.entry-meta,
-.nikki.kitsune-meta {
+.diary.entry-meta,
+.diary.kitsune-meta {
   color: #888;
   margin: -4px 0 16px 0;
 }

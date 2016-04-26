@@ -1,5 +1,5 @@
 
-angular.module('nikki.services')
+angular.module('diary.services')
 
 .factory('Entries', function($cordovaFile, FileUtils, Database) {
 
@@ -12,7 +12,7 @@ angular.module('nikki.services')
       author: 'Kitsune',
       date: new Date(2015, 06, 17),
       title: 'Welcome!',
-      text: "Thanks for using Uta Nikki!\n\nHopefully, these notes will help you get started."
+      text: "Thanks for using Uta Diary!\n\nHopefully, these notes will help you get started."
     },
     first: {
       id: 1,
@@ -60,7 +60,7 @@ angular.module('nikki.services')
       ionic.Platform.ready(function() {
         if (!window.cordova) {
           console.log("Checking for entries in localStorage...");
-          if (window.localStorage['nikkiDB']) {
+          if (window.localStorage['diaryDB']) {
             return Entries.reload(callback);
           }
           else {
@@ -122,7 +122,7 @@ angular.module('nikki.services')
     reload: function(callback) {
       if (!window.cordova) {
         console.log("Reloading entries from localStorage...");
-        var json = window.localStorage['nikkiDB'];
+        var json = window.localStorage['diaryDB'];
         if (!json) {
           return callback(new Error("No database found in localStorage"));
         }
@@ -184,7 +184,7 @@ angular.module('nikki.services')
 
       if (!window.cordova) {
         console.log("Saving to localStorage...");
-        window.localStorage['nikkiDB'] = json;
+        window.localStorage['diaryDB'] = json;
         return callback(null);
       }
       else {

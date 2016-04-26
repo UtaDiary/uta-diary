@@ -1,6 +1,6 @@
-// Nikki
+// Diary
 
-angular.module('nikki', ['ionic', 'ngCordova', 'monospaced.elastic', 'nikki.controllers', 'nikki.services', 'nikki.directives'])
+angular.module('diary', ['ionic', 'ngCordova', 'monospaced.elastic', 'diary.controllers', 'diary.services', 'diary.directives'])
 
 .run(function($ionicPlatform, Uta, Entries) {
   $ionicPlatform.ready(function() {
