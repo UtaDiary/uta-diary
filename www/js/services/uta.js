@@ -262,6 +262,44 @@ angular.module('diary.services')
       );
     },
 
+    // Serializes the encrypted database for storage.
+    serializeVault: function() {
+      var q = $q.defer();
+      var vault = new Vault();
+      var passphrase = Uta.keyRing.passphrase;
+      var data = Uta.db;
+      vault.store(passphrase, data)
+      .then(
+        function() {
+          var json = vault.serialize();
+          return q.resolve(json);
+        }
+      )
+      .catch(
+        function(error) {
+          return q.reject(new Error("Failed serializing vault: " + error.message));
+        }
+      );
+      return q.promise;
+    },
+
+    // Serializes the non-encrypted database for storage.
+    serializeDB: function() {
+      var q = $q.defer();
+      var json = angular.toJson(Uta.db);
+      q.resolve(json);
+      return q.promise;
+    },
+
+    // Serializes the database for storage.
+    serialize: function(database) {
+      var useEncryption = Uta.db.settings.enableEncryption;
+      if (useEncryption)
+        return Uta.serializeVault();
+      else
+        return Uta.serializeDB();
+    },
+
     // Commits database.
     commit: function(callback) {
       return Uta.Entries.commit(callback);
