@@ -150,22 +150,43 @@ angular.module('diary.services')
       });
     },
 
+    createBackupDirs: function() {
+      var q = $q.defer();
+      console.log("Creating backup directories");
+      $cordovaFile.createDir(Uta.getBackupRoot(), 'UtaDiary', true)
+      .then(
+        function(success) {
+          return $cordovaFile.createDir(Uta.getBackupParent(), 'backups', true)
+        }
+      )
+      .then(
+        function() {
+          return q.resolve();
+        }
+      )
+      .catch(
+        function(error) {
+          return q.reject(new Error("Error creating backup directories: " + error.message));
+        }
+      );
+      return q.promise;
+    },
+
     // Exports database to file.
     exportFile: function(path, file, callback) {
       console.log("Exporting file: " + file);
-
-      $cordovaFile.createDir(Uta.getBackupRoot(), 'UtaDiary', true).then(
-      function(success) {
-        return $cordovaFile.createDir(Uta.getBackupParent(), 'backups', true);
-      },
-      function(error) {
-        return callback(new Error("Error creating backup directories: " + error.message));
-      })
+      Uta.createBackupDirs()
       .then(
-      function(success) {
-        var data = angular.toJson(Uta.db);
-       return FileUtils.writeFile(path, file, data, true, callback);
-      });
+        function() {
+          var data = angular.toJson(Uta.db);
+          return FileUtils.writeFile(path, file, data, true, callback);
+        }
+      )
+      .catch(
+        function(error) {
+          return callback(new Error("Failed exporting file: " + error.message));
+        }
+      );
     },
 
     // Deletes a given file.
