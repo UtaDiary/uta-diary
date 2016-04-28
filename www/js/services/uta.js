@@ -61,6 +61,7 @@ angular.module('diary.services')
     }
   };
 
+  // Initialises the module.
   KeyRing.init = function(uta) {
     Uta = uta;
     return this;
@@ -115,8 +116,70 @@ angular.module('diary.services')
       });
     },
 
+    // Loads database from a vault.
+    loadVault: function(vault, callback) {
+      var passphrase = Uta.keyRing.passphrase;
+      vault.retrieve(passphrase)
+      .then(
+        function(data) {
+          Uta.importDB(data, callback);
+        }
+      )
+      .catch(
+        function(err) {
+          return callback(new Error("Failed loading vault: " + err.message));
+        }
+      );
+    },
+
+    // Saves database to a vault.
+    saveVault: function(path, filename, callback) {
+      var passphrase = Uta.keyRing.passphrase;
+      var data = Uta.db;
+      var vault = new Vault();
+      vault.store(passphrase, data)
+      .then(
+        function() {
+          return Uta.createBackupDirs();
+        }
+      )
+      .then(
+        function() {
+          var json = vault.serialize();
+          return FileUtils.writeFile(path, filename, json, true, function(err) {
+            if (err)
+              return callback(new Error("Failed saving vault: " + err.message));
+            else
+              return callback(null);
+          });
+        }
+      )
+      .catch(
+        function(err) {
+          return callback(new Error("Failed saving vault: " + err.message));
+        }
+      );
+    },
+
+    // Loads JSON for database or vault.
+    loadJSON: function(json, callback) {
+      var data = angular.fromJson(json);
+      var isVault = data.vault ? true : false;
+
+      if (isVault) {
+        var vault = new Vault();
+        vault.deserialize(json);
+        Uta.loadVault(vault, callback);
+      }
+      else {
+        Uta.importDB(data, callback);
+      }
+    },
+
     // Imports a database object.
     importDB: function(database, callback) {
+      console.log("Importing database: " + JSON.stringify(database, null, '  '));
+
       var isValid = Database.validateDB(database);
       if (isValid) {
         Uta.db = database;
@@ -132,21 +195,18 @@ angular.module('diary.services')
       console.log("Importing file: " + file);
 
       $cordovaFile.readAsText(path, file).then(
-      function(success) {
-        var json = success;
-        var imported = angular.fromJson(json);
+      function(json) {
         console.log("Imported JSON: " + json);
-        console.log("Imported object: " + JSON.stringify(imported, null, 2));
 
-        Uta.importDB(imported, function(err) {
+        Uta.loadJSON(json, function(err) {
           if (err)
-            return callback(new Error("Error importing database: " + err.message));
+            return callback(new Error("Error importing file: " + err.message));
           else
             return callback(null);
         });
       },
       function(error) {
-        return callback(new Error("Error reading file: " + JSON.stringify(error, null, 2)));
+        return callback(new Error("Error reading file: " + JSON.stringify(error, null, '  ')));
       });
     },
 
