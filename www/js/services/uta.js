@@ -1,7 +1,75 @@
 
 angular.module('diary.services')
 
-.factory('Uta', function($cordovaFile, Backups, Crypto, Database, Entries, FileUtils, Test, Vault) {
+.factory('KeyRing', function() {
+
+  var Uta = null;
+
+  /**
+   * The KeyRing class holds a user's secret keys,
+   * allowing for cryptographic operations after entering
+   * their passphrase once each time the app is started.
+   *
+   * This sensitive information is stored only in memory,
+   * rather than persisted to the filesystem with other data.
+   *
+   * Example:
+   *
+   *    // Create a new key ring
+   *    KeyRing.create(passphrase, salt).then(
+   *      function(keyRing) {
+   *        var pass          = keyRing.passphrase;
+   *        var salt          = keyRing.salt;
+   *        var parentKey     = keyRing.keys.parentKey;
+   *        var encryptionKey = keyRing.keys.encryptionKey;
+   *        var signingKey    = keyRing.keys.signingKey;
+   *      }
+   *    );
+   *
+   */
+  var KeyRing = function() {};
+
+  // Creates a new key ring from passphrase and salt.
+  KeyRing.create = function(passphrase, salt) {
+    var keyRing = new KeyRing();
+    var promise = keyRing.configure(passphrase, salt);
+    return promise;
+  };
+
+  KeyRing.prototype = {
+
+    constructor: KeyRing,
+    passphrase: null,
+    salt: null,
+    keys: null,
+
+    // Configures this key ring with passphrase and salt.
+    configure: function(passphrase, salt) {
+      var q = $q.defer();
+      var self = this;
+
+      Crypto.deriveKeys(passphrase, salt, function(err, keys) {
+        if (err) return q.reject(err);
+
+        self.passphrase = passphrase;
+        self.salt = salt;
+        self.keys = keys;
+
+        return q.resolve(self);
+      });
+      return q.promise;
+    }
+  };
+
+  KeyRing.init = function(uta) {
+    Uta = uta;
+    return this;
+  };
+
+  return KeyRing;
+})
+
+.factory('Uta', function($cordovaFile, Backups, Crypto, Database, Entries, FileUtils, KeyRing, Test, Vault) {
 
   var Uta = {
 
@@ -141,6 +209,7 @@ angular.module('diary.services')
   Uta.Crypto = Crypto.init(Uta);
   Uta.Entries = Entries.init(Uta);
   Uta.Database = Database.init(Uta);
+  Uta.KeyRing = KeyRing.init(Uta);
   Uta.Test = Test.init(Uta);
   Uta.Vault = Vault.init(Uta);
 
