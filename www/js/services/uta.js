@@ -292,7 +292,7 @@ angular.module('diary.services')
     },
 
     // Serializes the database for storage.
-    serialize: function(database) {
+    serialize: function() {
       var useEncryption = Uta.db.settings.enableEncryption;
       if (useEncryption)
         return Uta.serializeVault();
@@ -300,9 +300,103 @@ angular.module('diary.services')
         return Uta.serializeDB();
     },
 
-    // Commits database.
+    // Reloads the database.
+    reload: function(callback) {
+      Uta.load()
+      .then(
+        function(json) {
+          return Uta.loadJSON(json);
+        }
+      )
+      .then(
+        function() {
+          return callback(null);
+        }
+      )
+      .catch(
+        function(error) {
+          return callback(new Error("Failed reloading database: " + error.message));
+        }
+      );
+    },
+
+    // Commits the database.
     commit: function(callback) {
-      return Uta.Entries.commit(callback);
+      Uta.serialize()
+      .then(
+        function(json) {
+          return Uta.save(json);
+        }
+      )
+      .then(
+        function() {
+          return callback(null);
+        }
+      )
+      .catch(
+        function(error) {
+          return callback(new Error("Failed commiting database: " + error.message));
+        }
+      );
+    },
+
+    // Loads application data.
+    load: function() {
+      if (window.cordova) {
+        return Uta.readFile("entries.json", Uta.getDataDirectory());
+      }
+      else {
+        return Uta.readLocalStorage("diaryDB");
+      }
+    },
+
+    // Saves application data.
+    save: function(data) {
+      var isMobile = window.cordova;
+      if (isMobile) {
+        var path = Uta.getDataDirectory();
+        var file = "entries.json";
+        return Uta.saveFile(path, file, json);
+      }
+      else {
+        return Uta.saveLocalStorage(key, json);
+      }
+    },
+
+    // Writes data to the file system.
+    writeFile: function(path, filename, data) {
+      return FileUtils.writeFileAsync(path, filename, data, true);
+    },
+
+    // Writes data to local storage.
+    writeLocalStorage: function(key, data) {
+      var q = $q.defer();
+      window.localStorage[key] = data;
+      q.resolve();
+      return q.promise;
+    },
+
+    // Reads data from the file system.
+    readFile: function(path, filename) {
+      return $cordovaFile.readAsText(path, filename)
+      .then(
+        function(data) {
+          return data;
+        }
+      )
+      .catch(
+        function(error) {
+          return new Error("Failed reading file: " + error.message);
+        }
+      );
+    },
+
+    // Reads data from local storage.
+    readLocalStorage: function(key) {
+      var q = $q.defer();
+      var data = window.localStorage[key];
+      q.resolve(data);
+      return q.promise;
     },
 
     // Migrates database up to latest version.

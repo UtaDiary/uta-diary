@@ -66,6 +66,17 @@ angular.module('diary.services')
       return q.promise;
     },
 
+    writeFileAsync: function(path, file, data, replace) {
+      var q = $q.defer();
+      FileUtils.writeFile(path, file, data, replace, function() {
+        if (err)
+          return q.reject(err);
+        else
+          return q.resolve();
+      });
+      return q.promise;
+    },
+
     // Writes a file to the file system.
     writeFile: function(path, file, data, replace, callback) {
       $cordovaFile.writeFile(path, file, data, true).then(
