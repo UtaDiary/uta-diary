@@ -9,7 +9,7 @@ angular.module('diary.services')
   }
 )
 
-.factory('Init', function($q, Uta, welcomeText) {
+.factory('Init', function($q, Uta, welcomeText, KeyRing) {
   console.log("Waiting for database...");
 
   var deferred = $q.defer();
@@ -49,21 +49,67 @@ angular.module('diary.services')
     )
   };
 
-  var startDB = function(callback) {
-    loadWelcomeText(function() {
-      Uta.Entries.start(function(err) {
+  var loadVaultMetadata = function(callback) {
+    console.log("Loading vault metadata...")
+
+    var handleJSON = function(json) {
+      var data = angular.fromJson(json);
+      if (!data.vault)
+        return callback(new Error("No vault found, skipping metadata"));
+
+      var vault = new Vault();
+      vault.deserialize(json);
+      return callback(null, vault);
+    };
+
+    if (window.cordova) {
+      Uta.readFile(Uta.getDataDirectory(), "entries.json")
+        .then(handleJSON);
+    }
+    else {
+      Uta.readLocalStorage('diaryDB')
+        .then(handleJSON);
+    }
+  };
+
+  var loadPassphrase = function(callback) {
+    // TODO: Prompt for passphrase
+    var passphrase = "test";
+    return callback(null, passphrase);
+  };
+
+  var loadKeyRing = function(callback) {
+    loadVaultMetadata(function(err, vault) {
+      if (err) return callback(err);
+
+      loadPassphrase(function(err, passphrase) {
         if (err) return callback(err);
 
-        // Check for existing entries
-        if (Uta.Entries.all().length == 0) {
-          // Add a welcome entry
-          var welcome = _.clone( Uta.Entries.examples.welcome );
-          Uta.Entries.create(welcome);
-          Uta.Entries.commit();
-        }
-        console.log("Initial entries: ", Uta.Entries.all());
+        KeyRing.create(passphrase, vault.salt, function(keyRing) {
+          Uta.keyRing = keyRing;
+          return callback(null);
+        });
+      });
+    });
+  };
 
-        return callback(null, Uta.Entries.db());
+  var startDB = function(callback) {
+    loadKeyRing(function(err) {
+      loadWelcomeText(function() {
+        Uta.Entries.start(function(err) {
+          if (err) return callback(err);
+
+          // Check for existing entries
+          if (Uta.Entries.all().length == 0) {
+            // Add a welcome entry
+            var welcome = _.clone( Uta.Entries.examples.welcome );
+            Uta.Entries.create(welcome);
+            Uta.commit();
+          }
+          console.log("Initial entries: ", Uta.Entries.all());
+
+          return callback(null, Uta.Entries.db());
+        });
       });
     });
   };
