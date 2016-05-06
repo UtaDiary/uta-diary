@@ -174,37 +174,6 @@ angular.module('diary.services')
       }
     },
 
-    // Commits all entries to storage.
-    commit: function(callback) {
-      console.log("Committing entries!");
-      callback = callback || function () {};
-
-      Uta.db.lastWrittenAt = new Date();
-      var json = angular.toJson(Uta.db);
-
-      if (!window.cordova) {
-        console.log("Saving to localStorage...");
-        window.localStorage['diaryDB'] = json;
-        return callback(null);
-      }
-      else {
-        console.log("Saving to data directory...");
-        var dataDir = Uta.getDataDirectory();
-        FileUtils.writeFile(dataDir, "entries.json", json, true, function(err) {
-          if (err) {
-            var message = "Error saving database: " + JSON.stringify(err);
-            console.error(message);
-            return callback(new Error(message));
-          }
-          else {
-            console.log("Finished saving database!");
-            console.log("json: ", json);
-            return callback(null);
-          }
-        });
-      }
-    },
-
     // Gets all journal entries as an array.
     all: function() {
       return Uta.db.entries;
