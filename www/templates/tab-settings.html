@@ -22,14 +22,13 @@
         <h2>Enable Debug</h2>
         <p>Enable application debugging</p>
       </ion-toggle>
-      <!--
-      <div class="item item-divider">
-        Security
-      </div>
-      <ion-toggle  ng-model="Uta.db.settings.enableEncryption">
-        Enable Encryption
+
+      <ion-toggle ng-model="Uta.db.settings.enableEncryption" ng-click="save()">
+        <h2>Enable Encryption</h2>
+        <p>Encrypt journals with your passphrase</p>
       </ion-toggle>
 
+      <!--
       <div class="item item-divider">
         Account
       </div>
