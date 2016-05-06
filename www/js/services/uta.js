@@ -187,7 +187,7 @@ angular.module('diary.services')
       var isValid = Database.validateDB(database);
       if (isValid) {
         Uta.db = database;
-        return Entries.commit(callback);
+        return Uta.commit(callback);
       }
       else {
         return callback(new Error("Invalid database"));
@@ -360,10 +360,10 @@ angular.module('diary.services')
       if (isMobile) {
         var path = Uta.getDataDirectory();
         var file = "entries.json";
-        return Uta.writeFile(path, file, json);
+        return Uta.writeFile(path, file, data);
       }
       else {
-        return Uta.writeLocalStorage(key, json);
+        return Uta.writeLocalStorage(key, data);
       }
     },
 
