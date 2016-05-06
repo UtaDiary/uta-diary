@@ -50,7 +50,7 @@ angular.module('diary.services')
     reset: function(callback) {
       console.log("Resetting database...");
       Uta.db = Database.defaults();
-      Entries.commit(callback);
+      Uta.commit(callback);
     },
 
     // Starts entries database.

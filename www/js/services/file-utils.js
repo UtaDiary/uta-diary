@@ -68,7 +68,7 @@ angular.module('diary.services')
 
     writeFileAsync: function(path, file, data, replace) {
       var q = $q.defer();
-      FileUtils.writeFile(path, file, data, replace, function() {
+      FileUtils.writeFile(path, file, data, replace, function(err) {
         if (err)
           return q.reject(err);
         else

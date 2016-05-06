@@ -326,6 +326,8 @@ angular.module('diary.services')
 
     // Commits the database.
     commit: function(callback) {
+      callback = callback || function() {};
+      Uta.db.lastWrittenAt = new Date();
       Uta.serialize()
       .then(
         function(json) {

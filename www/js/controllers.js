@@ -42,11 +42,11 @@ angular.module('diary.controllers', [])
       title: "Title"
     };
     var entry = Entries.create(options);
-    Entries.commit();
+    Uta.commit();
   };
   $scope.remove = function(chat) {
     Entries.remove(chat);
-    Entries.commit();
+    Uta.commit();
   };
   $scope.$watch('Entries.all()', function() {
       $scope.entries = Entries.all();
@@ -76,7 +76,7 @@ angular.module('diary.controllers', [])
 .controller('SettingsCtrl', function($scope, Uta, Entries) {
   $scope.Uta = Uta;
   $scope.save = function() {
-    Entries.commit();
+    Uta.commit();
   };
 })
 

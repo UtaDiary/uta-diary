@@ -17,7 +17,7 @@ angular.module('diary.directives', [])
   };
 }])
 
-.directive('diaryEntryTitle', function(Entries, $timeout) {
+.directive('diaryEntryTitle', function(Uta, $timeout) {
   return {
     templateUrl: 'templates/diary-entry-title.html',
     restrict: 'AE',
@@ -38,13 +38,13 @@ angular.module('diary.directives', [])
       };
       $scope.saveTitleChanges = function() {
         $scope.state.editingTitle = false;
-        Entries.commit();
+        Uta.commit();
       };
     }
   };
 })
 
-.directive('diaryEntryText', function(Entries, $timeout, $window, $cordovaInAppBrowser) {
+.directive('diaryEntryText', function(Uta, $timeout, $window, $cordovaInAppBrowser) {
   return {
     templateUrl: 'templates/diary-entry-text.html',
     restrict: 'AE',
@@ -91,7 +91,7 @@ angular.module('diary.directives', [])
         }, 3500);
       };
       $scope.autosave = function() {
-        Entries.commit(function() {
+        Uta.commit(function() {
           $scope.saveCheckpoint();
           $scope.notify("Journal saved.");
         });
