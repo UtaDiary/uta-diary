@@ -70,7 +70,7 @@ angular.module('diary.services')
   return KeyRing;
 })
 
-.factory('Uta', function($cordovaFile, Backups, Crypto, Database, Entries, FileUtils, KeyRing, Test, Vault) {
+.factory('Uta', function($cordovaFile, $q, Backups, Crypto, Database, Entries, FileUtils, KeyRing, Test, Vault) {
 
   var Uta = {
 
@@ -118,6 +118,7 @@ angular.module('diary.services')
 
     // Loads database from a vault.
     loadVault: function(vault, callback) {
+      console.log("Loading vault: " + vault);
       var passphrase = Uta.keyRing.passphrase;
       vault.retrieve(passphrase)
       .then(
@@ -134,6 +135,7 @@ angular.module('diary.services')
 
     // Saves database to a vault.
     saveVault: function(path, filename, callback) {
+      console.log("Saving vault...");
       var passphrase = Uta.keyRing.passphrase;
       var data = Uta.db;
       var vault = new Vault();
@@ -163,6 +165,7 @@ angular.module('diary.services')
 
     // Loads JSON for database or vault.
     loadJSON: function(json, callback) {
+      console.log("Loading JSON: " + json);
       var data = angular.fromJson(json);
       var isVault = data.vault ? true : false;
 
@@ -179,6 +182,7 @@ angular.module('diary.services')
     // Imports a database object.
     importDB: function(database, callback) {
       console.log("Importing database: " + JSON.stringify(database, null, '  '));
+      callback = callback || function() {};
 
       var isValid = Database.validateDB(database);
       if (isValid) {
@@ -343,7 +347,7 @@ angular.module('diary.services')
     // Loads application data.
     load: function() {
       if (window.cordova) {
-        return Uta.readFile("entries.json", Uta.getDataDirectory());
+        return Uta.readFile(Uta.getDataDirectory(), "entries.json");
       }
       else {
         return Uta.readLocalStorage("diaryDB");
@@ -356,10 +360,10 @@ angular.module('diary.services')
       if (isMobile) {
         var path = Uta.getDataDirectory();
         var file = "entries.json";
-        return Uta.saveFile(path, file, json);
+        return Uta.writeFile(path, file, json);
       }
       else {
-        return Uta.saveLocalStorage(key, json);
+        return Uta.writeLocalStorage(key, json);
       }
     },
 

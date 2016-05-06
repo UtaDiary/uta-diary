@@ -61,7 +61,7 @@ angular.module('diary.services')
         if (!window.cordova) {
           console.log("Checking for entries in localStorage...");
           if (window.localStorage['diaryDB']) {
-            return Entries.reload(callback);
+            return Uta.reload(callback);
           }
           else {
             return Entries.reset(callback);
@@ -76,7 +76,7 @@ angular.module('diary.services')
           $cordovaFile.checkFile(dataDir, "entries.json")
           .then(
             function(success) {
-              return Entries.reload(callback);
+              return Uta.reload(callback);
             },
             function(error) {
               console.warn("Error checking entries file: " + JSON.stringify(error));
@@ -93,7 +93,7 @@ angular.module('diary.services')
               .then(
                 function(success) {
                   console.log("Finished copying default entries");
-                  return Entries.reload(callback);
+                  return Uta.reload(callback);
                 }
               )
               .catch(
