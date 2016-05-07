@@ -1,7 +1,7 @@
 
 angular.module('diary.services')
 
-.factory('KeyRing', function() {
+.factory('KeyRing', function($q, Crypto) {
 
   var Uta = null;
 
@@ -238,6 +238,7 @@ angular.module('diary.services')
         return Uta.writeFile(path, file, data);
       }
       else {
+        var key = "diaryDB";
         return Uta.writeLocalStorage(key, data);
       }
     },

@@ -9,7 +9,7 @@ angular.module('diary.services')
   }
 )
 
-.factory('Init', function($q, Uta, welcomeText, KeyRing) {
+.factory('Init', function($q, Uta, welcomeText, Crypto, KeyRing) {
   console.log("Waiting for database...");
 
   var deferred = $q.defer();
@@ -55,7 +55,7 @@ angular.module('diary.services')
     var handleJSON = function(json) {
       var data = angular.fromJson(json);
       if (!data.vault)
-        return callback(new Error("No vault found, skipping metadata"));
+        return callback(null);
 
       var vault = new Vault();
       vault.deserialize(json);
@@ -74,21 +74,30 @@ angular.module('diary.services')
 
   var loadPassphrase = function(callback) {
     // TODO: Prompt for passphrase
-    var passphrase = "test";
+    var passphrase = '';
     return callback(null, passphrase);
   };
 
   var loadKeyRing = function(callback) {
+
     loadVaultMetadata(function(err, vault) {
       if (err) return callback(err);
+
+      vault = vault || {};
 
       loadPassphrase(function(err, passphrase) {
         if (err) return callback(err);
 
-        KeyRing.create(passphrase, vault.salt, function(keyRing) {
-          Uta.keyRing = keyRing;
-          return callback(null);
-        });
+        var pass = passphrase || '';
+        var salt = vault.salt || Crypto.generateSalt(16);
+
+        KeyRing.create(pass, salt)
+        .then(
+          function(keyRing) {
+            Uta.keyRing = keyRing;
+            return callback(null);
+          }
+        );
       });
     });
   };
