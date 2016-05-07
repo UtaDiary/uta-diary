@@ -116,6 +116,184 @@ angular.module('diary.services')
       });
     },
 
+    // Creates backup directories.
+    createBackupDirs: function() {
+      var q = $q.defer();
+      console.log("Creating backup directories");
+      $cordovaFile.createDir(Uta.getBackupRoot(), 'UtaDiary', true)
+      .then(
+        function(success) {
+          return $cordovaFile.createDir(Uta.getBackupParent(), 'backups', true)
+        }
+      )
+      .then(
+        function() {
+          return q.resolve();
+        }
+      )
+      .catch(
+        function(error) {
+          return q.reject(new Error("Error creating backup directories: " + error.message));
+        }
+      );
+      return q.promise;
+    },
+
+    // Reloads the database.
+    reload: function(callback) {
+      Uta.load()
+      .then(
+        function(json) {
+          return Uta.loadJSON(json);
+        }
+      )
+      .then(
+        function() {
+          return callback(null);
+        }
+      )
+      .catch(
+        function(error) {
+          return callback(new Error("Failed reloading database: " + error.message));
+        }
+      );
+    },
+
+    // Commits the database.
+    commit: function(callback) {
+      callback = callback || function() {};
+      Uta.db.lastWrittenAt = new Date();
+      Uta.serialize()
+      .then(
+        function(json) {
+          return Uta.save(json);
+        }
+      )
+      .then(
+        function() {
+          return callback(null);
+        }
+      )
+      .catch(
+        function(error) {
+          return callback(new Error("Failed commiting database: " + error.message));
+        }
+      );
+    },
+
+    // Serializes the database for storage.
+    serialize: function() {
+      var useEncryption = Uta.db.settings.enableEncryption;
+      if (useEncryption)
+        return Uta.serializeVault();
+      else
+        return Uta.serializeDB();
+    },
+
+    // Serializes the non-encrypted database for storage.
+    serializeDB: function() {
+      var q = $q.defer();
+      var json = angular.toJson(Uta.db);
+      q.resolve(json);
+      return q.promise;
+    },
+
+    // Serializes the encrypted database for storage.
+    serializeVault: function() {
+      var q = $q.defer();
+      var vault = new Vault();
+      var passphrase = Uta.keyRing.passphrase;
+      var data = Uta.db;
+      vault.store(passphrase, data)
+      .then(
+        function() {
+          var json = vault.serialize();
+          return q.resolve(json);
+        }
+      )
+      .catch(
+        function(error) {
+          return q.reject(new Error("Failed serializing vault: " + error.message));
+        }
+      );
+      return q.promise;
+    },
+
+    // Loads application data.
+    load: function() {
+      if (window.cordova) {
+        return Uta.readFile(Uta.getDataDirectory(), "entries.json");
+      }
+      else {
+        return Uta.readLocalStorage("diaryDB");
+      }
+    },
+
+    // Saves application data.
+    save: function(data) {
+      var isMobile = window.cordova;
+      if (isMobile) {
+        var path = Uta.getDataDirectory();
+        var file = "entries.json";
+        return Uta.writeFile(path, file, data);
+      }
+      else {
+        return Uta.writeLocalStorage(key, data);
+      }
+    },
+
+    // Reads data from the file system.
+    readFile: function(path, filename) {
+      return $cordovaFile.readAsText(path, filename)
+      .then(
+        function(data) {
+          return data;
+        }
+      )
+      .catch(
+        function(error) {
+          return new Error("Failed reading file: " + error.message);
+        }
+      );
+    },
+
+    // Reads data from local storage.
+    readLocalStorage: function(key) {
+      var q = $q.defer();
+      var data = window.localStorage[key];
+      q.resolve(data);
+      return q.promise;
+    },
+
+    // Writes data to the file system.
+    writeFile: function(path, filename, data) {
+      return FileUtils.writeFileAsync(path, filename, data, true);
+    },
+
+    // Writes data to local storage.
+    writeLocalStorage: function(key, data) {
+      var q = $q.defer();
+      window.localStorage[key] = data;
+      q.resolve();
+      return q.promise;
+    },
+
+    // Loads JSON for database or vault.
+    loadJSON: function(json, callback) {
+      console.log("Loading JSON: " + json);
+      var data = angular.fromJson(json);
+      var isVault = data.vault ? true : false;
+
+      if (isVault) {
+        var vault = new Vault();
+        vault.deserialize(json);
+        Uta.loadVault(vault, callback);
+      }
+      else {
+        Uta.importDB(data, callback);
+      }
+    },
+
     // Loads database from a vault.
     loadVault: function(vault, callback) {
       console.log("Loading vault: " + vault);
@@ -163,37 +341,6 @@ angular.module('diary.services')
       );
     },
 
-    // Loads JSON for database or vault.
-    loadJSON: function(json, callback) {
-      console.log("Loading JSON: " + json);
-      var data = angular.fromJson(json);
-      var isVault = data.vault ? true : false;
-
-      if (isVault) {
-        var vault = new Vault();
-        vault.deserialize(json);
-        Uta.loadVault(vault, callback);
-      }
-      else {
-        Uta.importDB(data, callback);
-      }
-    },
-
-    // Imports a database object.
-    importDB: function(database, callback) {
-      console.log("Importing database: " + JSON.stringify(database, null, '  '));
-      callback = callback || function() {};
-
-      var isValid = Database.validateDB(database);
-      if (isValid) {
-        Uta.db = database;
-        return Uta.commit(callback);
-      }
-      else {
-        return callback(new Error("Invalid database"));
-      }
-    },
-
     // Imports a database file.
     importFile: function(path, file, callback) {
       console.log("Importing file: " + file);
@@ -214,26 +361,19 @@ angular.module('diary.services')
       });
     },
 
-    createBackupDirs: function() {
-      var q = $q.defer();
-      console.log("Creating backup directories");
-      $cordovaFile.createDir(Uta.getBackupRoot(), 'UtaDiary', true)
-      .then(
-        function(success) {
-          return $cordovaFile.createDir(Uta.getBackupParent(), 'backups', true)
-        }
-      )
-      .then(
-        function() {
-          return q.resolve();
-        }
-      )
-      .catch(
-        function(error) {
-          return q.reject(new Error("Error creating backup directories: " + error.message));
-        }
-      );
-      return q.promise;
+    // Imports a database object.
+    importDB: function(database, callback) {
+      console.log("Importing database: " + JSON.stringify(database, null, '  '));
+      callback = callback || function() {};
+
+      var isValid = Database.validateDB(database);
+      if (isValid) {
+        Uta.db = database;
+        return Uta.commit(callback);
+      }
+      else {
+        return callback(new Error("Invalid database"));
+      }
     },
 
     // Exports database to file.
@@ -264,145 +404,6 @@ angular.module('diary.services')
           return callback(new Error("Error deleting file: " + JSON.stringify(error)));
         }
       );
-    },
-
-    // Serializes the encrypted database for storage.
-    serializeVault: function() {
-      var q = $q.defer();
-      var vault = new Vault();
-      var passphrase = Uta.keyRing.passphrase;
-      var data = Uta.db;
-      vault.store(passphrase, data)
-      .then(
-        function() {
-          var json = vault.serialize();
-          return q.resolve(json);
-        }
-      )
-      .catch(
-        function(error) {
-          return q.reject(new Error("Failed serializing vault: " + error.message));
-        }
-      );
-      return q.promise;
-    },
-
-    // Serializes the non-encrypted database for storage.
-    serializeDB: function() {
-      var q = $q.defer();
-      var json = angular.toJson(Uta.db);
-      q.resolve(json);
-      return q.promise;
-    },
-
-    // Serializes the database for storage.
-    serialize: function() {
-      var useEncryption = Uta.db.settings.enableEncryption;
-      if (useEncryption)
-        return Uta.serializeVault();
-      else
-        return Uta.serializeDB();
-    },
-
-    // Reloads the database.
-    reload: function(callback) {
-      Uta.load()
-      .then(
-        function(json) {
-          return Uta.loadJSON(json);
-        }
-      )
-      .then(
-        function() {
-          return callback(null);
-        }
-      )
-      .catch(
-        function(error) {
-          return callback(new Error("Failed reloading database: " + error.message));
-        }
-      );
-    },
-
-    // Commits the database.
-    commit: function(callback) {
-      callback = callback || function() {};
-      Uta.db.lastWrittenAt = new Date();
-      Uta.serialize()
-      .then(
-        function(json) {
-          return Uta.save(json);
-        }
-      )
-      .then(
-        function() {
-          return callback(null);
-        }
-      )
-      .catch(
-        function(error) {
-          return callback(new Error("Failed commiting database: " + error.message));
-        }
-      );
-    },
-
-    // Loads application data.
-    load: function() {
-      if (window.cordova) {
-        return Uta.readFile(Uta.getDataDirectory(), "entries.json");
-      }
-      else {
-        return Uta.readLocalStorage("diaryDB");
-      }
-    },
-
-    // Saves application data.
-    save: function(data) {
-      var isMobile = window.cordova;
-      if (isMobile) {
-        var path = Uta.getDataDirectory();
-        var file = "entries.json";
-        return Uta.writeFile(path, file, data);
-      }
-      else {
-        return Uta.writeLocalStorage(key, data);
-      }
-    },
-
-    // Writes data to the file system.
-    writeFile: function(path, filename, data) {
-      return FileUtils.writeFileAsync(path, filename, data, true);
-    },
-
-    // Writes data to local storage.
-    writeLocalStorage: function(key, data) {
-      var q = $q.defer();
-      window.localStorage[key] = data;
-      q.resolve();
-      return q.promise;
-    },
-
-    // Reads data from the file system.
-    readFile: function(path, filename) {
-      return $cordovaFile.readAsText(path, filename)
-      .then(
-        function(data) {
-          return data;
-        }
-      )
-      .catch(
-        function(error) {
-          return new Error("Failed reading file: " + error.message);
-        }
-      );
-    },
-
-    // Reads data from local storage.
-    readLocalStorage: function(key) {
-      var q = $q.defer();
-      var data = window.localStorage[key];
-      q.resolve(data);
-      return q.promise;
     },
 
     // Migrates database up to latest version.
