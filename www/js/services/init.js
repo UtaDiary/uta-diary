@@ -9,7 +9,7 @@ angular.module('diary.services')
   }
 )
 
-.factory('Init', function($q, Uta, welcomeText, Crypto, KeyRing) {
+.factory('Init', function($q, Uta, welcomeText, Crypto, KeyRing, Vault) {
   console.log("Waiting for database...");
 
   var deferred = $q.defer();
@@ -83,13 +83,13 @@ angular.module('diary.services')
     loadVaultMetadata(function(err, vault) {
       if (err) return callback(err);
 
-      vault = vault || {};
+      vault = vault || new Vault();
 
       loadPassphrase(function(err, passphrase) {
         if (err) return callback(err);
 
-        var pass = passphrase || '';
-        var salt = vault.salt || Crypto.generateSalt(16);
+        var pass = passphrase;
+        var salt = vault.storage.salt || Crypto.generateSalt(16);
 
         KeyRing.create(pass, salt)
         .then(

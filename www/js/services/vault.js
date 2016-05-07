@@ -113,8 +113,11 @@ angular.module('diary.services')
         var signingKey = keys.signingKey;
         var encryptionKey = keys.encryptionKey
 
-        Crypto.verify(signingKey, ciphertext, signature, function(err, signature) {
+        Crypto.verify(signingKey, ciphertext, signature, function(err, isValid) {
           if (err) return q.reject(err);
+
+          if (!isValid)
+            console.warn("Invalid signature detected for vault: " + self.serialize());
 
           Crypto.decrypt(encryptionKey, ciphertext, algorithm, function(err, plaintext) {
             if (err) return q.reject(err);

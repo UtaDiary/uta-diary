@@ -144,12 +144,7 @@ angular.module('diary.services')
       Uta.loadData()
       .then(
         function(json) {
-          return Uta.loadJSON(json);
-        }
-      )
-      .then(
-        function() {
-          return callback(null);
+          return Uta.loadJSON(json, callback);
         }
       )
       .catch(
