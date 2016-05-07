@@ -141,7 +141,7 @@ angular.module('diary.services')
 
     // Reloads the database.
     reload: function(callback) {
-      Uta.load()
+      Uta.loadData()
       .then(
         function(json) {
           return Uta.loadJSON(json);
@@ -166,7 +166,7 @@ angular.module('diary.services')
       Uta.serialize()
       .then(
         function(json) {
-          return Uta.save(json);
+          return Uta.saveData(json);
         }
       )
       .then(
@@ -220,7 +220,7 @@ angular.module('diary.services')
     },
 
     // Loads application data.
-    load: function() {
+    loadData: function() {
       if (window.cordova) {
         return Uta.readFile(Uta.getDataDirectory(), "entries.json");
       }
@@ -230,7 +230,7 @@ angular.module('diary.services')
     },
 
     // Saves application data.
-    save: function(data) {
+    saveData: function(data) {
       var isMobile = window.cordova;
       if (isMobile) {
         var path = Uta.getDataDirectory();
