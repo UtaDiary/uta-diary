@@ -35,6 +35,13 @@ angular.module('diary', ['ionic', 'ngCordova', 'monospaced.elastic', 'diary.cont
     }
   })
 
+  // Login
+  .state('login', {
+    url: '/login',
+    templateUrl: 'templates/login.html',
+    controller: 'LoginCtrl'
+  })
+
   // An abstract tab state
   .state('tab', {
     url: "/tab",
@@ -134,6 +141,6 @@ angular.module('diary', ['ionic', 'ngCordova', 'monospaced.elastic', 'diary.cont
   })
 
   // Default Route
-  $urlRouterProvider.otherwise('/intro');
+  $urlRouterProvider.otherwise('/login');
 
 });

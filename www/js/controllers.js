@@ -33,6 +33,50 @@ angular.module('diary.controllers', [])
   };
 })
 
+.controller('LoginCtrl', function($scope, $state, Uta, KeyRing) {
+  $scope.passphrase = '';
+  $scope.confirmation = '';
+
+  $scope.submit = function() {
+    // Try passphrase
+    Uta.vault.retrieve($scope.passphrase)
+    .then(
+      function(data) {
+        // Update keys
+        return KeyRing.create($scope.passphrase, $scope.salt)
+        .then(
+          function(keyRing) {
+            Uta.keyRing = keyRing;
+          }
+        );
+      }
+    )
+    .then(
+      function() {
+        // Reload database
+        Uta.reload(function() {
+          return $scope.success();
+        });
+      }
+    )
+    .catch(
+      function(error) {
+        return $scope.error(error);
+      }
+    );
+  };
+
+  $scope.success = function() {
+    // Continue
+    $state.go('tab.journal');
+  };
+
+  $scope.error = function(error) {
+    // Retry
+    console.error("Failed login: " + error.message);
+  };
+})
+
 .controller('JournalCtrl', function($scope, Uta, Entries) {
   $scope.Entries = Entries;
   $scope.entries = Entries.all();

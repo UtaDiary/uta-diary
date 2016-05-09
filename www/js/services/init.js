@@ -94,6 +94,7 @@ angular.module('diary.services')
         KeyRing.create(pass, salt)
         .then(
           function(keyRing) {
+            Uta.vault = vault;
             Uta.keyRing = keyRing;
             return callback(null);
           }
