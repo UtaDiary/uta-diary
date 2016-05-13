@@ -28,8 +28,10 @@ angular.module('diary', ['ionic', 'ngCordova', 'monospaced.elastic', 'diary.cont
     resolve: {
       init: function(Uta, Init, $state) {
         return Init.initLoginScreen().then(function(db) {
-          if (!Uta.db.settings.enableTutorial)
-            $state.go('tab.journal');
+          if (!Uta.vault.storage.vault.encrypted) {
+            console.log("Skipping login!");
+            $state.go('intro');
+          }
         });
       }
     }
@@ -43,8 +45,10 @@ angular.module('diary', ['ionic', 'ngCordova', 'monospaced.elastic', 'diary.cont
     resolve: {
       init: function(Uta, Init, $state) {
         return Init.initIntroScreen().then(function(db) {
-          if (!Uta.db.settings.enableTutorial)
+          if (!Uta.db.settings.enableTutorial) {
+            console.log("Skipping tutorial!");
             $state.go('tab.journal');
+          }
         });
       }
     }
