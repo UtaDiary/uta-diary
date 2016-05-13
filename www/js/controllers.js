@@ -38,12 +38,13 @@ angular.module('diary.controllers', [])
   $scope.confirmation = '';
 
   $scope.submit = function() {
-    // Try passphrase
+
+    console.log("Opening vault...");
     Uta.vault.retrieve($scope.passphrase)
     .then(
       function(data) {
-        // Update keys
-        return KeyRing.create($scope.passphrase, $scope.salt)
+        console.log("Updating key ring...");
+        return KeyRing.create($scope.passphrase, Uta.vault.storage.salt)
         .then(
           function(keyRing) {
             Uta.keyRing = keyRing;
@@ -53,7 +54,7 @@ angular.module('diary.controllers', [])
     )
     .then(
       function() {
-        // Reload database
+        console.log("Reloading database...");
         Uta.reload(function() {
           return $scope.success();
         });

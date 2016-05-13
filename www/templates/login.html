@@ -4,10 +4,22 @@
     <p>
       Choose a strong passphrase to secure your data!
     </p>
-    <form>
-      <input name="email" type="text" placeholder="Email">
-      <input name="passphrase" type="password" placeholder="Passphrase">
-      <input name="confirm" type="password" placeholder="Confirm passphrase">
+    <form name="loginForm" ng-controller="LoginCtrl">
+      <div class="list">
+        <!--
+        <label class="item item-input">
+          <input name="email" type="text" placeholder="Email">
+        </label>
+        -->
+        <label class="item item-input">
+          <input name="passphrase" type="password" placeholder="Passphrase"
+                 ng-model="passphrase">
+        </label>
+        <label class="item item-input">
+          <input name="confirm" type="password" placeholder="Confirm passphrase"
+                 ng-model="confirmation">
+        </label>
+      </div>
       <button class="button button-block button-positive" ng-click="submit()">Login</button>
     </form>
   </ion-content>
