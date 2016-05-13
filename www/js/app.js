@@ -20,14 +20,14 @@ angular.module('diary', ['ionic', 'ngCordova', 'monospaced.elastic', 'diary.cont
   // AngularUI Router States
   $stateProvider
 
-  // Tutorial
-  .state('intro', {
-    url: '/intro',
-    templateUrl: 'templates/intro.html',
-    controller: 'IntroCtrl',
+  // Login
+  .state('login', {
+    url: '/login',
+    templateUrl: 'templates/login.html',
+    controller: 'LoginCtrl',
     resolve: {
       init: function(Uta, Init, $state) {
-        return Init.then(function(db) {
+        return Init.initLoginScreen().then(function(db) {
           if (!Uta.db.settings.enableTutorial)
             $state.go('tab.journal');
         });
@@ -35,11 +35,19 @@ angular.module('diary', ['ionic', 'ngCordova', 'monospaced.elastic', 'diary.cont
     }
   })
 
-  // Login
-  .state('login', {
-    url: '/login',
-    templateUrl: 'templates/login.html',
-    controller: 'LoginCtrl'
+  // Tutorial
+  .state('intro', {
+    url: '/intro',
+    templateUrl: 'templates/intro.html',
+    controller: 'IntroCtrl',
+    resolve: {
+      init: function(Uta, Init, $state) {
+        return Init.initIntroScreen().then(function(db) {
+          if (!Uta.db.settings.enableTutorial)
+            $state.go('tab.journal');
+        });
+      }
+    }
   })
 
   // An abstract tab state
@@ -49,7 +57,7 @@ angular.module('diary', ['ionic', 'ngCordova', 'monospaced.elastic', 'diary.cont
     templateUrl: "templates/tabs.html",
     resolve: {
       init: function(Uta, Init, $state) {
-        return Init.then(function(db) {
+        return Init.initJournalScreen().then(function(db) {
           console.log('Initialised Uta.db: ', Uta.db);
         });
       }
