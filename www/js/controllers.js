@@ -36,8 +36,7 @@ angular.module('diary.controllers', [])
 .controller('LoginCtrl', function($scope, $state, Uta, KeyRing) {
   $scope.passphrase = '';
   $scope.confirmation = '';
-  $scope.loginFailed = false;
-  $scope.loginFailMessage = "";
+  $scope.loginErrors = [];
 
   $scope.submit = function() {
 
@@ -64,6 +63,7 @@ angular.module('diary.controllers', [])
     )
     .catch(
       function(error) {
+        console.error("Failed login: " + error.message);
         return $scope.error(error);
       }
     );
@@ -75,9 +75,8 @@ angular.module('diary.controllers', [])
   };
 
   $scope.error = function(error) {
-    $scope.loginFailed = true;
-    $scope.loginFailMessage = "Vault decryption failed. Please check your passphrase!";
-    console.error("Failed login: " + error.message);
+    var loginError = new Error("Vault decryption failed. Please check your passphrase!");
+    $scope.loginErrors.push(loginError);
   };
 })
 
