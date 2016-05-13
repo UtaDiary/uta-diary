@@ -20,6 +20,9 @@
                  ng-model="confirmation">
         </label>
       </div>
+      <div class="login-errors">
+        <div class="login-error" ng-show="loginFailed" ng-bind="loginFailMessage"></div>
+      </div>
       <button class="button button-block button-positive" ng-click="submit()">Login</button>
     </form>
   </ion-content>

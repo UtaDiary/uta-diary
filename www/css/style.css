@@ -12,6 +12,18 @@ $royal:                           #886aea !default;
 $dark:                            #444 !default;
 */
 
+.diary.login .login-errors {
+}
+.diary.login .login-error {
+  margin: 4px;
+  padding: 8px;
+  border-radius: 5px;
+  background: rgba(255, 0, 50, 0.2);
+  border: 1px solid rgba(255, 0, 50, 1);
+  color: rgba(255, 0, 50, 0.8);
+  font-weight: bold;
+}
+
 .diary.intro .scroll {
   height: 100%;
 }
