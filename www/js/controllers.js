@@ -39,23 +39,14 @@ angular.module('diary.controllers', [])
   $scope.loginErrors = [];
 
   $scope.validate = function() {
-    var errors = [];
-
     if ($scope.confirmation != $scope.passphrase)
-      errors.push(new Error("Passphrase and confirmation must match!"));
-
-    return errors.length ? errors : null;
-  };
-
-  $scope.validationFailed = function(errors) {
-    console.error("Validation failed!");
-    $scope.loginErrors = errors;
+      return new Error("Passphrase and confirmation must match!");
   };
 
   $scope.submit = function() {
-    var errors = $scope.validate();
-    if (errors)
-      return $scope.validationFailed(errors);
+    var error = $scope.validate();
+    if (error)
+      return $scope.fail("Failed validation", error);
 
     console.log("Opening vault...");
     Uta.vault.retrieve($scope.passphrase)
@@ -79,9 +70,10 @@ angular.module('diary.controllers', [])
       }
     )
     .catch(
-      function(error) {
-        console.error("Failed login: " + error.message);
-        return $scope.error(error);
+      function(details) {
+        var status = "Failed decryption";
+        var error = new Error("Vault decryption failed. Please check your passphrase!");
+        return $scope.fail(status, error, details);
       }
     );
   };
@@ -91,11 +83,9 @@ angular.module('diary.controllers', [])
     $state.go('tab.journal');
   };
 
-  $scope.error = function(error) {
-    $scope.loginErrors = [];
-
-    var loginError = new Error("Vault decryption failed. Please check your passphrase!");
-    $scope.loginErrors.push(loginError);
+  $scope.fail = function(status, error, details) {
+    console.error(status, error, details);
+    $scope.loginErrors = [ error ];
   };
 })
 
