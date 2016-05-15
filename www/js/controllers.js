@@ -38,7 +38,24 @@ angular.module('diary.controllers', [])
   $scope.confirmation = '';
   $scope.loginErrors = [];
 
+  $scope.validate = function() {
+    var errors = [];
+
+    if ($scope.confirmation != $scope.passphrase)
+      errors.push(new Error("Passphrase and confirmation must match!"));
+
+    return errors.length ? errors : null;
+  };
+
+  $scope.validationFailed = function(errors) {
+    console.error("Validation failed!");
+    $scope.loginErrors = errors;
+  };
+
   $scope.submit = function() {
+    var errors = $scope.validate();
+    if (errors)
+      return $scope.validationFailed(errors);
 
     console.log("Opening vault...");
     Uta.vault.retrieve($scope.passphrase)
@@ -75,6 +92,8 @@ angular.module('diary.controllers', [])
   };
 
   $scope.error = function(error) {
+    $scope.loginErrors = [];
+
     var loginError = new Error("Vault decryption failed. Please check your passphrase!");
     $scope.loginErrors.push(loginError);
   };
