@@ -13,7 +13,7 @@ angular.module('diary.services')
 
   var Init = {};
 
-  Init.initLoginScreen = function() {
+  Init.initStartScreen = function() {
     console.log("Waiting for database...");
 
     var deferred = $q.defer();
@@ -29,7 +29,7 @@ angular.module('diary.services')
         }
         else {
           startDB(function(err, db) {
-            if (err) return console.error(err.message);
+            if (err) return fail("Failed starting database: ", err);
 
             runTests(function(err) {
               if (err) console.error("Failed Uta tests: " + err.message);
@@ -58,7 +58,7 @@ angular.module('diary.services')
 
       var handleJSON = function(json) {
         var data = angular.fromJson(json);
-        if (!data.vault)
+        if (!data || !data.vault)
           return callback(null);
 
         var vault = new Vault();
@@ -145,8 +145,19 @@ angular.module('diary.services')
       deferred.resolve(Uta.db);
     };
 
+    var fail = function(message, error, details) {
+      console.error(message, error, details);
+      return deferred.reject(error);
+    };
+
     waitForFS();
     return deferred.promise;
+  };
+
+  Init.initLoginScreen = function() {
+    var q = $q.defer();
+    q.resolve();
+    return q.promise;
   };
 
   Init.initIntroScreen = function() {

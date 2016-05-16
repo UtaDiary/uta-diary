@@ -20,6 +20,34 @@ angular.module('diary', ['ionic', 'ngCordova', 'monospaced.elastic', 'diary.cont
   // AngularUI Router States
   $stateProvider
 
+  // Start
+  .state('start', {
+    url: '/start',
+    templateUrl: 'templates/start.html',
+    controller: 'StartCtrl',
+    resolve: {
+      init: function(Uta, Init, $state) {
+        return Init.initStartScreen().finally(function() {
+
+          var databaseExists =
+            Uta.db &&
+            Uta.db.settings &&
+            Uta.db.settings.enableEncryption === false;
+
+          var vaultExists =
+            Uta.vault.storage.salt &&
+            Uta.vault.storage.ciphertext &&
+            Uta.vault.storage.vault.encrypted === true;
+
+          if (databaseExists || vaultExists) {
+            console.log("Skipping start!");
+            $state.go('login');
+          }
+        });
+      }
+    }
+  })
+
   // Login
   .state('login', {
     url: '/login',
@@ -153,6 +181,6 @@ angular.module('diary', ['ionic', 'ngCordova', 'monospaced.elastic', 'diary.cont
   })
 
   // Default Route
-  $urlRouterProvider.otherwise('/login');
+  $urlRouterProvider.otherwise('/start');
 
 });

@@ -12,9 +12,11 @@ $royal:                           #886aea !default;
 $dark:                            #444 !default;
 */
 
-.diary.login .login-errors {
+.diary.start .form-errors,
+.diary.login .form-errors {
 }
-.diary.login .login-error {
+.diary.start .form-error,
+.diary.login .form-error {
   margin: 4px;
   padding: 8px;
   border-radius: 5px;

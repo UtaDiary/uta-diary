@@ -33,10 +33,66 @@ angular.module('diary.controllers', [])
   };
 })
 
+.controller('StartCtrl', function($scope, $state, Uta, Crypto, KeyRing) {
+  $scope.passphrase = '';
+  $scope.confirmation = '';
+  $scope.formErrors = [];
+
+  $scope.validate = function() {
+    if ($scope.confirmation != $scope.passphrase)
+      return new Error("Passphrase and confirmation must match!");
+  };
+
+  $scope.submit = function() {
+    var error = $scope.validate();
+    if (error)
+      return $scope.fail("Failed validation", error);
+
+    var salt = Crypto.generateSalt(16);
+    KeyRing.create($scope.passphrase, salt)
+    .then(
+      function(keyRing) {
+        console.log("Creating key ring...");
+        Uta.keyRing = keyRing;
+      }
+    )
+    .then(
+      function() {
+        console.log("Creating vault...");
+        Uta.db.settings.enableEncryption = true;
+        Uta.commit(
+          function(err) {
+            if (err) {
+              var error = new Error("Failed creating vault: " + err.message);
+              return $scope.fail("Failed creating vault", error, err);
+            }
+            return $scope.success();
+          }
+        );
+      }
+    )
+    .catch(
+      function(err) {
+        var error = new Error("Failed creating passphrase: " + err.message);
+        return $scope.fail("Failed creating passphrase", error, err);
+      }
+    );
+  };
+
+  $scope.success = function() {
+    $state.go('tab.intro');
+  };
+
+  $scope.fail = function(status, error, details) {
+    console.error(status, error, details);
+    $scope.formErrors = [ error ];
+  };
+})
+
 .controller('LoginCtrl', function($scope, $state, Uta, KeyRing) {
   $scope.passphrase = '';
   $scope.confirmation = '';
-  $scope.loginErrors = [];
+  $scope.formErrors = [];
 
   $scope.validate = function() {
     if ($scope.confirmation != $scope.passphrase)
@@ -79,13 +135,12 @@ angular.module('diary.controllers', [])
   };
 
   $scope.success = function() {
-    // Continue
-    $state.go('tab.journal');
+    $state.go('intro');
   };
 
   $scope.fail = function(status, error, details) {
     console.error(status, error, details);
-    $scope.loginErrors = [ error ];
+    $scope.formErrors = [ error ];
   };
 })
 

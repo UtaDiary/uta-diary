@@ -1,8 +1,8 @@
 <ion-view view-title="Login" class="diary login">
   <ion-content>
-    <h2>Create Passphrase</h2>
+    <h2>Enter Passphrase</h2>
     <p>
-      Choose a strong passphrase to secure your data!
+      Enter your passphrase to unlock the diary!
     </p>
     <form name="loginForm" ng-controller="LoginCtrl">
       <div class="list">
@@ -15,8 +15,8 @@
                  ng-model="confirmation">
         </label>
       </div>
-      <div class="login-errors">
-        <div class="login-error" ng-repeat="error in loginErrors" ng-bind="error.message"></div>
+      <div class="form-errors">
+        <div class="form-error" ng-repeat="error in formErrors" ng-bind="error.message"></div>
       </div>
       <button class="button button-block button-positive" ng-click="submit()">Login</button>
     </form>
