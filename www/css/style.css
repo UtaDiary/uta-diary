@@ -71,6 +71,11 @@ $dark:                            #444 !default;
   text-align: right;
   font-weight: bold;
 }
+.diary.start .form-table td .icon {
+  padding-right: 4px;
+  font-size: 125%;
+  color: #a940dd;
+}
 .diary.start .form-note {
   color: #888;
   font-weight: normal;

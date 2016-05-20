@@ -11,11 +11,11 @@
             <th colspan="2">Passphrase Security</th>
           </tr>
           <tr>
-            <td>Time to Crack</td>
+            <td><i class="icon ion-android-time"></i> Time to Crack</td>
             <td><span ng-bind-html="timeToCrack"></span><sup><span class="form-note">⁕</span></sup></td>
           </tr>
           <tr>
-            <td>Current Strength</td>
+            <td><i class="icon ion-locked"></i> Current Strength</td>
             <td>{{ entropy | number: 1 }} bits of entropy</td>
           </tr>
           <!--
