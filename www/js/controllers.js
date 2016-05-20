@@ -38,9 +38,32 @@ angular.module('diary.controllers', [])
   $scope.confirmation = '';
   $scope.formErrors = [];
 
+  delete window.localStorage.diaryDB;
+
+  $scope.init = function() {
+    $scope.validateStrength();
+  };
+
   $scope.validate = function() {
     if ($scope.confirmation != $scope.passphrase)
       return new Error("Passphrase and confirmation must match!");
+  };
+
+  $scope.validateStrength = function() {
+    $scope.pbkdfRounds = 1e5;
+    // Hashrate for Nvidia Titan X: ~2.4 GH/s (SHA-256)
+    // https://gist.github.com/epixoip/63c2ad11baf7bbd57544
+    $scope.gpuHashrate = 2.4e9;
+    $scope.strength = zxcvbn($scope.passphrase);
+    $scope.entropy = Math.log2($scope.strength.guesses);
+    $scope.guessesPerSecond = $scope.gpuHashrate / $scope.pbkdfRounds;
+    $scope.secondsToCrack = $scope.strength.guesses / $scope.guessesPerSecond;
+    $scope.yearsToCrack = $scope.secondsToCrack / (3600 * 24 * 365);
+    $scope.yearsScientific = $scope.yearsToCrack.toPrecision(3)
+      .replace(/e\+/, " ⨉ 10<sup>") + "</sup> years";
+    $scope.timeToCrack = $scope.yearsToCrack > 1e9
+      ? $scope.yearsScientific
+      : moment.duration(1000 * $scope.secondsToCrack).humanize();
   };
 
   $scope.submit = function() {
@@ -80,13 +103,15 @@ angular.module('diary.controllers', [])
   };
 
   $scope.success = function() {
-    $state.go('tab.intro');
+    $state.go('intro');
   };
 
   $scope.fail = function(status, error, details) {
     console.error(status, error, details);
     $scope.formErrors = [ error ];
   };
+
+  $scope.init();
 })
 
 .controller('LoginCtrl', function($scope, $state, Uta, KeyRing) {

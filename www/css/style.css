@@ -12,6 +12,67 @@ $royal:                           #886aea !default;
 $dark:                            #444 !default;
 */
 
+.center {
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+
+.diary.start {
+  color: #fff;
+  background: linear-gradient(to bottom, #9900E6, #00E7FF);
+  text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+}
+.diary.start h2 {
+  color: #fff;
+}
+.diary.start form {
+  background: none;
+  color: #fff;
+}
+.diary.start form .item-input,
+.diary.start form input {
+   background: none;
+   color: #fff;
+}
+.diary.start form input::-webkit-input-placeholder {
+   background: none;
+   color: #eee;
+}
+
+.diary.start .table-container {
+  border-radius: 3px;
+  background: #fff;
+  color: #000;
+  margin:  20px auto;
+  display: block;
+  width: 90%;
+  padding: 10px;
+  box-sizing: content-box;
+  text-shadow: none;
+  box-shadow: 1px 1px 10px rgba(0,0,0,0.2);
+}
+.diary.start .form-table {
+  display: table;
+}
+.diary.start .form-table tr {
+}
+.diary.start .form-table th {
+  color: #A940DD;
+  padding: 5px 20px;
+  font-size: 19px;
+  font-weight: bold;
+}
+
+.diary.start .form-table td {
+  padding: 5px 20px;
+}
+.diary.start .form-table td:first-child {
+  text-align: right;
+}
+.diary.start .form-note {
+  color: #888;
+}
 .diary.start .form-errors,
 .diary.login .form-errors {
 }
@@ -20,11 +81,12 @@ $dark:                            #444 !default;
   margin: 4px;
   padding: 8px;
   border-radius: 5px;
-  background: rgba(255, 0, 50, 0.2);
+  background: #FFB2C1;
   border: 1px solid rgba(255, 0, 50, 1);
   color: rgba(255, 0, 50, 0.8);
   font-weight: bold;
 }
+
 
 .diary.intro .scroll {
   height: 100%;
