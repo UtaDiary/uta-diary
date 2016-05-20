@@ -30,6 +30,7 @@ $dark:                            #444 !default;
   background: none;
   color: #fff;
 }
+.diary.start form .list-inset,
 .diary.start form .item-input,
 .diary.start form input {
    background: none;
@@ -46,7 +47,6 @@ $dark:                            #444 !default;
   color: #000;
   margin:  20px auto;
   display: block;
-  width: 90%;
   padding: 10px;
   box-sizing: content-box;
   text-shadow: none;
@@ -92,6 +92,10 @@ $dark:                            #444 !default;
   border: 1px solid rgba(255, 0, 50, 1);
   color: rgba(255, 0, 50, 0.8);
   font-weight: bold;
+}
+.diary.start .button-block,
+.diary.login .button-block {
+  box-shadow: 0px 2px 0px rgba(0,0,0,0.2);
 }
 
 

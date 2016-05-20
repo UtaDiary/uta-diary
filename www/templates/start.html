@@ -5,31 +5,29 @@
       Choose a strong passphrase to secure your data!
     </p>
     <form name="startForm" ng-controller="StartCtrl">
-      <div class="table-container">
-        <table class="form-table center">
-          <tr>
-            <th colspan="2">Passphrase Security</th>
-          </tr>
-          <tr>
-            <td><i class="icon ion-android-time"></i> Time to Crack</td>
-            <td><span ng-bind-html="timeToCrack"></span><sup><span class="form-note">⁕</span></sup></td>
-          </tr>
-          <tr>
-            <td><i class="icon ion-locked"></i> Current Strength</td>
-            <td>{{ entropy | number: 1 }} bits of entropy</td>
-          </tr>
-          <!--
-          -->
-          <tr>
-            <td colspan="2" style="text-align: center">
-              <div class="form-note">
-                ⁕ Assuming a single GPU at 2.4 gigahashes per second.
-              </div>
-            </td>
-          </tr>
-        </table>
-      </div>
-      <div class="list">
+      <div class="list list-inset">
+        <div class="table-container">
+          <table class="form-table center">
+            <tr>
+              <th colspan="2">Passphrase Security</th>
+            </tr>
+            <tr>
+              <td><i class="icon ion-android-time"></i> Time to Crack</td>
+              <td><span ng-bind-html="timeToCrack"></span><sup><span class="form-note">⁕</span></sup></td>
+            </tr>
+            <tr>
+              <td><i class="icon ion-locked"></i> Current Strength</td>
+              <td>{{ entropy | number: 1 }} bits of entropy</td>
+            </tr>
+            <tr>
+              <td colspan="2" style="text-align: center">
+                <div class="form-note">
+                  ⁕ Assuming a single GPU at 2.4 gigahashes per second.
+                </div>
+              </td>
+            </tr>
+          </table>
+        </div>
         <label class="item item-input">
           <input name="passphrase" type="password" placeholder="Passphrase"
                  ng-model="passphrase" ng-change="validateStrength()">
@@ -38,11 +36,18 @@
           <input name="confirm" type="password" placeholder="Confirm passphrase"
                  ng-model="confirmation">
         </label>
+        <div class="form-errors">
+          <div class="form-error" ng-repeat="error in formErrors" ng-bind="error.message"></div>
+        </div>
+        <button class="button button-block button-positive center" ng-click="suggest()">
+          <i class="icon ion-refresh"></i>
+          Suggest Passphrase
+        </button>
+        <button class="button button-block button-calm center" ng-click="submit()">
+          <i class="icon ion-checkmark"></i>
+          Continue!
+        </button>
       </div>
-      <div class="form-errors">
-        <div class="form-error" ng-repeat="error in formErrors" ng-bind="error.message"></div>
-      </div>
-      <button class="button button-block button-positive" ng-click="submit()">Create!</button>
     </form>
   </ion-content>
 </ion-view>
