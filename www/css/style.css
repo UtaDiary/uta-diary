@@ -69,9 +69,11 @@ $dark:                            #444 !default;
 }
 .diary.start .form-table td:first-child {
   text-align: right;
+  font-weight: bold;
 }
 .diary.start .form-note {
   color: #888;
+  font-weight: normal;
 }
 .diary.start .form-errors,
 .diary.login .form-errors {

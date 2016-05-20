@@ -11,18 +11,20 @@
             <th colspan="2">Passphrase Security</th>
           </tr>
           <tr>
-            <td>Time to crack</td>
+            <td>Time to Crack</td>
             <td><span ng-bind-html="timeToCrack"></span><sup><span class="form-note">⁕</span></sup></td>
           </tr>
           <tr>
-            <td>Current strength</td>
+            <td>Current Strength</td>
             <td>{{ entropy | number: 1 }} bits of entropy</td>
           </tr>
           <!--
           -->
           <tr>
-            <td class="form-note" colspan="2" style="text-align: center">
-              ⁕ Assuming a single GPU at 2.4 gigahashes per second.
+            <td colspan="2" style="text-align: center">
+              <div class="form-note">
+                ⁕ Assuming a single GPU at 2.4 gigahashes per second.
+              </div>
             </td>
           </tr>
         </table>
