@@ -29,7 +29,7 @@
           </table>
         </div>
         <label class="item item-input">
-          <input name="passphrase" type="password" placeholder="Passphrase"
+          <input name="passphrase" type="text" placeholder="Passphrase"
                  ng-model="passphrase" ng-change="validateStrength()">
         </label>
         <label class="item item-input">
@@ -39,7 +39,7 @@
         <div class="form-errors">
           <div class="form-error" ng-repeat="error in formErrors" ng-bind="error.message"></div>
         </div>
-        <button class="button button-block button-positive center" ng-click="suggest()">
+        <button class="button button-block button-positive center" ng-click="suggestPassphrase()">
           <i class="icon ion-refresh"></i>
           Suggest Passphrase
         </button>

@@ -33,15 +33,23 @@ angular.module('diary.controllers', [])
   };
 })
 
-.controller('StartCtrl', function($scope, $state, Uta, Crypto, KeyRing) {
+.controller('StartCtrl', function($http, $scope, $state, Uta, Crypto, KeyRing) {
   $scope.passphrase = '';
   $scope.confirmation = '';
   $scope.formErrors = [];
+  $scope.wordlist = [];
 
   delete window.localStorage.diaryDB;
 
   $scope.init = function() {
+    $scope.loadWordlist();
     $scope.validateStrength();
+  };
+
+  $scope.loadWordlist = function() {
+    $http.get("/templates/wordlist.txt").then(function(response) {
+      $scope.wordlist = response.data.split(/\n/g);
+    });
   };
 
   $scope.validate = function() {
@@ -64,6 +72,23 @@ angular.module('diary.controllers', [])
     $scope.timeToCrack = $scope.yearsToCrack > 1e9
       ? $scope.yearsScientific
       : moment.duration(1000 * $scope.secondsToCrack).humanize();
+  };
+
+  $scope.suggestPassphrase = function() {
+    var totalWords = $scope.wordlist.length;
+    var wordCount = 10;
+    var words = [];
+    var values = new Uint32Array(wordCount);
+    window.crypto.getRandomValues(values);
+
+    for (var i = 0; i < wordCount; i++) {
+      var index = values[i] % totalWords;
+      var word = $scope.wordlist[index];
+      words.push(word);
+    }
+    var suggestion = words.join(' ');
+    $scope.passphrase = suggestion;
+    $scope.validateStrength();
   };
 
   $scope.submit = function() {
