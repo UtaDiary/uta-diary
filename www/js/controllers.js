@@ -38,6 +38,7 @@ angular.module('diary.controllers', [])
   $scope.confirmation = '';
   $scope.formErrors = [];
   $scope.wordlist = [];
+  $scope.tokens = [];
 
   delete window.localStorage.diaryDB;
 
@@ -49,6 +50,7 @@ angular.module('diary.controllers', [])
   $scope.loadWordlist = function() {
     $http.get("/templates/wordlist.txt").then(function(response) {
       $scope.wordlist = response.data.split(/\n/g);
+      $scope.tokens = [].concat($scope.wordlist);
     });
   };
 
@@ -57,15 +59,20 @@ angular.module('diary.controllers', [])
       return new Error("Passphrase and confirmation must match!");
   };
 
-  $scope.validateStrength = function() {
+  $scope.validateStrength = function(entropy) {
     $scope.pbkdfRounds = 1e5;
     // Hashrate for Nvidia Titan X: ~2.4 GH/s (SHA-256)
     // https://gist.github.com/epixoip/63c2ad11baf7bbd57544
     $scope.gpuHashrate = 2.4e9;
-    $scope.strength = zxcvbn($scope.passphrase);
-    $scope.entropy = Math.log2($scope.strength.guesses);
+    $scope.strength = zxcvbn($scope.passphrase, $scope.tokens);
+    $scope.entropy = entropy
+      ? entropy
+      : Math.max(0, Math.log2(2 * ($scope.strength.guesses - 1)));
+    $scope.guesses = entropy
+      ? 1 + 0.5 * Math.pow(2, entropy)
+      : $scope.strength.guesses;
     $scope.guessesPerSecond = $scope.gpuHashrate / $scope.pbkdfRounds;
-    $scope.secondsToCrack = $scope.strength.guesses / $scope.guessesPerSecond;
+    $scope.secondsToCrack = $scope.guesses / $scope.guessesPerSecond;
     $scope.yearsToCrack = $scope.secondsToCrack / (3600 * 24 * 365);
     $scope.yearsScientific = $scope.yearsToCrack.toPrecision(3)
       .replace(/e\+/, " ⨉ 10<sup>") + "</sup> years";
@@ -88,7 +95,9 @@ angular.module('diary.controllers', [])
     }
     var suggestion = words.join(' ');
     $scope.passphrase = suggestion;
-    $scope.validateStrength();
+
+    var entropy = wordCount * Math.log2(totalWords);
+    $scope.validateStrength(entropy);
   };
 
   $scope.submit = function() {
