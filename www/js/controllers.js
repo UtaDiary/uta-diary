@@ -76,9 +76,11 @@ angular.module('diary.controllers', [])
     $scope.yearsToCrack = $scope.secondsToCrack / (3600 * 24 * 365);
     $scope.yearsScientific = $scope.yearsToCrack.toPrecision(3)
       .replace(/e\+/, " ⨉ 10<sup>") + "</sup> years";
-    $scope.timeToCrack = $scope.yearsToCrack > 1e9
-      ? $scope.yearsScientific
-      : moment.duration(1000 * $scope.secondsToCrack).humanize();
+    $scope.timeToCrack = $scope.secondsToCrack <= 1
+      ? "1 second or less"
+      : $scope.yearsToCrack < 1e9
+      ? moment.duration(1000 * $scope.secondsToCrack).humanize()
+      : $scope.yearsScientific;
   };
 
   $scope.suggestPassphrase = function() {
