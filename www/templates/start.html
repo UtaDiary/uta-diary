@@ -31,11 +31,11 @@
         <div class="passphrase-suggestion" ng-bind-html="suggestion">
         </div>
         <label class="item item-input">
-          <input name="passphrase" type="text" placeholder="Passphrase"
+          <input name="passphrase" type="text" placeholder="Passphrase" autocapitalize="off"
                  ng-model="passphrase" ng-change="validateStrength()">
         </label>
         <label class="item item-input">
-          <input name="confirmation" type="text" placeholder="Confirm passphrase"
+          <input name="confirmation" type="text" placeholder="Confirm passphrase" autocapitalize="off"
                  ng-model="confirmation">
         </label>
         <div class="form-errors">
