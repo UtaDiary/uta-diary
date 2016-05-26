@@ -48,7 +48,7 @@ angular.module('diary.controllers', [])
   };
 
   $scope.loadWordlist = function() {
-    $http.get("/templates/wordlist.txt").then(function(response) {
+    $http.get("templates/wordlist.txt").then(function(response) {
       $scope.wordlist = response.data.split(/\n/g);
       $scope.tokens = [].concat($scope.wordlist);
     });
