@@ -139,6 +139,8 @@ angular.module('diary.controllers', [])
   };
 
   $scope.success = function() {
+    document.getElementsByName('passphrase')[0].type = 'password';
+    document.getElementsByName('confirmation')[0].type = 'password';
     $state.go('intro');
   };
 
@@ -152,12 +154,9 @@ angular.module('diary.controllers', [])
 
 .controller('LoginCtrl', function($scope, $state, Uta, KeyRing) {
   $scope.passphrase = '';
-  $scope.confirmation = '';
   $scope.formErrors = [];
 
   $scope.validate = function() {
-    if ($scope.confirmation != $scope.passphrase)
-      return new Error("Passphrase and confirmation must match!");
   };
 
   $scope.submit = function() {
@@ -196,6 +195,7 @@ angular.module('diary.controllers', [])
   };
 
   $scope.success = function() {
+    var input = document.getElementsByName('passphrase')[0].type = 'password';
     $state.go('intro');
   };
 
