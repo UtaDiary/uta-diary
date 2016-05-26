@@ -17,8 +17,27 @@ angular.module('diary.services')
     console.log("Waiting for database...");
 
     var deferred = $q.defer();
+
+    var main = function() {
+
+      waitForFS(function() {
+
+        startDB(function(err, db) {
+          if (err) return fail("Failed starting database: ", err);
+
+          runTests(function(err) {
+            if (err) console.error("Failed Uta tests: " + err.message);
+
+            runMigrations(function() {
+              resolveDB();
+            });
+          });
+        });
+      });
+    };
+
     var waited = 0;
-    var waitForFS = function() {
+    var waitForFS = function(callback) {
       setTimeout(function() {
         console.log("Waiting for filesystem...")
         var isMobile = ionic.Platform.isWebView();
@@ -28,19 +47,55 @@ angular.module('diary.services')
           waitForFS();
         }
         else {
-          startDB(function(err, db) {
-            if (err) return fail("Failed starting database: ", err);
-
-            runTests(function(err) {
-              if (err) console.error("Failed Uta tests: " + err.message);
-
-              runMigrations(function() {
-                resolveDB();
-              });
-            });
-          });
+          return callback();
         }
       }, 500);
+    };
+
+    var startDB = function(callback) {
+      loadKeyRing(function(err) {
+        loadWelcomeText(function() {
+          Uta.Entries.start(function(err) {
+            if (err) return callback(err);
+
+            // Check for existing entries
+            if (Uta.Entries.all().length == 0) {
+              // Add a welcome entry
+              var welcome = _.clone( Uta.Entries.examples.welcome );
+              Uta.Entries.create(welcome);
+              Uta.commit();
+            }
+            console.log("Initial entries: ", Uta.Entries.all());
+
+            return callback(null, Uta.Entries.db());
+          });
+        });
+      });
+    };
+
+    var loadKeyRing = function(callback) {
+
+      loadVaultMetadata(function(err, vault) {
+        if (err) return callback(err);
+
+        vault = vault || new Vault();
+
+        loadPassphrase(function(err, passphrase) {
+          if (err) return callback(err);
+
+          var pass = passphrase;
+          var salt = vault.storage.salt || Crypto.generateSalt(16);
+
+          KeyRing.create(pass, salt)
+          .then(
+            function(keyRing) {
+              Uta.vault = vault;
+              Uta.keyRing = keyRing;
+              return callback(null);
+            }
+          );
+        });
+      });
     };
 
     var loadWelcomeText = function(callback) {
@@ -82,52 +137,6 @@ angular.module('diary.services')
       return callback(null, passphrase);
     };
 
-    var loadKeyRing = function(callback) {
-
-      loadVaultMetadata(function(err, vault) {
-        if (err) return callback(err);
-
-        vault = vault || new Vault();
-
-        loadPassphrase(function(err, passphrase) {
-          if (err) return callback(err);
-
-          var pass = passphrase;
-          var salt = vault.storage.salt || Crypto.generateSalt(16);
-
-          KeyRing.create(pass, salt)
-          .then(
-            function(keyRing) {
-              Uta.vault = vault;
-              Uta.keyRing = keyRing;
-              return callback(null);
-            }
-          );
-        });
-      });
-    };
-
-    var startDB = function(callback) {
-      loadKeyRing(function(err) {
-        loadWelcomeText(function() {
-          Uta.Entries.start(function(err) {
-            if (err) return callback(err);
-
-            // Check for existing entries
-            if (Uta.Entries.all().length == 0) {
-              // Add a welcome entry
-              var welcome = _.clone( Uta.Entries.examples.welcome );
-              Uta.Entries.create(welcome);
-              Uta.commit();
-            }
-            console.log("Initial entries: ", Uta.Entries.all());
-
-            return callback(null, Uta.Entries.db());
-          });
-        });
-      });
-    };
-
     var runTests = function(callback) {
       if (Uta.db.settings.enableDebug == true) {
         return Uta.Test.runAll(callback);
@@ -150,7 +159,7 @@ angular.module('diary.services')
       return deferred.reject(error);
     };
 
-    waitForFS();
+    main();
     return deferred.promise;
   };
 
