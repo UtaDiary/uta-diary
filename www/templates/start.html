@@ -28,6 +28,8 @@
             </tr>
           </table>
         </div>
+        <div class="passphrase-suggestion" ng-bind-html="suggestion">
+        </div>
         <label class="item item-input">
           <input name="passphrase" type="text" placeholder="Passphrase"
                  ng-model="passphrase" ng-change="validateStrength()">

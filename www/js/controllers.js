@@ -36,6 +36,7 @@ angular.module('diary.controllers', [])
 .controller('StartCtrl', function($http, $scope, $state, Uta, Crypto, KeyRing) {
   $scope.passphrase = '';
   $scope.confirmation = '';
+  $scope.suggestion = '';
   $scope.formErrors = [];
   $scope.wordlist = [];
   $scope.tokens = [];
@@ -85,7 +86,7 @@ angular.module('diary.controllers', [])
 
   $scope.suggestPassphrase = function() {
     var totalWords = $scope.wordlist.length;
-    var wordCount = 10;
+    var wordCount = 9;
     var words = [];
     var values = new Uint32Array(wordCount);
     window.crypto.getRandomValues(values);
@@ -95,8 +96,7 @@ angular.module('diary.controllers', [])
       var word = $scope.wordlist[index];
       words.push(word);
     }
-    var suggestion = words.join(' ');
-    $scope.passphrase = suggestion;
+    $scope.suggestion = words.join(' ').replace(/(\w+ \w+ \w+)/g, '$1<br>');
 
     var entropy = wordCount * Math.log2(totalWords);
     $scope.validateStrength(entropy);

@@ -80,6 +80,14 @@ $dark:                            #444 !default;
   color: #888;
   font-weight: normal;
 }
+.diary.start .passphrase-suggestion {
+  font-family: Georgia, serif;
+  font-size: 20px;
+  text-align: center;
+  margin: 20px;
+  line-height: 1.3;
+}
+
 .diary.start .form-errors,
 .diary.login .form-errors {
 }
