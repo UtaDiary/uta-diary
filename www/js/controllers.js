@@ -42,8 +42,6 @@ angular.module('diary.controllers', [])
   $scope.wordlist = [];
   $scope.tokens = [];
 
-  delete window.localStorage.diaryDB;
-
   $scope.init = function() {
     $scope.loadWordlist();
     $scope.validateStrength();
@@ -247,10 +245,25 @@ angular.module('diary.controllers', [])
   $scope.stats = Entries.getStats();
 })
 
-.controller('SettingsCtrl', function($scope, Uta, Entries) {
+.controller('SettingsCtrl', function($scope, $state, Uta, Entries) {
   $scope.Uta = Uta;
   $scope.save = function() {
     Uta.commit();
+  };
+  $scope.enableEncryption = function() {
+    var activated = Uta.db.settings.enableEncryption;
+    if (activated) {
+      console.log("Will enable encryption when passphrase created...");
+      Uta.db.events.createPassphrase = null;
+      Uta.db.settings.enableEncryption = false;
+      Uta.commit(function() {
+        console.log("Navigating to start screen...");
+        $state.go('start');
+      });
+    }
+    else {
+      $scope.save();
+    }
   };
 })
 
