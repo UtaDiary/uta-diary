@@ -18,6 +18,12 @@ $dark:                            #444 !default;
   display: block;
 }
 
+.diary.splash {
+  background: url("../img/splash.png");
+  background-size: cover;
+  background-position: center;
+}
+
 .diary.start {
   color: #fff;
   background: linear-gradient(to bottom, #9900E6, #00E7FF);

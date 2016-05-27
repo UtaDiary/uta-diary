@@ -25,12 +25,6 @@ angular.module('diary', ['ionic', 'ngCordova', 'monospaced.elastic', 'diary.cont
     templateUrl: 'templates/splash.html',
     controller: 'SplashCtrl',
     resolve: {
-      init: function(Uta, Init, $state) {
-        return Init.initSplashScreen().finally(function() {
-          console.log("Leaving splash screen!");
-          $state.go('start');
-        });
-      }
     }
   })
 
