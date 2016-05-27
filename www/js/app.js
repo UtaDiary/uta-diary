@@ -34,12 +34,22 @@ angular.module('diary', ['ionic', 'ngCordova', 'monospaced.elastic', 'diary.cont
             Uta.db.settings &&
             Uta.db.settings.enableEncryption === false;
 
+          var completedTutorial =
+            Uta.db &&
+            Uta.db.events &&
+            Uta.db.events.completeTutorial;
+
+          var createdPassphrase =
+            Uta.db &&
+            Uta.db.events &&
+            Uta.db.events.createPassphrase;
+
           var vaultExists =
             Uta.vault.storage.salt &&
             Uta.vault.storage.ciphertext &&
             Uta.vault.storage.vault.encrypted === true;
 
-          if (databaseExists || vaultExists) {
+          if (!completedTutorial || (databaseExists && createdPassphrase) || vaultExists) {
             console.log("Skipping start!");
             $state.go('login');
           }

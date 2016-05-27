@@ -20,6 +20,10 @@ angular.module('diary.services')
           Database.migrations.slice(-1)[0], 'id', 'date', 'version'
         ),
         entries: [ Uta.Entries.examples.welcome ],
+        events: {
+          completeTutorial: null,
+          createPassphrase: null
+        },
         settings: {
           username: "",
           password: "",
@@ -96,6 +100,22 @@ angular.module('diary.services')
           delete db.settings.enableDebug;
           return db;
         }
+      },
+      {
+        id: 4,
+        date: '2016-05-27',
+        version: '0.9.3',
+        up: function(db) {
+          db.events = {
+            completeTutorial: null,
+            createPassphrase: null
+          };
+          return db;
+        },
+        down: function(db) {
+          delete db.events;
+          return db;
+        }
       }
     ],
 
@@ -158,7 +178,8 @@ angular.module('diary.services')
       var result1 = _.isEqual(db.entries, Database.defaults().entries);
       var result2 = _.isEqual(db.settings, Database.defaults().settings);
       var result3 = _.isEqual(db.lastWrittenAt, Database.defaults().lastWrittenAt);
-      return result1 && result2 && result3;
+      var result4 = _.isEqual(db.events, Database.defaults().events);
+      return result1 && result2 && result3 && result4;
     },
 
     testMigrateDown: function() {

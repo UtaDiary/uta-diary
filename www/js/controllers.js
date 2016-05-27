@@ -26,6 +26,7 @@ angular.module('diary.controllers', [])
   };
 
   $scope.finishTutorial = function() {
+    Uta.db.events.completeTutorial = new Date();
     Uta.db.settings.enableTutorial = false;
     Uta.commit(function(err) {
       $state.go('tab.journal');
@@ -118,6 +119,7 @@ angular.module('diary.controllers', [])
     .then(
       function() {
         console.log("Creating vault...");
+        Uta.db.events.createPassphrase = new Date();
         Uta.db.settings.enableEncryption = true;
         Uta.commit(
           function(err) {
