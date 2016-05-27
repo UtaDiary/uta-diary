@@ -31,7 +31,7 @@ angular.module('diary.services')
           firstName: "",
           lastName: "",
           enableDebug: false,
-          enableEncryption: true,
+          enableEncryption: false,
           enableTutorial: true
         }
       };
@@ -63,7 +63,7 @@ angular.module('diary.services')
               email: "",
               firstName: "",
               lastName: "",
-              enableEncryption: true
+              enableEncryption: false
             }
           };
           db = initial;
@@ -197,7 +197,7 @@ angular.module('diary.services')
         db.settings.firstName == '' &&
         db.settings.lastName == '' &&
         db.settings.enableTutorial == undefined &&
-        db.settings.enableEncryption == true;
+        db.settings.enableEncryption == false;
       return result;
     },
 
