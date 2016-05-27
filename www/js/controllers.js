@@ -8,6 +8,9 @@ angular.module('diary.controllers', [])
   }
 })
 
+.controller('SplashCtrl', function($scope, $state, Uta) {
+})
+
 .controller('IntroCtrl', function($scope, $state, $ionicSlideBoxDelegate, Uta) {
   $scope.startApp = function() {
     $state.go('tab.journal');

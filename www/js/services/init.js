@@ -13,7 +13,7 @@ angular.module('diary.services')
 
   var Init = {};
 
-  Init.initStartScreen = function() {
+  Init.initSplashScreen = function() {
     console.log("Waiting for database...");
 
     var deferred = $q.defer();
@@ -161,6 +161,12 @@ angular.module('diary.services')
 
     main();
     return deferred.promise;
+  };
+
+  Init.initStartScreen = function() {
+    var q = $q.defer();
+    q.resolve();
+    return q.promise;
   };
 
   Init.initLoginScreen = function() {

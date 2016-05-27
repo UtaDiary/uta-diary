@@ -20,6 +20,20 @@ angular.module('diary', ['ionic', 'ngCordova', 'monospaced.elastic', 'diary.cont
   // AngularUI Router States
   $stateProvider
 
+  .state('splash', {
+    url: '/splash',
+    templateUrl: 'templates/splash.html',
+    controller: 'SplashCtrl',
+    resolve: {
+      init: function(Uta, Init, $state) {
+        return Init.initSplashScreen().finally(function() {
+          console.log("Leaving splash screen!");
+          $state.go('start');
+        });
+      }
+    }
+  })
+
   // Start
   .state('start', {
     url: '/start',
@@ -27,7 +41,7 @@ angular.module('diary', ['ionic', 'ngCordova', 'monospaced.elastic', 'diary.cont
     controller: 'StartCtrl',
     resolve: {
       init: function(Uta, Init, $state) {
-        return Init.initStartScreen().finally(function() {
+        return Init.initStartScreen().then(function(db) {
 
           var databaseExists =
             Uta.db &&
@@ -191,6 +205,6 @@ angular.module('diary', ['ionic', 'ngCordova', 'monospaced.elastic', 'diary.cont
   })
 
   // Default Route
-  $urlRouterProvider.otherwise('/start');
+  $urlRouterProvider.otherwise('/splash');
 
 });
