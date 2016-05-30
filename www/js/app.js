@@ -100,6 +100,14 @@ angular.module('diary', ['ionic', 'ngCordova', 'monospaced.elastic', 'diary.cont
     }
   })
 
+  // Passphrase
+  .state('passphrase', {
+    url: '/passphrase',
+    templateUrl: 'templates/passphrase.html',
+    controller: 'PassphraseCtrl',
+    resolve: {}
+  })
+
   // An abstract tab state
   .state('tab', {
     url: "/tab",

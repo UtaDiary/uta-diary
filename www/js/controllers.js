@@ -41,7 +41,10 @@ angular.module('diary.controllers', [])
   };
 })
 
-.controller('StartCtrl', function($http, $scope, $state, Uta, Crypto, KeyRing) {
+.controller('StartCtrl', function($scope, $state, Uta, Init) {
+})
+
+.controller('PassphraseCtrl', function($http, $scope, $state, Uta, Crypto, KeyRing) {
   $scope.passphrase = '';
   $scope.confirmation = '';
   $scope.suggestion = '';
@@ -264,7 +267,7 @@ angular.module('diary.controllers', [])
 
       // TODO: Add route for creating passphrase
       console.log("Navigating to passphrase screen...")
-      $state.go('start');
+      $state.go('passphrase');
     }
   };
   $scope.enableEncryption = function() {
@@ -274,8 +277,8 @@ angular.module('diary.controllers', [])
       Uta.db.events.createPassphrase = null;
       Uta.db.settings.enableEncryption = false;
       Uta.commit(function() {
-        console.log("Navigating to start screen...");
-        $state.go('start');
+        console.log("Navigating to passphrase screen...");
+        $state.go('passphrase');
       });
     }
     else {
