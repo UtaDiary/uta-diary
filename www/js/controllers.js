@@ -257,6 +257,16 @@ angular.module('diary.controllers', [])
   $scope.save = function() {
     Uta.commit();
   };
+  $scope.changePassphrase = function() {
+    if (Uta.db.settings.enableEncryption) {
+      // TODO: Ask for current passphrase
+      Uta.db.events.createPassphrase = null;
+
+      // TODO: Add route for creating passphrase
+      console.log("Navigating to passphrase screen...")
+      $state.go('start');
+    }
+  };
   $scope.enableEncryption = function() {
     var activated = Uta.db.settings.enableEncryption;
     if (activated) {
