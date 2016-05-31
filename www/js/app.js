@@ -24,8 +24,7 @@ angular.module('diary', ['ionic', 'ngCordova', 'monospaced.elastic', 'diary.cont
     url: '/splash',
     templateUrl: 'templates/splash.html',
     controller: 'SplashCtrl',
-    resolve: {
-    }
+    resolve: {}
   })
 
   // Start
@@ -114,9 +113,13 @@ angular.module('diary', ['ionic', 'ngCordova', 'monospaced.elastic', 'diary.cont
     abstract: true,
     templateUrl: "templates/tabs.html",
     resolve: {
-      init: function(Uta, Init, $state) {
+      init: function(Uta, Database, Init, $state) {
         return Init.initJournalScreen().then(function(db) {
           console.log('Initialised Uta.db: ', Uta.db);
+
+          if (!Database.validateDB(Uta.db)) {
+            $state.go('splash');
+          }
         });
       }
     }
