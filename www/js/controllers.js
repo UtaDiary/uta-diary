@@ -11,7 +11,7 @@ angular.module('diary.controllers', [])
 .controller('SplashCtrl', function($scope, $state, $timeout, Uta, Init) {
   Init.initSplashScreen().finally(function() {
     console.log("Leaving splash screen!");
-    $state.go('start');
+    $state.go('login');
   });
 })
 

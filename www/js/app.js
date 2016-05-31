@@ -27,44 +27,6 @@ angular.module('diary', ['ionic', 'ngCordova', 'monospaced.elastic', 'diary.cont
     resolve: {}
   })
 
-  // Start
-  .state('start', {
-    url: '/start',
-    templateUrl: 'templates/start.html',
-    controller: 'StartCtrl',
-    resolve: {
-      init: function(Uta, Init, $state) {
-        return Init.initStartScreen().then(function(db) {
-
-          var databaseExists =
-            Uta.db &&
-            Uta.db.settings &&
-            Uta.db.settings.enableEncryption === false;
-
-          var completedTutorial =
-            Uta.db &&
-            Uta.db.events &&
-            Uta.db.events.completeTutorial;
-
-          var createdPassphrase =
-            Uta.db &&
-            Uta.db.events &&
-            Uta.db.events.createPassphrase;
-
-          var vaultExists =
-            Uta.vault.storage.salt &&
-            Uta.vault.storage.ciphertext &&
-            Uta.vault.storage.vault.encrypted === true;
-
-          if (!completedTutorial || (databaseExists && createdPassphrase) || vaultExists) {
-            console.log("Skipping start!");
-            $state.go('login');
-          }
-        });
-      }
-    }
-  })
-
   // Login
   .state('login', {
     url: '/login',
@@ -72,10 +34,36 @@ angular.module('diary', ['ionic', 'ngCordova', 'monospaced.elastic', 'diary.cont
     controller: 'LoginCtrl',
     resolve: {
       init: function(Uta, Init, $state) {
-        return Init.initLoginScreen().then(function(db) {
+        return Init.initLoginScreen().then(function() {
           if (!Uta.vault.storage.vault.encrypted) {
             console.log("Skipping login!");
-            $state.go('intro');
+            $state.go('start');
+          }
+        });
+      }
+    }
+  })
+
+  // Start
+  .state('start', {
+    url: '/start',
+    templateUrl: 'templates/start.html',
+    controller: 'StartCtrl',
+    resolve: {
+      init: function(Uta, Init, $state) {
+        return Init.initStartScreen().then(function() {
+
+          var completedTutorial = Uta.db.events.completeTutorial;
+          var createdPassphrase = Uta.db.events.createPassphrase;
+
+          if (!completedTutorial) {
+            return $state.go('intro');
+          }
+          else if (!createdPassphrase) {
+            return $state.go('passphrase');
+          }
+          else {
+            return $state.go('tab.journal');
           }
         });
       }
