@@ -68,7 +68,7 @@ angular.module('diary.controllers', [])
   };
 
   $scope.validateStrength = function(entropy) {
-    $scope.pbkdfRounds = 1e5;
+    $scope.pbkdfRounds = 1e4;
     // Hashrate for Nvidia Titan X: ~2.4 GH/s (SHA-256)
     // https://gist.github.com/epixoip/63c2ad11baf7bbd57544
     $scope.gpuHashrate = 2.4e9;

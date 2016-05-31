@@ -93,7 +93,7 @@ angular.module('diary.services')
       window.crypto.subtle.importKey('raw', data, 'PBKDF2', false, ['deriveKey'])
       .then(
         function(key) {
-          var derivationAlgo = { name: 'PBKDF2', salt: salt, iterations: 1e5, hash: 'SHA-256' };
+          var derivationAlgo = { name: 'PBKDF2', salt: salt, iterations: 1e4, hash: 'SHA-256' };
           var initialKey = key;
           var derivedKeyAlgo = { name: 'AES-CBC', length: 256 };
           var extractable = true;
@@ -146,7 +146,7 @@ angular.module('diary.services')
       window.crypto.subtle.importKey('raw', data, 'PBKDF2', false, ['deriveKey', 'deriveBits'])
       .then(
         function(key) {
-          var derivationAlgo = { name: 'PBKDF2', salt: salt, iterations: 1e5, hash: 'SHA-256' };
+          var derivationAlgo = { name: 'PBKDF2', salt: salt, iterations: 1e4, hash: 'SHA-256' };
           var initialKey = key;
           var length = 256;
           return window.crypto.subtle.deriveBits(
