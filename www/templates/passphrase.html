@@ -1,4 +1,4 @@
-<ion-view view-title="Login" class="diary start" hide-nav-bar="true">
+<ion-view view-title="Passphrase" class="diary start" cache-view="false" hide-nav-bar="true">
   <ion-content>
     <h2>Create Passphrase</h2>
     <p>
@@ -30,8 +30,12 @@
         </div>
         <div class="passphrase-suggestion" ng-bind-html="suggestion">
         </div>
+        <label class="item item-input" ng-show="requireCurrentPassphrase">
+          <input name="currentPassphrase" type="text" placeholder="Current passphrase" autocapitalize="off"
+                 ng-model="currentPassphrase" ng-change="validateStrength()">
+        </label>
         <label class="item item-input">
-          <input name="passphrase" type="text" placeholder="Passphrase" autocapitalize="off"
+          <input name="passphrase" type="text" placeholder="New passphrase" autocapitalize="off"
                  ng-model="passphrase" ng-change="validateStrength()">
         </label>
         <label class="item item-input">

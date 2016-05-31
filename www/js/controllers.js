@@ -51,6 +51,9 @@ angular.module('diary.controllers', [])
   $scope.formErrors = [];
   $scope.wordlist = [];
   $scope.tokens = [];
+  $scope.requireCurrentPassphrase =
+    Uta.db.settings.enableEncryption &&
+    Uta.db.events.createPassphrase;
 
   $scope.init = function() {
     $scope.loadWordlist();
@@ -62,11 +65,6 @@ angular.module('diary.controllers', [])
       $scope.wordlist = response.data.split(/\n/g);
       $scope.tokens = [].concat($scope.wordlist);
     });
-  };
-
-  $scope.validate = function() {
-    if ($scope.confirmation != $scope.passphrase)
-      return new Error("Passphrase and confirmation must match!");
   };
 
   $scope.validateStrength = function(entropy) {
@@ -109,6 +107,15 @@ angular.module('diary.controllers', [])
 
     var entropy = wordCount * Math.log2(totalWords);
     $scope.validateStrength(entropy);
+  };
+
+  $scope.validate = function() {
+    if ($scope.requireCurrentPassphrase &&
+        $scope.currentPassphrase != Uta.keyRing.passphrase)
+      return new Error("Current passphrase must match your existing passphrase");
+
+    if ($scope.confirmation != $scope.passphrase)
+      return new Error("Passphrase and confirmation must match!");
   };
 
   $scope.submit = function() {
@@ -262,10 +269,6 @@ angular.module('diary.controllers', [])
   };
   $scope.changePassphrase = function() {
     if (Uta.db.settings.enableEncryption) {
-      // TODO: Ask for current passphrase
-      Uta.db.events.createPassphrase = null;
-
-      // TODO: Add route for creating passphrase
       console.log("Navigating to passphrase screen...")
       $state.go('passphrase');
     }
