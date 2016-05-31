@@ -157,6 +157,14 @@ angular.module('diary.services')
     // Commits the database.
     commit: function(callback) {
       callback = callback || function() {};
+
+      if (!Database.validateDB(Uta.db)) {
+        var message = "Failed committing database: Database validation failed";
+        var error = new Error(message);
+        console.warn(error.message);
+        return callback(error);
+      }
+
       Uta.db.lastWrittenAt = new Date();
       Uta.serialize()
       .then(
