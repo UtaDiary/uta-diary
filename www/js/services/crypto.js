@@ -489,13 +489,13 @@ angular.module('diary.services')
           if (!exportedKey)
             return done(new Error("Exported key should be returned."))
 
-          if (hex != "41e7b1463db2654fe56aba9d104df7ac9ff869bcdebf66ce9ffb184c74a4766b")
+          if (hex != "c5ff9a5225128895e4e80ed12cbbe2559e3e2e3a7963ac4a6116936f95e01e0f")
             return done(new Error("Exported key should match expected hex value"));
 
-          if (base64 != "QeexRj2yZU/larqdEE33rJ/4abzev2bOn/sYTHSkdms=")
+          if (base64 != "xf+aUiUSiJXk6A7RLLviVZ4+Ljp5Y6xKYRaTb5XgHg8=")
             return done(new Error("Exported key should match expected Base64 value"));
 
-          if (base58 != "5SGQoSVpD1b86gEwDbfzEaT59PLKYHnXhx7VNuTYJkcS")
+          if (base58 != "EKuNdPMzr5bVZkjNHgopNZkXfQjf9bZg1KT5rt1y1Ykv")
             return done(new Error("Exported key should match expected Base58 value"));
 
           return done();
