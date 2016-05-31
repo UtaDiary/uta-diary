@@ -185,8 +185,12 @@ angular.module('diary.services')
     },
 
     // Serializes the database for storage.
-    serialize: function() {
-      var useEncryption = Uta.db.settings.enableEncryption;
+    serialize: function(options) {
+      var options = options || {};
+      var useEncryption = options.encrypt != undefined
+        ? options.encrypt
+        : Uta.db.settings.enableEncryption;
+
       if (useEncryption)
         return Uta.serializeVault();
       else
@@ -386,7 +390,12 @@ angular.module('diary.services')
       Uta.createBackupDirs()
       .then(
         function() {
-          var data = angular.toJson(Uta.db);
+          var options = { encrypt: Uta.db.settings.enableEncryption };
+          return Uta.serialize(options);
+        }
+      )
+      .then(
+        function(data) {
           return FileUtils.writeFile(path, file, data, true, callback);
         }
       )
