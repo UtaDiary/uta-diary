@@ -25,9 +25,6 @@ angular.module('diary.services')
           createPassphrase: null
         },
         settings: {
-          username: "",
-          password: "",
-          email: "",
           firstName: "",
           lastName: "",
           enableDebug: false,
@@ -116,6 +113,23 @@ angular.module('diary.services')
           delete db.events;
           return db;
         }
+      },
+      {
+        id: 5,
+        date: '2016-05-31',
+        version: '0.9.4',
+        up: function(db) {
+          delete db.settings.username;
+          delete db.settings.password;
+          delete db.settings.email;
+          return db;
+        },
+        down: function(db) {
+          db.settings.username = "";
+          db.settings.password = "";
+          db.settings.email = "";
+          return db;
+        }
       }
     ],
 
@@ -179,7 +193,8 @@ angular.module('diary.services')
       var result2 = _.isEqual(db.settings, Database.defaults().settings);
       var result3 = _.isEqual(db.lastWrittenAt, Database.defaults().lastWrittenAt);
       var result4 = _.isEqual(db.events, Database.defaults().events);
-      return result1 && result2 && result3 && result4;
+      var result5 = _.isEqual(_.pick(db.settings, 'username', 'password', 'email'), {});
+      return result1 && result2 && result3 && result4 && result5;
     },
 
     testMigrateDown: function() {
