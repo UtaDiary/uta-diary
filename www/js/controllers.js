@@ -45,6 +45,7 @@ angular.module('diary.controllers', [])
 })
 
 .controller('PassphraseCtrl', function($http, $scope, $state, Uta, Crypto, KeyRing) {
+  $scope.currentPassphrase = '';
   $scope.passphrase = '';
   $scope.confirmation = '';
   $scope.suggestion = '';
