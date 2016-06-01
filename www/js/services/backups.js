@@ -18,8 +18,8 @@ angular.module('diary.services')
     },
 
     // Exports backup by name.
-    export: function(backup, callback) {
-      Uta.exportFile(Uta.getBackupDirectory(), backup, callback);
+    export: function(backup, options, callback) {
+      Uta.exportFile(Uta.getBackupDirectory(), backup, options, callback);
     },
 
     // Deletes backup by name.

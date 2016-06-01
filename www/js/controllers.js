@@ -382,10 +382,15 @@ angular.module('diary.controllers', [])
     var date = new Date();
     var timestamp = date.toISOString().slice(0, 10);
     $scope.exportOptions = {
-      filename: 'journal-' + timestamp + '.json'
+      filename: 'journal-' + timestamp + '.json',
+      encrypt: Uta.db.settings.enableEncryption
     };
     var popup = $ionicPopup.show({
-      template: '<input type="text" ng-model="exportOptions.filename">',
+      template: '<input type="text" ng-model="exportOptions.filename">'
+        + '<label>'
+        + '  <input type="checkbox" ng-model="exportOptions.encrypt" style="margin: 8px 0; width: auto">'
+        + '  Encrypt with passphrase'
+        + '</label>',
       title: 'Backup File',
       subTitle: 'Choose a name for your backup',
       scope: $scope,
@@ -419,7 +424,7 @@ angular.module('diary.controllers', [])
     $scope.selectExportOptions(function(options) {
       if (options.filename) {
         var file = options.filename;
-        $scope.exportBackup(file);
+        $scope.exportBackup(file, options);
       }
       else {
         $scope.notify({ title: "Error", template: "Invalid name for backup file" });
@@ -439,9 +444,9 @@ angular.module('diary.controllers', [])
     });
   };
 
-  $scope.exportBackup = function(backup) {
+  $scope.exportBackup = function(backup, options) {
     console.log("Exporting backup: " + backup);
-    Uta.Backups.export(backup, function(err) {
+    Uta.Backups.export(backup, options, function(err) {
       if (err)
         $scope.notify({ title: "Error", template: "Error exporting to " + backup + "<br>\n" + err.message });
       else

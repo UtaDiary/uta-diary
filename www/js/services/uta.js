@@ -385,12 +385,11 @@ angular.module('diary.services')
     },
 
     // Exports database to file.
-    exportFile: function(path, file, callback) {
+    exportFile: function(path, file, options, callback) {
       console.log("Exporting file: " + file);
       Uta.createBackupDirs()
       .then(
         function() {
-          var options = { encrypt: Uta.db.settings.enableEncryption };
           return Uta.serialize(options);
         }
       )
