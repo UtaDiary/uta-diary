@@ -22,11 +22,9 @@ entry for each one of yours. The results may surprise you!
 + Markdown - Easily add headings, links, pictures, and more!
 + Kitsune - Your journaling companion! (Chatbot-style A.I.)
 + Local Storage - Data is stored locally on your device.
++ Encryption - Protect your privacy by encrypting data with a passphrase.
 + Backups - Save your data to a backup file (JSON), which you can restore later.
 
-**Future development**
-
-+ Encryption - Protect your privacy by encrypting data with a passphrase.
 
 ## Milestones
 
@@ -47,11 +45,9 @@ entry for each one of yours. The results may surprise you!
 + Part-of-speech tagging with [Compendium](https://github.com/Ulflander/compendium-js)
 + Improved interface for backup files
 + Database migrations run on startup
++ Encryption protects your data with a passphrase
 
 ### 1.0 Android (Next)
 
 + Public release for Android on Google Play!
 
-### 1.1 Encryption
-
-+ Encryption - Journal database is encrypted locally
