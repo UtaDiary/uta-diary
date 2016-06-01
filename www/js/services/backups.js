@@ -13,8 +13,8 @@ angular.module('diary.services')
     },
 
     // Imports backup by name.
-    import: function(backup, callback) {
-      Uta.importFile(Uta.getBackupDirectory(), backup, callback);
+    import: function(backup, options, callback) {
+      Uta.importFile(Uta.getBackupDirectory(), backup, options, callback);
     },
 
     // Exports backup by name.

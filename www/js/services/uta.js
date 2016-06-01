@@ -287,7 +287,12 @@ angular.module('diary.services')
     },
 
     // Loads JSON for database or vault.
-    loadJSON: function(json, callback) {
+    loadJSON: function(json, options, callback) {
+      if (arguments.length == 2) {
+        callback = options;
+        options = {};
+      }
+
       console.log("Loading JSON: " + json);
       var data = angular.fromJson(json);
       var isVault = data.vault ? true : false;
@@ -295,7 +300,7 @@ angular.module('diary.services')
       if (isVault) {
         var vault = new Vault();
         vault.deserialize(json);
-        Uta.loadVault(vault, callback);
+        Uta.loadVault(vault, options, callback);
       }
       else {
         Uta.importDB(data, callback);
@@ -303,9 +308,17 @@ angular.module('diary.services')
     },
 
     // Loads database from a vault.
-    loadVault: function(vault, callback) {
+    loadVault: function(vault, options, callback) {
+      if (arguments.length == 2) {
+        callback = options;
+        options = {};
+      }
+
+      var passphrase = _.isString(options.passphrase)
+        ? options.passphrase
+        : Uta.keyRing.passphrase;
+
       console.log("Loading vault: " + vault);
-      var passphrase = Uta.keyRing.passphrase;
       vault.retrieve(passphrase)
       .then(
         function(data) {
@@ -350,14 +363,14 @@ angular.module('diary.services')
     },
 
     // Imports a database file.
-    importFile: function(path, file, callback) {
+    importFile: function(path, file, options, callback) {
       console.log("Importing file: " + file);
 
       $cordovaFile.readAsText(path, file).then(
       function(json) {
         console.log("Imported JSON: " + json);
 
-        Uta.loadJSON(json, function(err) {
+        Uta.loadJSON(json, options, function(err) {
           if (err)
             return callback(new Error("Error importing file: " + err.message));
           else

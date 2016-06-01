@@ -321,11 +321,17 @@ angular.module('diary.controllers', [])
   };
 
   $scope.confirmImport = function(callback) {
-    $scope.importOptions = {};
+    $scope.importOptions = {
+      passphrase: Uta.keyRing.passphrase
+    };
     var popup = $ionicPopup.show({
-      template: '',
       title: "Import Backup",
       subTitle: "This replaces your current journals and settings. Continue?",
+      template:
+          '<label>'
+        + '  Passphrase<br>'
+        + '  <input type="password" ng-model=importOptions.passphrase>'
+        + '</label>',
       scope: $scope,
       buttons: [
         {
@@ -436,7 +442,7 @@ angular.module('diary.controllers', [])
   $scope.importBackup = function(backup) {
     console.log("Importing backup: " + backup);
     $scope.confirmImport(function(options) {
-      Uta.Backups.import(backup, function(err) {
+      Uta.Backups.import(backup, options, function(err) {
         if (err)
           $scope.notify({ title: "Error", template: "Error importing from " + backup + "<br>\n" + err.message });
         else
