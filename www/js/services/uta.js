@@ -332,36 +332,6 @@ angular.module('diary.services')
       );
     },
 
-    // Saves database to a vault.
-    saveVault: function(path, filename, callback) {
-      console.log("Saving vault...");
-      var passphrase = Uta.keyRing.passphrase;
-      var data = Uta.db;
-      var vault = new Vault();
-      vault.store(passphrase, data)
-      .then(
-        function() {
-          return Uta.createBackupDirs();
-        }
-      )
-      .then(
-        function() {
-          var json = vault.serialize();
-          return FileUtils.writeFile(path, filename, json, true, function(err) {
-            if (err)
-              return callback(new Error("Failed saving vault: " + err.message));
-            else
-              return callback(null);
-          });
-        }
-      )
-      .catch(
-        function(err) {
-          return callback(new Error("Failed saving vault: " + err.message));
-        }
-      );
-    },
-
     // Imports a database file.
     importFile: function(path, file, options, callback) {
       console.log("Importing file: " + file);
