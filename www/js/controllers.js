@@ -387,8 +387,9 @@ angular.module('diary.controllers', [])
     };
     var popup = $ionicPopup.show({
       template: '<input type="text" ng-model="exportOptions.filename">'
-        + '<label>'
-        + '  <input type="checkbox" ng-model="exportOptions.encrypt" style="margin: 8px 0; width: auto">'
+        + '<label ng-show="Uta.db.settings.enableEncryption">'
+        + '  <input type="checkbox" style="margin: 8px 0; width: auto"'
+        + '         ng-model="exportOptions.encrypt">'
         + '  Encrypt with passphrase'
         + '</label>',
       title: 'Backup File',
