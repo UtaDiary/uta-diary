@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.ionicframework.utanikki207884" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>UtaDiary</name>
+<widget id="com.ionicframework.utanikki207884" version="0.9.4" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>Uta Diary</name>
     <description>
-        An Ionic Framework and Cordova project.
+        A magical journal for mobile devices!
     </description>
-    <author email="hi@ionicframework" href="http://ionicframework.com/">
-      Ionic Framework Team
+    <author email="UtaDiaryApp@gmail.com" href="https://github.com/qualiabyte/uta-diary">
+      Tyler Florez
     </author>
     <content src="index.html" />
     <access origin="*" />
