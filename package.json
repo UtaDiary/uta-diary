@@ -1,6 +1,6 @@
 {
   "name": "uta-diary",
-  "version": "0.9.2",
+  "version": "0.9.4",
   "description": "Uta Diary, a journal app and poetic diary",
   "dependencies": {
     "gulp": "^3.5.6",
@@ -20,7 +20,8 @@
     "cordova-plugin-whitelist",
     "cordova-plugin-splashscreen",
     "com.ionic.keyboard",
-    "cordova-plugin-file"
+    "cordova-plugin-file",
+    "cordova-plugin-inappbrowser"
   ],
   "cordovaPlatforms": [
     "android"
