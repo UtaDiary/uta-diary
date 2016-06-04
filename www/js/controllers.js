@@ -52,15 +52,33 @@ angular.module('diary.controllers', [])
   $scope.formErrors = [];
   $scope.wordlist = [];
   $scope.tokens = [];
+  $scope.country = '';
+  $scope.suggestionWordCount = 4;
+  $scope.entropyLimit = 56;
   $scope.requireCurrentPassphrase =
     Uta.db.settings.enableEncryption &&
     Uta.db.events.createPassphrase;
 
   $scope.init = function() {
+    $scope.loadCountry();
     $scope.loadWordlist();
     $scope.validateStrength();
   };
 
+  $scope.loadCountry = function() {
+    geolocator.locate(function(response) {
+      $scope.country = response.address.country;
+
+      if ($scope.country == "United States") {
+        $scope.suggestionWordCount = 9;
+        $scope.entropyLimit = 256;
+      }
+      else {
+        $scope.suggestionWordCount = 4;
+        $scope.entropyLimit = 56;
+      }
+    });
+  };
   $scope.loadWordlist = function() {
     $http.get("templates/wordlist.txt").then(function(response) {
       $scope.wordlist = response.data.split(/\n/g);
@@ -94,7 +112,7 @@ angular.module('diary.controllers', [])
 
   $scope.suggestPassphrase = function() {
     var totalWords = $scope.wordlist.length;
-    var wordCount = 9;
+    var wordCount = $scope.suggestionWordCount;
     var words = [];
     var values = new Uint32Array(wordCount);
     window.crypto.getRandomValues(values);
@@ -117,6 +135,10 @@ angular.module('diary.controllers', [])
 
     if ($scope.confirmation != $scope.passphrase)
       return new Error("Passphrase and confirmation must match!");
+
+    if ($scope.entropy > $scope.entropyLimit) {
+      return new Error("Sorry, the maximium passphrase strength is " + $scope.entropyLimit + " bits");
+    }
   };
 
   $scope.submit = function() {
