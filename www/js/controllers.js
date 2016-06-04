@@ -55,6 +55,7 @@ angular.module('diary.controllers', [])
   $scope.country = '';
   $scope.suggestionWordCount = 4;
   $scope.entropyLimit = 56;
+  $scope.dictionary = {};
   $scope.requireCurrentPassphrase =
     Uta.db.settings.enableEncryption &&
     Uta.db.events.createPassphrase;
@@ -79,10 +80,15 @@ angular.module('diary.controllers', [])
       }
     });
   };
+
   $scope.loadWordlist = function() {
     $http.get("templates/wordlist.txt").then(function(response) {
       $scope.wordlist = response.data.split(/\n/g);
       $scope.tokens = [].concat($scope.wordlist);
+
+      for (var i = 0; i < $scope.wordlist.length; i++) {
+        $scope.dictionary[$scope.wordlist[i]] = true;
+      }
     });
   };
 
@@ -95,6 +101,7 @@ angular.module('diary.controllers', [])
     $scope.entropy = entropy
       ? entropy
       : Math.max(0, Math.log2(2 * ($scope.strength.guesses - 1)));
+    $scope.refineEntropyEstimate();
     $scope.guesses = entropy
       ? 1 + 0.5 * Math.pow(2, entropy)
       : $scope.strength.guesses;
@@ -110,6 +117,26 @@ angular.module('diary.controllers', [])
       : $scope.yearsScientific;
   };
 
+  $scope.refineEntropyEstimate = function() {
+    var estimate = $scope.entropy;
+    var words = $scope.passphrase.split(/ +/g);
+
+    var isSuggestion = true;
+
+    if (words.length == 0 || words == "")
+      isSuggestion = false;
+
+    for (var i = 0; i < words.length; i++) {
+      if (! $scope.dictionary[words[i]])
+        isSuggestion = false;
+    }
+
+    if (isSuggestion == true)
+      $scope.entropy = words.length * Math.log2($scope.wordlist.length);
+    else
+      $scope.entropy = estimate;
+  };
+
   $scope.suggestPassphrase = function() {
     var totalWords = $scope.wordlist.length;
     var wordCount = $scope.suggestionWordCount;
@@ -122,7 +149,11 @@ angular.module('diary.controllers', [])
       var word = $scope.wordlist[index];
       words.push(word);
     }
-    $scope.suggestion = words.join(' ').replace(/(\w+ \w+ \w+)/g, '$1<br>');
+
+    if (words.length > 4)
+      $scope.suggestion = words.join(' ').replace(/(\w+ \w+ \w+)/g, '$1<br>');
+    else
+      $scope.suggestion = words.join(' ');
 
     var entropy = wordCount * Math.log2(totalWords);
     $scope.validateStrength(entropy);
