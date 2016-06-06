@@ -197,6 +197,16 @@ angular.module('diary', ['ionic', 'ngCordova', 'monospaced.elastic', 'diary.cont
     }
   })
 
+  .state('tab.settings-privacy', {
+    url: '/settings/privacy',
+    views: {
+      'tab-settings': {
+        templateUrl: 'templates/tab-settings-privacy.html',
+        controller: 'PrivacyCtrl'
+      }
+    }
+  })
+
   // Default Route
   $urlRouterProvider.otherwise('/splash');
 

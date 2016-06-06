@@ -1,0 +1,16 @@
+<ion-view view-title="Privacy">
+  <ion-content>
+    <ion-list>
+      <ion-toggle ng-model="Uta.db.settings.enableEncryption" ng-click="enableEncryption()">
+        <h2>Enable Encryption</h2>
+        <p>Encrypt journals with your passphrase</p>
+      </ion-toggle>
+
+      <ion-item class="item-icon-right" ng-show="Uta.db.settings.enableEncryption" ng-click="changePassphrase()">
+        <h2>Change Passphrase</h2>
+        <p>Change your encryption passphrase</p>
+        <i class="icon ion-chevron-right icon-accessory"></i>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>

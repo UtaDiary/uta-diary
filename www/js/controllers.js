@@ -316,7 +316,7 @@ angular.module('diary.controllers', [])
   $scope.stats = Entries.getStats();
 })
 
-.controller('SettingsCtrl', function($scope, $state, Uta, Entries) {
+.controller('PrivacyCtrl', function ($scope, $state, Uta) {
   $scope.Uta = Uta;
   $scope.save = function() {
     Uta.commit();
@@ -342,6 +342,9 @@ angular.module('diary.controllers', [])
       $scope.save();
     }
   };
+})
+
+.controller('SettingsCtrl', function($scope, $state, Uta) {
 })
 
 .controller('ProfileCtrl', function($scope, Uta) {
