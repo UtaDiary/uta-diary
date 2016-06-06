@@ -185,6 +185,7 @@ diary-entry-text .diary.entry-text ul {
 }
 diary-entry-text .diary.entry-text-editor {
   width: 100%;
+  line-height: 1.4em;
 }
 
 diary-entry-text .diary.notifications {
