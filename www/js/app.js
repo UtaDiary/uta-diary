@@ -177,6 +177,16 @@ angular.module('diary', ['ionic', 'ngCordova', 'monospaced.elastic', 'diary.cont
     }
   })
 
+  .state('tab.settings-advanced', {
+    url: '/settings/advanced',
+    views: {
+      'tab-settings': {
+        templateUrl: 'templates/tab-settings-advanced.html',
+        controller: 'AdvancedCtrl'
+      }
+    }
+  })
+
   .state('tab.settings-backups', {
     url: '/settings/backups',
     views: {

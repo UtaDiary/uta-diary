@@ -316,6 +316,16 @@ angular.module('diary.controllers', [])
   $scope.stats = Entries.getStats();
 })
 
+.controller('SettingsCtrl', function($scope, $state, Uta) {
+})
+
+.controller('ProfileCtrl', function($scope, Uta) {
+  $scope.Uta = Uta;
+})
+
+.controller('AdvancedCtrl', function($scope, $state, Uta) {
+})
+
 .controller('PrivacyCtrl', function ($scope, $state, Uta) {
   $scope.Uta = Uta;
   $scope.save = function() {
@@ -342,13 +352,6 @@ angular.module('diary.controllers', [])
       $scope.save();
     }
   };
-})
-
-.controller('SettingsCtrl', function($scope, $state, Uta) {
-})
-
-.controller('ProfileCtrl', function($scope, Uta) {
-  $scope.Uta = Uta;
 })
 
 .controller('BackupsCtrl', function($scope, $ionicActionSheet, $ionicPopup, Uta, Backups) {
