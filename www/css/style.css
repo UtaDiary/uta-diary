@@ -158,19 +158,19 @@ $dark:                            #444 !default;
   color: #fff;
   text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
 }
-.diary.journal ion-list .list {
+.diary.journal > ion-content > .scroll > ion-list > .list {
   margin: 10px 10px;
   padding: 0px;
   border: 0px;
   box-shadow: 1px 1px 10px rgba(0,0,0,0.2);
 }
-.diary.journal ion-list .list :first-child {
+.diary.journal > ion-content > .scroll > ion-list > .list > :first-child {
   border-radius: 3px 3px 0 0;
 }
-.diary.journal ion-list .list :last-child {
+.diary.journal > ion-content > .scroll > ion-list > .list > :last-child {
   border-radius: 0 0 3px 3px;
 }
-.diary.journal ion-list .list ion-item {
+.diary.journal > ion-content > .scroll > ion-list > .list > ion-item {
   border: 0px;
 }
 
