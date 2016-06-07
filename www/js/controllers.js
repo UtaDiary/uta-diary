@@ -277,6 +277,7 @@ angular.module('diary.controllers', [])
 })
 
 .controller('JournalCtrl', function($scope, Uta, Entries) {
+  $scope.Uta = Uta;
   $scope.Entries = Entries;
   $scope.entries = Entries.all();
   $scope.create = function() {
@@ -321,6 +322,9 @@ angular.module('diary.controllers', [])
 
 .controller('ProfileCtrl', function($scope, Uta) {
   $scope.Uta = Uta;
+  $scope.save = function() {
+    Uta.commit();
+  };
 })
 
 .controller('AdvancedCtrl', function($scope, $state, Uta) {

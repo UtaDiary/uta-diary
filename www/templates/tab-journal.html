@@ -1,6 +1,6 @@
 <ion-view view-title="Journal" class="diary journal">
   <ion-content>
-    <h2 class="content-header">My Journal</h2>
+  <h2 class="content-header">{{ Uta.db.settings.firstName ? Uta.db.settings.firstName + "'s" : "My"}} Journal</h2>
     <ion-list>
       <ion-item class="diary new-entry item-remove-animate item-icon-right"
                 ng-click="create()">
