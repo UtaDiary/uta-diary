@@ -182,6 +182,14 @@ $dark:                            #444 !default;
   color: #fff;
 }
 
+diary-entry {
+  display: block;
+  padding: 8px;
+  border-radius: 4px;
+  background: #fff;
+  box-shadow: 1px 1px 10px rgba(0,0,0,0.2);
+}
+
 diary-entry-title .diary.entry-title,
 diary-entry-title .diary.entry-title-editor {
   margin: 0px;
@@ -190,7 +198,7 @@ diary-entry-title .diary.entry-title-editor {
 }
 
 diary-entry-text .diary.entry-text {
-  min-height: 20em;
+  min-height: 0em;
 }
 
 diary-entry-text .diary.entry-text h1 { font-size: 30px; }
@@ -224,6 +232,7 @@ diary-entry-text .diary.notifications {
 }
 
 diary-entry-text .diary.notifications .notification {
+  background: none;
   transition: all 2s ease;
 }
 diary-entry-text .diary.notifications .notification.start {
