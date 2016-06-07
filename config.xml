@@ -17,7 +17,11 @@
     <preference name="android-minSdkVersion" value="16" />
     <preference name="BackupWebStorage" value="none" />
     <preference name="SplashScreen" value="screen" />
-    <preference name="SplashScreenDelay" value="3000" />
+    <preference name="SplashScreenDelay" value="5000" />
+    <preference name="SplashMaintainAspectRatio" value="true" />
+    <preference name="ShowSplashScreenSpinner" value="false" />
+    <preference name="FadeSplashScreenDuration" value="300"/>
+    <preference name="AutoHideSplashScreen" value="true" />
     <preference name="KeyboardDisplayRequiresUserAction" value="false" />
     <feature name="Keyboard">
         <param name="ios-package" onload="true" value="IonicKeyboard" />
