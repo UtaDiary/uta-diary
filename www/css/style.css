@@ -192,6 +192,8 @@ diary-entry {
 
 diary-entry-title .diary.entry-title,
 diary-entry-title .diary.entry-title-editor {
+  display: block;
+  width: 100%;
   margin: 0px;
   padding: 0px;
   font-size: 30px;
