@@ -1,13 +1,14 @@
-<ion-view view-title="Journal">
+<ion-view view-title="Journal" class="diary journal">
   <ion-content>
+    <h2 class="content-header">My Journal</h2>
     <ion-list>
-      <ion-item class="diary new-entry item-remove-animate item-avatar item-icon-right"
+      <ion-item class="diary new-entry item-remove-animate item-icon-right"
                 ng-click="create()">
         <h2 class="diary new-entry-header">New Entry</h2>
         <p>Today</p>
         <i class="icon ion-plus icon-accessory"></i>
       </ion-item>
-      <ion-item class="item-remove-animate item-avatar item-icon-right"
+      <ion-item class="item-remove-animate item-icon-right"
                 ng-repeat="entry in entries | orderBy:'-id' track by entry.id" type="item-text-wrap" href="#/tab/journal/{{entry.id}}">
         <h2>{{ entry.title }}</h2>
         <p>{{ entry.date | date:'MMMM dd, yyyy' }}</p>

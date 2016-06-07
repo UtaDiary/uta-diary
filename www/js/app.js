@@ -2,7 +2,7 @@
 
 angular.module('diary', ['ionic', 'ngCordova', 'monospaced.elastic', 'diary.controllers', 'diary.services', 'diary.directives'])
 
-.run(function($ionicPlatform, Uta, Entries) {
+.run(function($ionicPlatform, Uta, Entries, $ionicConfig) {
   $ionicPlatform.ready(function() {
     if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
       // Hide the input accessory bar
@@ -12,6 +12,8 @@ angular.module('diary', ['ionic', 'ngCordova', 'monospaced.elastic', 'diary.cont
       // Requires org.apache.cordova.statusbar
       StatusBar.styleLightContent();
     }
+
+    $ionicConfig.tabs.position('top');
   });
 })
 
