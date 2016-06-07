@@ -158,7 +158,6 @@ $dark:                            #444 !default;
   color: #fff;
   text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
 }
-
 .diary.journal ion-list .list {
   margin: 10px 10px;
   padding: 0px;
@@ -174,8 +173,6 @@ $dark:                            #444 !default;
 .diary.journal ion-list .list ion-item {
   border: 0px;
 }
-
-
 
 .diary.new-entry, .diary.new-entry * {
   background: #11c1f3;

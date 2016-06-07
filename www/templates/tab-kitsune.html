@@ -1,6 +1,7 @@
 <!-- Kitsune -->
-<ion-view view-title="Kitsune">
+<ion-view view-title="Kitsune" class="diary journal kitsune">
   <ion-content>
+    <h2 class="content-header">Kitsune's Diary</h2>
     <ion-list>
       <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="entry in entries | orderBy:'-id' track by entry.id" type="item-text-wrap" href="#/tab/kitsune/{{entry.id}}">
         <img ng-src="{{avatarURL}}">
