@@ -182,7 +182,9 @@ $dark:                            #444 !default;
   color: #fff;
 }
 
-diary-entry {
+diary-entry,
+kitsune-entry
+{
   display: block;
   padding: 8px;
   border-radius: 4px;

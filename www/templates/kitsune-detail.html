@@ -1,9 +1,11 @@
 <!-- Kitsune Detail -->
-<ion-view view-title="{{entry.title}}">
+<ion-view view-title="{{entry.title}}" class="diary journal kitsune-entry">
   <ion-content class="padding">
-    <img ng-src="{{avatarURL}}" style="max-width: 100%;">
-    <h2 class="diary kitsune-title">{{ entry.title }}</h2>
-    <div class="diary kitsune-meta">By {{entry.author}}, {{ entry.date | date:'MMMM dd, yyyy' }}</div>
-    <p ng-bind-html="entry.text | renderMarkdown"></p>
+    <kitsune-entry>
+      <img ng-src="{{avatarURL}}" style="max-width: 100%;">
+      <h2 class="diary kitsune-title">{{ entry.title }}</h2>
+      <div class="diary kitsune-meta">By {{entry.author}}, {{ entry.date | date:'MMMM dd, yyyy' }}</div>
+      <p ng-bind-html="entry.text | renderMarkdown"></p>
+    </kitsune-entry>
   </ion-content>
 </ion-view>
