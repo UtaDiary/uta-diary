@@ -58,7 +58,7 @@ angular.module('diary', ['ionic', 'ngCordova', 'monospaced.elastic', 'diary.cont
           var completedTutorial = Uta.db.events.completeTutorial;
           var createdPassphrase = Uta.db.events.createPassphrase;
 
-          if (!completedTutorial) {
+          if (!completedTutorial || Uta.db.settings.enableTutorial) {
             return $state.go('intro');
           }
           else if (!createdPassphrase) {

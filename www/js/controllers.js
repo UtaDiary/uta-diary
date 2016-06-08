@@ -315,6 +315,10 @@ angular.module('diary.controllers', [])
 })
 
 .controller('AdvancedCtrl', function($scope, $state, Uta) {
+  $scope.Uta = Uta;
+  $scope.save = function() {
+    Uta.commit();
+  };
 })
 
 .controller('PrivacyCtrl', function ($scope, $state, Uta) {
