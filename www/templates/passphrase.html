@@ -28,8 +28,20 @@
             </tr>
           </table>
         </div>
-        <div class="passphrase-suggestion" ng-bind-html="suggestion">
+
+        <div class="suggestion-container" ng-show="suggestionHTML.length > 0">
+          <h2 class="suggestion-header">Suggestion Strength</h2>
+          <div class="item range">
+            <i class="icon ion-ios-unlocked-outline"></i>
+            <input type="range" name="suggestRange"
+                   min="{{suggest.min}}" max="{{suggest.max}}" step="1"
+                   ng-model="suggest.count"
+                   ng-change="renderSuggestion()">
+            <i class="icon ion-ios-locked"></i>
+          </div>
         </div>
+        <div class="passphrase-suggestion" ng-bind-html="suggestionHTML"></div>
+
         <label class="item item-input" ng-show="requireCurrentPassphrase">
           <input name="currentPassphrase" type="text" placeholder="Current passphrase" autocapitalize="off"
                  ng-model="currentPassphrase" ng-change="validateStrength()">

@@ -49,10 +49,16 @@ angular.module('diary.controllers', [])
   $scope.passphrase = '';
   $scope.confirmation = '';
   $scope.suggestion = '';
+  $scope.suggest = {
+    min: 1,
+    max: 9,
+    count: 9
+  };
+  $scope.suggestionWords = [];
+  $scope.suggestionHTML = '';
   $scope.formErrors = [];
   $scope.wordlist = [];
   $scope.tokens = [];
-  $scope.suggestionWordCount = 9;
   $scope.dictionary = {};
   $scope.requireCurrentPassphrase =
     Uta.db.settings.enableEncryption &&
@@ -121,7 +127,7 @@ angular.module('diary.controllers', [])
 
   $scope.suggestPassphrase = function() {
     var totalWords = $scope.wordlist.length;
-    var wordCount = $scope.suggestionWordCount;
+    var wordCount = $scope.suggest.max;
     var words = [];
     var values = new Uint32Array(wordCount);
     window.crypto.getRandomValues(values);
@@ -132,13 +138,16 @@ angular.module('diary.controllers', [])
       words.push(word);
     }
 
-    if (words.length > 4)
-      $scope.suggestion = words.join(' ').replace(/(\w+ \w+ \w+)/g, '$1<br>');
-    else
-      $scope.suggestion = words.join(' ');
+    $scope.suggestionWords = words;
+    $scope.renderSuggestion();
+  };
 
-    var entropy = wordCount * Math.log2(totalWords);
+  $scope.renderSuggestion = function() {
+    var totalWords = $scope.wordlist.length;
+    var words = $scope.suggestionWords.slice(0, $scope.suggest.count);
+    var entropy = words.length * Math.log2(totalWords);
     $scope.validateStrength(entropy);
+    $scope.suggestionHTML = words.join(' ').replace(/(\w+ \w+ \w+)/g, '$1<br>');
   };
 
   $scope.validate = function() {
