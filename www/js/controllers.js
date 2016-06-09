@@ -45,9 +45,11 @@ angular.module('diary.controllers', [])
 })
 
 .controller('PassphraseCtrl', function($http, $scope, $state, Uta, Crypto, KeyRing) {
-  $scope.currentPassphrase = '';
-  $scope.passphrase = '';
-  $scope.confirmation = '';
+  var form = $scope.form = {
+    currentPassphrase: '',
+    passphrase: '',
+    confirmation: ''
+  };
   $scope.suggestion = '';
   $scope.suggest = {
     min: 1,
@@ -85,7 +87,7 @@ angular.module('diary.controllers', [])
     // Hashrate for Nvidia Titan X: ~2.4 GH/s (SHA-256)
     // https://gist.github.com/epixoip/63c2ad11baf7bbd57544
     $scope.gpuHashrate = 2.4e9;
-    $scope.strength = zxcvbn($scope.passphrase, $scope.tokens);
+    $scope.strength = zxcvbn(form.passphrase, $scope.tokens);
     $scope.entropy = entropy
       ? entropy
       : Math.max(0, Math.log2(2 * ($scope.strength.guesses - 1)));
@@ -107,7 +109,7 @@ angular.module('diary.controllers', [])
 
   $scope.refineEntropyEstimate = function() {
     var estimate = $scope.entropy;
-    var words = $scope.passphrase.split(/ +/g);
+    var words = form.passphrase.split(/ +/g);
 
     var isSuggestion = true;
 
@@ -152,10 +154,10 @@ angular.module('diary.controllers', [])
 
   $scope.validate = function() {
     if ($scope.requireCurrentPassphrase &&
-        $scope.currentPassphrase != Uta.keyRing.passphrase)
+        form.currentPassphrase != Uta.keyRing.passphrase)
       return new Error("Current passphrase must match your existing passphrase");
 
-    if ($scope.confirmation != $scope.passphrase)
+    if (form.confirmation != form.passphrase)
       return new Error("Passphrase and confirmation must match!");
   };
 
@@ -165,7 +167,7 @@ angular.module('diary.controllers', [])
       return $scope.fail("Failed validation", error);
 
     var salt = Crypto.generateSalt(16);
-    KeyRing.create($scope.passphrase, salt)
+    KeyRing.create(form.passphrase, salt)
     .then(
       function(keyRing) {
         console.log("Creating key ring...");

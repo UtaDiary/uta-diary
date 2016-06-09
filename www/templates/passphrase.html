@@ -44,15 +44,15 @@
 
         <label class="item item-input" ng-show="requireCurrentPassphrase">
           <input name="currentPassphrase" type="text" placeholder="Current passphrase" autocapitalize="off"
-                 ng-model="currentPassphrase" ng-change="validateStrength()">
+                 ng-model="form.currentPassphrase" ng-change="validateStrength()">
         </label>
         <label class="item item-input">
           <input name="passphrase" type="text" placeholder="New passphrase" autocapitalize="off"
-                 ng-model="passphrase" ng-change="validateStrength()">
+                 ng-model="form.passphrase" ng-change="validateStrength()">
         </label>
         <label class="item item-input">
           <input name="confirmation" type="text" placeholder="Confirm passphrase" autocapitalize="off"
-                 ng-model="confirmation">
+                 ng-model="form.confirmation">
         </label>
         <div class="form-errors">
           <div class="form-error" ng-repeat="error in formErrors" ng-bind="error.message"></div>
