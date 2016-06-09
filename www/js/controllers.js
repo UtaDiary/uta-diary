@@ -213,7 +213,9 @@ angular.module('diary.controllers', [])
 })
 
 .controller('LoginCtrl', function($scope, $state, Uta, KeyRing) {
-  $scope.passphrase = '';
+  var form = $scope.form = {
+    passphrase: ''
+  };
   $scope.formErrors = [];
 
   $scope.validate = function() {
@@ -225,11 +227,11 @@ angular.module('diary.controllers', [])
       return $scope.fail("Failed validation", error);
 
     console.log("Opening vault...");
-    Uta.vault.retrieve($scope.passphrase)
+    Uta.vault.retrieve(form.passphrase)
     .then(
       function(data) {
         console.log("Updating key ring...");
-        return KeyRing.create($scope.passphrase, Uta.vault.storage.salt)
+        return KeyRing.create(form.passphrase, Uta.vault.storage.salt)
         .then(
           function(keyRing) {
             Uta.keyRing = keyRing;
