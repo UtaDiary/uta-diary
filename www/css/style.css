@@ -99,13 +99,14 @@ $dark:                            #444 !default;
 }
 .diary.start .form-error,
 .diary.login .form-error {
-  margin: 4px;
+  margin: 10px 0px;
+  border: 1px solid #f06;
   padding: 8px;
-  border-radius: 5px;
-  background: #FFB2C1;
-  border: 1px solid rgba(255, 0, 50, 1);
-  color: rgba(255, 0, 50, 0.8);
+  background: #ffb3cf;
+  color: #f06;
   font-weight: bold;
+  text-shadow: none;
+  border-radius: 5px;
 }
 .diary.start .button-block,
 .diary.login .button-block {
