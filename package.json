@@ -1,6 +1,6 @@
 {
   "name": "uta-diary",
-  "version": "0.9.4",
+  "version": "0.9.5",
   "description": "Uta Diary, a journal app and poetic diary",
   "dependencies": {
     "gulp": "^3.5.6",
