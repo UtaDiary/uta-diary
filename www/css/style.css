@@ -78,7 +78,7 @@ $dark:                            #444 !default;
 }
 
 .diary.start .form-table td {
-  padding: 5px 20px;
+  padding: 5px 10px;
 }
 .diary.start .form-table td:first-child {
   text-align: right;
