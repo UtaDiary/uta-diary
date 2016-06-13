@@ -146,6 +146,17 @@ $dark:                            #444 !default;
   font-size: 20px;
 }
 
+.diary.tutorial .image-container {
+  text-align: center;
+}
+.diary.tutorial .image-container .image {
+  width: 80%;
+  height: auto;
+  max-width: 509px;
+  -webkit-mask-image:
+    -webkit-gradient(linear, left 60%, left 65%, from(rgba(0,0,0,1)), to(rgba(0,0,0,0)));
+}
+
 .diary.passphrase .suggestion-container {
   padding: 0.2px;
   background:
