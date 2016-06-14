@@ -1,7 +1,5 @@
 
-# Uta Diary
-
-**A magical journal for mobile devices!**
+# Uta Diary: A Magical Journal
 
 <img src="https://qualiabyte.github.io/images/uta-diary.svg" width="800px" height="auto">
 
