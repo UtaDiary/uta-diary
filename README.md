@@ -1,7 +1,9 @@
 
 # Uta Diary
 
-**A magical journal for mobile devices**
+**A magical journal for mobile devices!**
+
+<img src="https://qualiabyte.github.io/images/uta-diary.svg" width="800px" height="auto">
 
 ```
 Uta Diary helps you write daily journals on your mobile device.
@@ -15,8 +17,14 @@ A.I. how to journal in your style. Kitsune will generate a random
 entry for each one of yours. The results may surprise you!
 ```
 
+[Now available](https://play.google.com/apps/testing/com.ionicframework.utanikki207884) on Google Play<sup>™</sup> for public alpha testing on Android!
 
-**Current Features**
+<a href="https://play.google.com/apps/testing/com.ionicframework.utanikki207884">
+  <img src="https://play.google.com/intl/en_us/badges/images/badge_new.png">
+</a>
+
+
+## Features
 
 + Journal - Create daily entries in a full-screen editor.
 + Markdown - Easily add headings, links, pictures, and more!
@@ -26,7 +34,7 @@ entry for each one of yours. The results may surprise you!
 + Backups - Save your data to a backup file (JSON), which you can restore later.
 
 
-## Milestones
+## History
 
 ### 0.1 Development
 
@@ -36,7 +44,7 @@ entry for each one of yours. The results may surprise you!
 + Clean filesystem API provided by Ng-Cordova
 + Journal entries are stored locally in JSON database
 
-### 0.9 Pre-release (Current)
+### 0.9 Pre-release
 
 + Beta version preparing for Uta Diary release
 + New artwork for icon and splash screen
@@ -47,7 +55,8 @@ entry for each one of yours. The results may surprise you!
 + Database migrations run on startup
 + Encryption protects your data with a passphrase
 
-### 1.0 Android (Next)
+## Roadmap
+
+### 1.0 Android
 
 + Public release for Android on Google Play!
-
