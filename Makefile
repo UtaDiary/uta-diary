@@ -11,7 +11,7 @@ build-android: build
 
 sign-android: build
 	cd platforms/android/build/outputs/apk && \
-	  jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore "$$KEYSTORE" android-release-unsigned.apk utadiary && \
+		jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore "$$KEYSTORE" -storepass:env KEYPASS -keypass:env KEYPASS android-release-unsigned.apk utadiary && \
 	  zipalign -v -f 4 android-release-unsigned.apk UtaDiary.apk && \
 	  cp UtaDiary.apk ../../../../../build/
 
