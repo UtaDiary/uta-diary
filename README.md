@@ -65,7 +65,7 @@ of computer algorithms. We hope the results will delight you!
 ## Open Economy License
 
 If you enjoy open source culture and want to help it grow,  
-Uta Diary is available under the Open Economy License:
+Uta Diary is available under the [Open Economy License](https://www.youtube.com/watch?v=dvtehQIJGZU):
 
 ```
 Open Economy License
@@ -76,6 +76,8 @@ small amount of profit (about 1%) with the parts of the open ecosystem
 they value, in proportion to their benefit and use. By doing so, they
 become members of this ecosystem and establish their good standing.
 ```
+
+You're encouraged to adopt this for your project, or write your own variant!
 
 ## Unlicense
 
