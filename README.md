@@ -61,3 +61,23 @@ of computer algorithms. We hope the results will delight you!
 ### 1.0 Android
 
 + Public release for Android on Google Play!
+
+## Open Economy License
+
+If you enjoy open source culture and want to help it grow,  
+Uta Diary is available under the Open Economy License:
+
+```
+Open Economy License
+
+The open economy license grants unlimited personal, non-profit, and
+commercial use to any individual or organisation that agrees to share a
+small amount of profit (about 1%) with the parts of the open ecosystem
+they value, in proportion to their benefit and use. By doing so, they
+become members of this ecosystem and establish their good standing.
+```
+
+## Unlicense
+
+Released into the public domain with the [Unlicense](http://unlicense.org/).  
+Please read [Lightness, nonviolence and the Unlicense](http://adrianshort.org/lightness-nonviolence-unlicense/).
