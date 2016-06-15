@@ -1,4 +1,4 @@
-Thanks for using Uta Nikki!  
+Thanks for using Uta Diary!  
 Hopefully these notes will help you get started.
 
 Journal entries may be written as [Markdown][WP],
