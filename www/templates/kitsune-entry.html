@@ -1,0 +1,4 @@
+<img ng-src="{{avatarURL}}" style="max-width: 100%;">
+<h2 class="diary kitsune-title">{{ entry.title }}</h2>
+<div class="diary kitsune-meta">By {{entry.author}}, {{ entry.date | date:'MMMM dd, yyyy' }}</div>
+<p ng-bind-html="entry.text | renderMarkdown" ng-click="handleClick($event)"></p>
