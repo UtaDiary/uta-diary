@@ -510,12 +510,12 @@ angular.module('diary.controllers', [])
   };
 
   $scope.exportBackup = function(backup, options) {
-    console.log("Exporting backup: " + backup);
-    Uta.Backups.export(backup, options, function(err) {
+    console.log("Creating backup: " + backup);
+    Uta.Backups.create(backup, options, function(err) {
       if (err)
-        $scope.notify({ title: "Error", template: "Error exporting to " + backup + "<br>\n" + err.message });
+        $scope.notify({ title: "Error", template: "Error creating backup " + backup + "<br>\n" + err.message });
       else
-        $scope.notify({ title: "Success!", template: "Exported database to " + backup });
+        $scope.notify({ title: "Success!", template: "Created backup " + backup });
     });
   };
 

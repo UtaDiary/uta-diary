@@ -45,9 +45,28 @@ angular.module('diary.services')
       Uta.importFile(Uta.getBackupDirectory(), backup, options, callback);
     },
 
-    // Exports backup by name.
-    export: function(backup, options, callback) {
-      Uta.exportFile(Uta.getBackupDirectory(), backup, options, callback);
+    // Creates backup by name.
+    create: function(backup, options, callback) {
+      if (window.require) {
+        var json = window.localStorage.backups || '{}';
+        var backups = JSON.parse(json);
+        Uta.serialize(options)
+        .then(
+          function(data) {
+            console.log("Created backup data: ", data);
+            backups[backup] = data;
+            window.localStorage.backups = JSON.stringify(backups, null, '  ');
+          }
+        )
+        .catch(
+          function(error) {
+            return callback("Error serializing backup: " + error.message);
+          }
+        );
+      }
+      else {
+        return Uta.exportFile(Uta.getBackupDirectory(), backup, options, callback);
+      }
     },
 
     // Deletes backup by name.
