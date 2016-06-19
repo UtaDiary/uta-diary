@@ -1,5 +1,45 @@
 angular.module('diary.directives', [])
 
+.factory('Link', function($window, $cordovaInAppBrowser) {
+  if (require) {
+    var {shell} = require('electron');
+  }
+  var Link = {
+    click: function($event) {
+      if ($event.target.tagName == "A") {
+        Link.open($event.target.href)
+        $event.preventDefault();
+        return false;
+      }
+    },
+    open: function(url) {
+      if (require) {
+        shell.openExternal(url);
+      }
+      else {
+        $window.open(url, '_system', 'location=yes');
+      }
+    }
+  };
+  return Link;
+})
+
+.directive('kitsuneEntry', function(Uta, Link) {
+  return {
+    templateUrl: 'templates/kitsune-entry.html',
+    restrict: 'AE',
+    scope: {
+      entry: '=',
+      avatarURL: '='
+    },
+    link: function($scope, $element, $attrs) {
+      $scope.handleClick = function($event) {
+        return Link.click($event);
+      };
+    }
+  }
+})
+
 .directive('diaryEntry', [function() {
   return {
     templateUrl: 'templates/diary-entry.html',
@@ -44,7 +84,7 @@ angular.module('diary.directives', [])
   };
 })
 
-.directive('diaryEntryText', function(Uta, $timeout, $window, $cordovaInAppBrowser) {
+.directive('diaryEntryText', function(Uta, $timeout, $window, Link) {
   return {
     templateUrl: 'templates/diary-entry-text.html',
     restrict: 'AE',
@@ -68,7 +108,7 @@ angular.module('diary.directives', [])
       $scope.startEditor = function($event) {
         // Open links in new window
         if ($event.target.tagName == "A") {
-          $window.open($event.target.href, '_system', 'location=yes');
+          Link.open($event.target.href);
           $event.preventDefault();
           return false;
         }
