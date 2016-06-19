@@ -1,7 +1,7 @@
 angular.module('diary.directives', [])
 
 .factory('Link', function($window, $cordovaInAppBrowser) {
-  if (require) {
+  if (window.require) {
     var {shell} = require('electron');
   }
   var Link = {
@@ -13,7 +13,7 @@ angular.module('diary.directives', [])
       }
     },
     open: function(url) {
-      if (require) {
+      if (window.require) {
         shell.openExternal(url);
       }
       else {
