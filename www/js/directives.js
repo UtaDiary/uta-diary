@@ -30,7 +30,7 @@ angular.module('diary.directives', [])
     restrict: 'AE',
     scope: {
       entry: '=',
-      avatarURL: '='
+      avatarURL: '@avatarUrl'
     },
     link: function($scope, $element, $attrs) {
       $scope.handleClick = function($event) {
