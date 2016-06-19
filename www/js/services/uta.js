@@ -101,21 +101,6 @@ angular.module('diary.services')
       return Uta.getBackupParent() + 'backups/';
     },
 
-    // Lists all available backup files by name.
-    listBackupFiles: function(callback) {
-      var backupDir = Uta.getBackupDirectory();
-      FileUtils.listDir(backupDir, function(err, entries) {
-        if (err) {
-          console.error("Error listing backups: ", backups);
-          return callback([]);
-        }
-        else {
-          var files = entries.map(function(entry) {return entry.name});
-          return callback(files);
-        }
-      });
-    },
-
     // Creates backup directories.
     createBackupDirs: function() {
       var q = $q.defer();

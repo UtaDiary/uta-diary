@@ -358,9 +358,9 @@ angular.module('diary.controllers', [])
   $scope.backups = [];
 
   $scope.refresh = function() {
-    Uta.listBackupFiles(function(files) {
-      console.log('Backup files: ' + JSON.stringify(files, null, 2));
-      $scope.backups = files;
+    Backups.list(function(names) {
+      console.log('Backups: ' + JSON.stringify(names, null, 2));
+      $scope.backups = names;
     });
   };
 
