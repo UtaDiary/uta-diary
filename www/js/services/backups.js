@@ -51,6 +51,7 @@ angular.module('diary.services')
             console.log("Created backup data: ", data);
             backups[backup] = data;
             window.localStorage.backups = JSON.stringify(backups, null, '  ');
+            return callback(null);
           }
         )
         .catch(
@@ -78,8 +79,19 @@ angular.module('diary.services')
     },
 
     // Deletes backup by name.
-    'delete': function(backup, callback) {
-      Uta.deleteFile(Uta.getBackupDirectory(), backup, callback);
+    'delete': function(name, callback) {
+      if (window.require) {
+        var json = window.localStorage.backups || '{}';
+        var backups = JSON.parse(json);
+
+        delete backups[name];
+        window.localStorage.backups = JSON.stringify(backups, null, '  ');
+
+        return callback(null);
+      }
+      else {
+        return Uta.deleteFile(Uta.getBackupDirectory(), backup, callback);
+      }
     }
   };
 
