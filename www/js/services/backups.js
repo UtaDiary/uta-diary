@@ -40,11 +40,6 @@ angular.module('diary.services')
       });
     },
 
-    // Imports backup by name.
-    import: function(backup, options, callback) {
-      Uta.importFile(Uta.getBackupDirectory(), backup, options, callback);
-    },
-
     // Creates backup by name.
     create: function(backup, options, callback) {
       if (window.require) {
@@ -66,6 +61,19 @@ angular.module('diary.services')
       }
       else {
         return Uta.exportFile(Uta.getBackupDirectory(), backup, options, callback);
+      }
+    },
+
+    // Restores backup by name.
+    restore: function(name, options, callback) {
+      if (window.require) {
+        var json = window.localStorage.backups || '{}';
+        var backups = JSON.parse(json);
+        var data = backups[name];
+        return Uta.loadJSON(data, options, callback);
+      }
+      else {
+        return Uta.importFile(Uta.getBackupDirectory(), backup, options, callback);
       }
     },
 

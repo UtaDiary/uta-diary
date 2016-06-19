@@ -500,11 +500,11 @@ angular.module('diary.controllers', [])
   $scope.importBackup = function(backup) {
     console.log("Importing backup: " + backup);
     $scope.confirmImport(function(options) {
-      Uta.Backups.import(backup, options, function(err) {
+      Uta.Backups.restore(backup, options, function(err) {
         if (err)
-          $scope.notify({ title: "Error", template: "Error importing from " + backup + "<br>\n" + err.message });
+          $scope.notify({ title: "Error", template: "Error restoring backup " + backup + "<br>\n" + err.message });
         else
-          $scope.notify({ title: "Success!", template: "Imported database from " + backup });
+          $scope.notify({ title: "Success!", template: "Restored backup " + backup });
       });
     });
   };
