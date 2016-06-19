@@ -41,7 +41,7 @@ angular.module('diary.services')
     },
 
     // Creates backup by name.
-    create: function(backup, options, callback) {
+    create: function(name, options, callback) {
       if (window.require) {
         var json = window.localStorage.backups || '{}';
         var backups = JSON.parse(json);
@@ -49,7 +49,7 @@ angular.module('diary.services')
         .then(
           function(data) {
             console.log("Created backup data: ", data);
-            backups[backup] = data;
+            backups[name] = data;
             window.localStorage.backups = JSON.stringify(backups, null, '  ');
             return callback(null);
           }
@@ -61,7 +61,7 @@ angular.module('diary.services')
         );
       }
       else {
-        return Uta.exportFile(Uta.getBackupDirectory(), backup, options, callback);
+        return Uta.exportFile(Uta.getBackupDirectory(), name, options, callback);
       }
     },
 
@@ -74,7 +74,7 @@ angular.module('diary.services')
         return Uta.loadJSON(data, options, callback);
       }
       else {
-        return Uta.importFile(Uta.getBackupDirectory(), backup, options, callback);
+        return Uta.importFile(Uta.getBackupDirectory(), name, options, callback);
       }
     },
 
@@ -90,7 +90,7 @@ angular.module('diary.services')
         return callback(null);
       }
       else {
-        return Uta.deleteFile(Uta.getBackupDirectory(), backup, callback);
+        return Uta.deleteFile(Uta.getBackupDirectory(), name, callback);
       }
     }
   };
