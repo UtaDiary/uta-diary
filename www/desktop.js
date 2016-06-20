@@ -4,13 +4,18 @@ const {app} = electron;
 // Module to create native browser window.
 const {BrowserWindow} = electron;
 
+const path = require('path');
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
 
 function createWindow() {
+
+  var iconPath = path.join(__dirname, '/img/icons/icon.png');
+
   // Create the browser window.
-  win = new BrowserWindow({width: 600, height: 700});
+  win = new BrowserWindow({ width: 600, height: 700, icon: iconPath });
 
   // and load the index.html of the app.
   win.loadURL(`file://${__dirname}/desktop.html`);

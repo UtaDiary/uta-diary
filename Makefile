@@ -21,15 +21,13 @@ android-sign: build
 
 desktop-build: build
 	electron-packager www UtaDiary \
-	  --icon=resources/icon.png \
 	  --platform=darwin,linux,win32 --arch=x64 --out=build \
 	  --version=1.2.3
 
-desktop-build-linux: build
+desktop-linux: build
 	electron-packager www UtaDiary \
-	  --icon=resources/icon.png \
 	  --platform=linux --arch=x64 --out=build \
-	  --version=1.2.3
+	  --version=1.2.3 --overwrite
 
 clean:
 	rm -rf build
