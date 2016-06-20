@@ -22,10 +22,11 @@ android-sign: build
 desktop-build: build
 	electron-packager www UtaDiary \
 	  --platform=darwin,linux,win32 --arch=x64 --out=build \
-	  --version=1.2.3
+	  --version=1.2.3 --overwrite
 
 desktop-linux: build
 	electron-packager www UtaDiary \
+	  --icon=www/img/icons/icon.png \
 	  --platform=linux --arch=x64 --out=build \
 	  --version=1.2.3 --overwrite
 
