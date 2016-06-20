@@ -1,5 +1,6 @@
 {
-  "name"    : "UtaDiaryDesktop",
-  "version" : "0.0.1",
+  "name"    : "uta-diary-desktop",
+  "productName": "UtaDiary",
+  "version" : "0.9.0",
   "main"    : "desktop.js"
 }
