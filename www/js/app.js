@@ -118,7 +118,7 @@ angular.module('diary', ['ionic', 'ngCordova', 'monospaced.elastic', 'diary.cont
           console.log('Initialised Uta.db: ', Uta.db);
 
           if (!Database.validateDB(Uta.db)) {
-            $state.go('root.splash');
+            $state.go('splash');
           }
         });
       }
