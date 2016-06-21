@@ -123,8 +123,12 @@ angular.module('diary.services')
         if (!self.tagDetails[token.raw])
           self.tagDetails[token.raw] = token;
 
-        var word = token.raw.replace(/\W+$/, '');
+        var word = token.raw.replace(/[:;,.!?]*\W*$/, '');
         var isPunctuation = /^[,:.!?'#]+/.test(token.raw);
+
+        if (word)
+          self.tagDetails[word] = token;
+
         if (!isPunctuation) {
           self.tokensForTag[token.pos] = self.tokensForTag[token.pos] || [];
           self.tokensForTag[token.pos].push(word);
