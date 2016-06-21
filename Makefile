@@ -5,7 +5,7 @@ release: android desktop
 
 android: android-build android-sign
 
-desktop: desktop-build
+desktop: desktop-build desktop-archives
 
 build:
 	mkdir -p build
@@ -19,9 +19,12 @@ android-sign: build
 	  zipalign -v -f 4 android-release-unsigned.apk UtaDiary.apk && \
 	  cp UtaDiary.apk ../../../../../build/
 
-desktop-build: build
+desktop-build: desktop-mac desktop-linux desktop-win
+
+desktop-mac: build
 	electron-packager www UtaDiary \
-	  --platform=darwin,linux,win32 --arch=x64 --out=build \
+	  --icon=www/img/icons/icon.icns \
+	  --platform=darwin --arch=x64 --out=build \
 	  --version=1.2.3 --overwrite
 
 desktop-linux: build
@@ -30,7 +33,22 @@ desktop-linux: build
 	  --platform=linux --arch=x64 --out=build \
 	  --version=1.2.3 --overwrite
 
+desktop-win: build
+	electron-packager www UtaDiary \
+	  --icon=www/img/icons/icon.ico \
+	  --platform=win32 --arch=x64 --out=build \
+	  --version=1.2.3 --overwrite
+
+desktop-archives: clean-zip
+	cd build && \
+	  zip -r UtaDiary-Linux-x64.zip UtaDiary-linux-x64 && \
+	  zip -r UtaDiary-OSX-x64.zip UtaDiary-darwin-x64 && \
+	  zip -r UtaDiary-Windows-x64.zip UtaDiary-win32-x64
+
 clean:
 	rm -rf build
 
-.PHONY: all release android desktop android-build android-sign desktop-build clean
+clean-zip:
+	rm build/UtaDiary-*.zip
+
+.PHONY: all release android desktop desktop-build desktop-mac desktop-linux desktop-win android-build android-sign clean
