@@ -8,10 +8,29 @@ angular.module('diary.controllers', [])
   }
 })
 
+.controller('RootCtrl', function($scope) {
+  $scope.$on('$ionicView.afterEnter', function(ev, data){
+    document.title = "Uta Diary";
+    ev.stopPropagation();
+  });
+})
+
+.controller('TabCtrl', function($scope, Uta) {
+  $scope.$on('$ionicView.afterEnter', function(ev, data){
+    document.title = "Uta Diary";
+    ev.stopPropagation();
+  });
+})
+
 .controller('SplashCtrl', function($scope, $state, $timeout, Uta, Init) {
+  $scope.$on('$ionicView.afterEnter', function(ev, data){
+    document.title = "Uta Diary";
+    ev.stopPropagation();
+  });
+
   Init.initSplashScreen().finally(function() {
     console.log("Leaving splash screen!");
-    $state.go('login');
+    $state.go('root.login');
   });
 })
 
@@ -201,7 +220,7 @@ angular.module('diary.controllers', [])
   $scope.success = function() {
     document.getElementsByName('passphrase')[0].type = 'password';
     document.getElementsByName('confirmation')[0].type = 'password';
-    $state.go('intro');
+    $state.go('root.intro');
   };
 
   $scope.fail = function(status, error, details) {
@@ -258,7 +277,7 @@ angular.module('diary.controllers', [])
 
   $scope.success = function() {
     var input = document.getElementsByName('passphrase')[0].type = 'password';
-    $state.go('intro');
+    $state.go('root.intro');
   };
 
   $scope.fail = function(status, error, details) {
@@ -287,13 +306,6 @@ angular.module('diary.controllers', [])
       $scope.entries = Entries.all();
     }
   );
-})
-
-.controller('TabCtrl', function($scope, Uta) {
-  $scope.$on('$ionicView.afterEnter', function(ev, data){
-    document.title = "Uta Diary";
-    ev.stopPropagation();
-  });
 })
 
 .controller('JournalDetailCtrl', function($scope, $stateParams, Uta, Entries) {
@@ -340,7 +352,7 @@ angular.module('diary.controllers', [])
   $scope.changePassphrase = function() {
     if (Uta.db.settings.enableEncryption) {
       console.log("Navigating to passphrase screen...")
-      $state.go('passphrase');
+      $state.go('root.passphrase');
     }
   };
   $scope.enableEncryption = function() {
@@ -351,7 +363,7 @@ angular.module('diary.controllers', [])
       Uta.db.settings.enableEncryption = false;
       Uta.commit(function() {
         console.log("Navigating to passphrase screen...");
-        $state.go('passphrase');
+        $state.go('root.passphrase');
       });
     }
     else {

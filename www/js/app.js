@@ -23,6 +23,14 @@ angular.module('diary', ['ionic', 'ngCordova', 'monospaced.elastic', 'diary.cont
   // AngularUI Router States
   $stateProvider
 
+  .state('root', {
+    url: "/root",
+    abstract: true,
+    templateUrl: "templates/root.html",
+    controller: 'RootCtrl',
+    resolve: {}
+  })
+
   .state('splash', {
     url: '/splash',
     templateUrl: 'templates/splash.html',
@@ -31,7 +39,7 @@ angular.module('diary', ['ionic', 'ngCordova', 'monospaced.elastic', 'diary.cont
   })
 
   // Login
-  .state('login', {
+  .state('root.login', {
     url: '/login',
     templateUrl: 'templates/login.html',
     controller: 'LoginCtrl',
@@ -40,7 +48,7 @@ angular.module('diary', ['ionic', 'ngCordova', 'monospaced.elastic', 'diary.cont
         return Init.initLoginScreen().then(function() {
           if (!Uta.vault.storage.vault.encrypted) {
             console.log("Skipping login!");
-            $state.go('start');
+            $state.go('root.start');
           }
         });
       }
@@ -48,7 +56,7 @@ angular.module('diary', ['ionic', 'ngCordova', 'monospaced.elastic', 'diary.cont
   })
 
   // Start
-  .state('start', {
+  .state('root.start', {
     url: '/start',
     templateUrl: 'templates/start.html',
     controller: 'StartCtrl',
@@ -60,10 +68,10 @@ angular.module('diary', ['ionic', 'ngCordova', 'monospaced.elastic', 'diary.cont
           var createdPassphrase = Uta.db.events.createPassphrase;
 
           if (!completedTutorial || Uta.db.settings.enableTutorial) {
-            return $state.go('intro');
+            return $state.go('root.intro');
           }
           else if (!createdPassphrase) {
-            return $state.go('passphrase');
+            return $state.go('root.passphrase');
           }
           else {
             return $state.go('tab.journal');
@@ -74,7 +82,7 @@ angular.module('diary', ['ionic', 'ngCordova', 'monospaced.elastic', 'diary.cont
   })
 
   // Tutorial
-  .state('intro', {
+  .state('root.intro', {
     url: '/intro',
     templateUrl: 'templates/intro.html',
     controller: 'IntroCtrl',
@@ -91,7 +99,7 @@ angular.module('diary', ['ionic', 'ngCordova', 'monospaced.elastic', 'diary.cont
   })
 
   // Passphrase
-  .state('passphrase', {
+  .state('root.passphrase', {
     url: '/passphrase',
     templateUrl: 'templates/passphrase.html',
     controller: 'PassphraseCtrl',
@@ -110,7 +118,7 @@ angular.module('diary', ['ionic', 'ngCordova', 'monospaced.elastic', 'diary.cont
           console.log('Initialised Uta.db: ', Uta.db);
 
           if (!Database.validateDB(Uta.db)) {
-            $state.go('splash');
+            $state.go('root.splash');
           }
         });
       }
