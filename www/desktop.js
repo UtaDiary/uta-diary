@@ -15,7 +15,7 @@ function createWindow() {
   var iconPath = path.join(__dirname, '/img/icons/icon.png');
 
   // Create the browser window.
-  win = new BrowserWindow({ width: 600, height: 700, icon: iconPath });
+  win = new BrowserWindow({ width: 600, height: 700, icon: iconPath, title: "Uta Diary" });
 
   // and load the index.html of the app.
   win.loadURL(`file://${__dirname}/desktop.html`);
