@@ -3,6 +3,7 @@
 angular.module('diary', ['ionic', 'ngCordova', 'monospaced.elastic', 'diary.controllers', 'diary.services', 'diary.directives'])
 
 .run(function($ionicPlatform, Uta, Entries, $ionicConfig) {
+
   $ionicPlatform.ready(function() {
     if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
       // Hide the input accessory bar
@@ -102,6 +103,7 @@ angular.module('diary', ['ionic', 'ngCordova', 'monospaced.elastic', 'diary.cont
     url: "/tab",
     abstract: true,
     templateUrl: "templates/tabs.html",
+    controller: 'TabCtrl',
     resolve: {
       init: function(Uta, Database, Init, $state) {
         return Init.initJournalScreen().then(function(db) {

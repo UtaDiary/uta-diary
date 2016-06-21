@@ -289,6 +289,13 @@ angular.module('diary.controllers', [])
   );
 })
 
+.controller('TabCtrl', function($scope, Uta) {
+  $scope.$on('$ionicView.afterEnter', function(ev, data){
+    document.title = "Uta Diary";
+    ev.stopPropagation();
+  });
+})
+
 .controller('JournalDetailCtrl', function($scope, $stateParams, Uta, Entries) {
   $scope.Entries = Entries;
   $scope.entry = Entries.get($stateParams.entryId);
