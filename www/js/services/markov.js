@@ -63,6 +63,12 @@ angular.module('diary.services')
     this.init();
   };
 
+  // Initialises the module.
+  Markov.init = function(uta) {
+    Uta = uta;
+    return this;
+  };
+
   // Initialises the instance.
   Markov.prototype.init = function() {
     this.PRNG = new Random();
@@ -329,6 +335,54 @@ angular.module('diary.services')
     }
   };
 
-  Uta.Markov = Markov;
+  // Checks that text has at least the given word count.
+  Markov.atLeast = function(text, wordCount) {
+    var wordPattern = /\w+/g;
+    var words = text.match(wordPattern) || [];
+    console.log("words: ", words);
+    return words.length >= wordCount;
+  };
+
+  Markov.testSentences = function() {
+    var data =
+      "Hello! This a test entry.\n" +
+      "Hopefully newlines will work okay.";
+
+    var markov = new Markov();
+    markov.seed("abcd");
+    markov.train(data);
+    var result = markov.generate();
+
+    return Markov.atLeast(result, 10);
+  };
+
+  Markov.testPunctuation = function() {
+    var data =
+      "An entry with punctuation!\n" +
+      "Hopefully,,, this:: will# be fine.";
+
+    var markov = new Markov();
+    markov.seed("abcd");
+    markov.train(data);
+    var result = markov.generate();
+
+    return Markov.atLeast(result, 9);
+  };
+
+  // Tests text generation.
+  Markov.testGeneration = function() {
+    var tests = [
+      [Markov.testSentences, "Should handle sentences in training data"],
+      [Markov.testPunctuation, "Should handle punctuation in training data"]
+    ];
+    var module = [tests, "Markov"];
+    Uta.Test.runModule(module);
+  };
+
+  // Test this module.
+  Markov.test = function() {
+    Markov.testGeneration();
+  };
+
   return Markov;
 });

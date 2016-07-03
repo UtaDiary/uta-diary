@@ -70,7 +70,7 @@ angular.module('diary.services')
   return KeyRing;
 })
 
-.factory('Uta', function($cordovaFile, $q, Backups, Crypto, Database, Entries, FileUtils, KeyRing, Test, Vault) {
+.factory('Uta', function($cordovaFile, $q, Backups, Crypto, Database, Entries, FileUtils, KeyRing, Markov, Test, Vault) {
 
   var Uta = {
 
@@ -410,6 +410,7 @@ angular.module('diary.services')
   Uta.Entries = Entries.init(Uta);
   Uta.Database = Database.init(Uta);
   Uta.KeyRing = KeyRing.init(Uta);
+  Uta.Markov = Markov.init(Uta);
   Uta.Test = Test.init(Uta);
   Uta.Vault = Vault.init(Uta);
 

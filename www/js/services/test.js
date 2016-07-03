@@ -151,6 +151,7 @@ angular.module('diary.services')
       Uta.Database.test();
       Uta.Crypto.test(function(er1) {
         Uta.Vault.test(function(er2) {
+          Uta.Markov.test();
           return callback(er1 || er2);
         });
       });

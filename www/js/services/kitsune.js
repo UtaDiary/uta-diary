@@ -38,7 +38,7 @@ angular.module('diary.services')
       return null;
     },
     remove: function(entry) {
-      console.log("Skipping removal of auto-generated entry...")
+      console.log("Skipping removal of auto-generated entry...");
     }
   };
   Uta.Kitsune = Kitsune;
