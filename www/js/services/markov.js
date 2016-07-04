@@ -100,7 +100,6 @@ angular.module('diary.services')
   // Trains the generator with given source text.
   Markov.prototype.train = function(sourceText) {
     this.addEntry(sourceText);
-    console.log("Updated Markov model: ", this);
   };
 
   // Adds given entry to the Markov model.
@@ -167,20 +166,28 @@ angular.module('diary.services')
     this.paragraphs.push(paragraph);
   };
 
+  Markov.punctuationPattern = /[.,;:<>?'"`~!@#$%^&*()\-_+=|{}\[\]\/\\]/g;
+
+  Markov.nonWordChars = '[.,;:<>?\'"`~!@#$%^&*()_+=|{}\\[\\]\\/\\\\]+';
+
+  Markov.wordChars = '[^.,;:<>?\'"`~!@#$%^&*()_+=|{}\\[\\]\\/\\\\]+';
+
+  Markov.innerTokenPattern = new RegExp(
+    Markov.wordChars + '|' +
+    Markov.nonWordChars, 'g'
+  );
+
   // Adds given sentence to the Markov model.
   Markov.prototype.addSentence = function(sentence) {
     var self = this;
-    var tokens = sentence.split(/\s+/);
+    var tokens = [];
+    var outerTokens = sentence.split(/\s+/);
 
-    // Split words followed by punctuation into two tokens.
-    for (var i = 0; i < tokens.length; i++) {
-      var token = tokens[i];
-      var parts = token.match(/(\S*\w+)([,:.!?]+)$/);
-      if (parts) {
-        var word = parts[1];
-        var punctuation = parts[2];
-        tokens.splice(i, 1, word, punctuation);
-      }
+    // Split into inner word and non-word tokens.
+    for (var i = 0; i < outerTokens.length; i++) {
+      var token = outerTokens[i];
+      var inner = token.match(Markov.innerTokenPattern) || [];
+      tokens = tokens.concat(inner);
     }
 
     // Add each token.
@@ -339,8 +346,19 @@ angular.module('diary.services')
   Markov.atLeast = function(text, wordCount) {
     var wordPattern = /\w+/g;
     var words = text.match(wordPattern) || [];
-    console.log("words: ", words);
     return words.length >= wordCount;
+  };
+
+  Markov.testSeeds = function(testFunction) {
+    var status = true;
+    for (var seed = 0; seed < 20; seed++) {
+      var success = testFunction(seed);
+      if (!success) {
+        console.error("Failed with seed: " + seed);
+        status = false;
+      }
+    }
+    return status;
   };
 
   Markov.testSentences = function() {
@@ -356,17 +374,21 @@ angular.module('diary.services')
     return Markov.atLeast(result, 10);
   };
 
-  Markov.testPunctuation = function() {
+  Markov.testPunctuationFor = function(seed) {
     var data =
       "An entry with punctuation!\n" +
       "Hopefully,,, this:: will# be fine.";
 
     var markov = new Markov();
-    markov.seed("abcd");
+    markov.seed(seed);
     markov.train(data);
     var result = markov.generate();
 
     return Markov.atLeast(result, 9);
+  };
+
+  Markov.testPunctuation = function() {
+    return Markov.testSeeds(Markov.testPunctuationFor);
   };
 
   // Tests text generation.
