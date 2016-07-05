@@ -168,9 +168,9 @@ angular.module('diary.services')
 
   Markov.punctuationPattern = /[.,;:<>?'"`~!@#$%^&*()\-_+=|{}\[\]\/\\]/g;
 
-  Markov.nonWordChars = '[.,;:<>?\'"`~!@#$%^&*()_+=|{}\\[\\]\\/\\\\]+';
+  Markov.nonWordChars = '[.,;:<>?"`~!@#$%^&*()_+=|{}\\[\\]\\/\\\\]+';
 
-  Markov.wordChars = '[^.,;:<>?\'"`~!@#$%^&*()_+=|{}\\[\\]\\/\\\\]+';
+  Markov.wordChars = '[^.,;:<>?"`~!@#$%^&*()_+=|{}\\[\\]\\/\\\\]+';
 
   Markov.innerTokenPattern = new RegExp(
     Markov.wordChars + '|' +
@@ -252,13 +252,23 @@ angular.module('diary.services')
     sentences.forEach(function(sentence, i) {
       sentence.forEach(function(tiki, j) {
         var isPunctuation = function(word) { return /^[,:.!?]+$/.test(word); };
+        var isFirst = (j == 0);
         var word = self.tokens[tiki];
         var replacement, replacementTiki;
 
+        // Skip the first word in sentence for now.
+        if (isFirst)
+          return;
+
+        // Replace any words in a sentence before a punctuation.
         if (isPunctuation(word)) {
           do {
             var lastTiki = sentence[j-1];
             var prevWord = self.tokens[lastTiki];
+            if (!prevWord) {
+              console.warn("No previous word for: " + word);
+              continue;
+            }
             replacement = self.replacementWord(prevWord);
             replacementTiki = self.tikis[replacement];
             if (replacementTiki == null) {
@@ -344,7 +354,7 @@ angular.module('diary.services')
 
   // Checks that text has at least the given word count.
   Markov.atLeast = function(text, wordCount) {
-    var wordPattern = /\w+/g;
+    var wordPattern = /[\w']+/g;
     var words = text.match(wordPattern) || [];
     return words.length >= wordCount;
   };
@@ -377,14 +387,15 @@ angular.module('diary.services')
   Markov.testPunctuationFor = function(seed) {
     var data =
       "An entry with punctuation!\n" +
-      "Hopefully,,, this:: will# be fine.";
+      "Hopefully,,, this:: will# be fine." +
+      ":) Let's check apostrophes and smileys.";
 
     var markov = new Markov();
     markov.seed(seed);
     markov.train(data);
     var result = markov.generate();
 
-    return Markov.atLeast(result, 9);
+    return Markov.atLeast(result, 14);
   };
 
   Markov.testPunctuation = function() {
