@@ -7,6 +7,12 @@ android: android-build android-sign
 
 desktop: desktop-build desktop-archives
 
+serve:
+	ionic-serve
+
+live-reload:
+	ionic serve --live-reload
+
 build:
 	mkdir -p build
 
@@ -54,4 +60,4 @@ clean-desktop:
 clean-zip:
 	rm -f build/UtaDiary-*.zip
 
-.PHONY: all release android desktop android-build android-sign desktop-build desktop-mac desktop-linux desktop-win desktop-archives clean clean-desktop clean-zip
+.PHONY: all release android desktop serve live-reload android-build android-sign desktop-build desktop-mac desktop-linux desktop-win desktop-archives clean clean-desktop clean-zip
