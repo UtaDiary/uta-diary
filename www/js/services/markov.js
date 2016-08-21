@@ -110,6 +110,9 @@ angular.module('diary.services')
     var paragraphs = normalized.split(/\n\n+/);
 
     paragraphs.forEach(function(paragraph) {
+      if (self.skippable(paragraph)) {
+        return;
+      }
       self.addParagraph(paragraph);
       entry.push(self.paragraphs.length - 1);
     });
@@ -117,6 +120,15 @@ angular.module('diary.services')
     self.entries.push(entry);
     self.entryTexts.push(entryText);
     self.analyse(entryText);
+  };
+
+  // Checks whether the given paragraph is skippable.
+  Markov.prototype.skippable = function(text) {
+    var listPattern = /^\s*([-+~]|\d+\\?\. |#)/;
+    var skipPatterns = [ listPattern ];
+    return skipPatterns.some(
+      pattern => pattern.test(text)
+    );
   };
 
   // Analyses a given body of text.
@@ -275,7 +287,7 @@ angular.module('diary.services')
               console.warn("Got null tiki for ", replacement);
             }
           }
-          while (isPunctuation(replacement));
+          while (replacementTiki == null || isPunctuation(replacement));
           sentence[j-1] = replacementTiki;
         }
       });
@@ -345,6 +357,10 @@ angular.module('diary.services')
     if (candidates) {
       var index = this.PRNG.rand(candidates.length);
       var replacement = candidates[index];
+      var tokenIndex = this.tikis[replacement];
+      if (tokenIndex == undefined) {
+        this.addToken(replacement);
+      }
       return replacement;
     }
     else {
