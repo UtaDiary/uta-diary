@@ -25,6 +25,9 @@ android-sign: build
 	  zipalign -v -f 4 android-release-unsigned.apk UtaDiary.apk && \
 	  cp UtaDiary.apk ../../../../../build/
 
+android-install: build
+	adb install -r build/UtaDiary.apk
+
 desktop-build: clean-desktop desktop-mac desktop-linux desktop-win
 
 desktop-mac: build
@@ -60,4 +63,4 @@ clean-desktop:
 clean-zip:
 	rm -f build/UtaDiary-*.zip
 
-.PHONY: all release android desktop serve live-reload android-build android-sign desktop-build desktop-mac desktop-linux desktop-win desktop-archives clean clean-desktop clean-zip
+.PHONY: all release android desktop serve live-reload android-build android-sign android-install desktop-build desktop-mac desktop-linux desktop-win desktop-archives clean clean-desktop clean-zip
