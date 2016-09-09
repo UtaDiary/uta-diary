@@ -306,8 +306,9 @@ angular.module('diary.services')
       for (var j = 0; j < sentenceTikis.length; j++) {
         var capitalize = function(word) { return word.charAt(0).toUpperCase() + word.slice(1); };
         var downcase = function(word) { return word.toLowerCase(); };
-        var tiki = sentenceTikis[j];
-        var word = this.tokens[tiki];
+        var defaultTiki = sentenceTikis[j];
+        var word = self.buildWord(defaultTiki);
+        var tiki = this.tikis[word];
         var nextTiki = sentenceTikis[j + 1];
         var nextToken = this.tokens[nextTiki];
         var isPunctuation = /^[,:.!?]+$/.test(nextToken);
@@ -338,6 +339,15 @@ angular.module('diary.services')
     return paragraph;
   }
 
+  // Builds word for a given default token index.
+  Markov.prototype.buildWord = function(defaultTiki) {
+    var defaultWord = this.tokens[defaultTiki];
+    var word = this.PRNG.random() < 0.1
+      ? this.replacementWord(defaultWord)
+      : defaultWord;
+    return word;
+  };
+
   // Selects a random paragraph index.
   Markov.prototype.randomPiki = function() {
     return this.PRNG.rand(this.paragraphs.length);
@@ -352,9 +362,10 @@ angular.module('diary.services')
 
   // Selects a replacement word with matching part-of-speech.
   Markov.prototype.replacementWord = function(word) {
-    var tag = this.tagDetails[word].pos;
-    var candidates = this.tokensForTag[tag];
-    if (candidates) {
+    var tagDetails = this.tagDetails[word];
+    var tag = tagDetails ? tagDetails.pos : null;
+    var candidates = this.tokensForTag[tag] ? this.tokensForTag[tag] : [];
+    if (candidates.length > 0) {
       var index = this.PRNG.rand(candidates.length);
       var replacement = candidates[index];
       var tokenIndex = this.tikis[replacement];
