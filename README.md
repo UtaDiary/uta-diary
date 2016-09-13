@@ -17,9 +17,9 @@ random entry for each one of yours, using the magical science
 of computer algorithms. We hope the results will delight you!
 ```
 
-[Now available](https://play.google.com/apps/testing/com.ionicframework.utanikki207884) on Google Play<sup>™</sup> for public alpha testing on Android!
+[Now available](https://play.google.com/store/apps/details?id=com.ionicframework.utanikki207884) for Android on Google Play!
 
-<a href="https://play.google.com/apps/testing/com.ionicframework.utanikki207884">
+<a href="https://play.google.com/store/apps/details?id=com.ionicframework.utanikki207884">
   <img src="https://play.google.com/intl/en_us/badges/images/badge_new.png">
 </a>
 
