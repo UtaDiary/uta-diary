@@ -96,7 +96,7 @@ angular.module('diary.services')
           var derivationAlgo = { name: 'PBKDF2', salt: salt, iterations: 1e4, hash: 'SHA-256' };
           var initialKey = key;
           var derivedKeyAlgo = { name: 'AES-CBC', length: 256 };
-          var extractable = true;
+          var extractable = false;
           var usages = [ 'encrypt', 'decrypt', 'wrapKey', 'unwrapKey' ];
           return window.crypto.subtle.deriveKey(
             derivationAlgo, initialKey, derivedKeyAlgo, extractable, usages
@@ -157,7 +157,7 @@ angular.module('diary.services')
       .then(
         function(buffer) {
           var array = new Uint8Array(buffer);
-          return window.crypto.subtle.importKey('raw', array, 'HKDF', true, ['deriveKey', 'deriveBits']);
+          return window.crypto.subtle.importKey('raw', array, 'HKDF', false, ['deriveKey', 'deriveBits']);
         }
       )
       .then(
@@ -180,7 +180,7 @@ angular.module('diary.services')
       var derivationAlgo = { name: 'HKDF', hash: 'SHA-256', salt: salt, info: info };
       var initialKey = parentKey;
       var derivedKeyAlgo = { name: 'HMAC', hash: 'SHA-256', length: 256 };
-      var extractable = true;
+      var extractable = false;
       var usages = [ 'sign', 'verify' ];
       window.crypto.subtle.deriveKey(
         derivationAlgo, initialKey, derivedKeyAlgo, extractable, usages
@@ -205,7 +205,7 @@ angular.module('diary.services')
       var derivationAlgo = { name: 'HKDF', hash: 'SHA-256', salt: salt, info: info };
       var initialKey = parentKey;
       var derivedKeyAlgo = { name: 'AES-CBC', length: 256 };
-      var extractable = true;
+      var extractable = false;
       var usages = [ 'encrypt', 'decrypt', 'wrapKey', 'unwrapKey' ];
       window.crypto.subtle.deriveKey(
         derivationAlgo, initialKey, derivedKeyAlgo, extractable, usages
