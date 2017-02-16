@@ -1,17 +1,27 @@
 
 all: release
 
+serve: ionic
+
+debug: ionic-debug
+
 release: android desktop
 
 android: android-build android-sign
 
 desktop: desktop-build desktop-archives
 
-serve:
-	ionic-serve
+ionic:
+	ionic serve --consolelogs
 
-live-reload:
+ionic-live:
 	ionic serve --live-reload
+
+ionic-debug:
+	ionic run --debug --device --consolelogs
+
+ionic-debug-live:
+	ionic run --debug --device --consolelogs --livereload
 
 build:
 	mkdir -p build
