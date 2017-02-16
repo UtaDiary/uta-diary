@@ -53,6 +53,7 @@ angular.module('diary.services')
     };
 
     var startDB = function(callback) {
+      console.log("Starting database...");
       loadKeyRing(function(err) {
         loadWelcomeText(function() {
           Uta.Entries.start(function(err) {
@@ -74,9 +75,18 @@ angular.module('diary.services')
     };
 
     var loadKeyRing = function(callback) {
+      console.log("Loading key ring...");
 
       loadVaultMetadata(function(err, vault) {
         if (err) return callback(err);
+
+        if (vault) {
+          console.log("Loaded vault: ", vault);
+        }
+        else {
+          vault = new Vault();
+          console.log("Created new vault: ", vault);
+        }
 
         vault = vault || new Vault();
 
@@ -89,9 +99,15 @@ angular.module('diary.services')
           KeyRing.create(pass, salt)
           .then(
             function(keyRing) {
+              console.log("Created key ring");
               Uta.vault = vault;
               Uta.keyRing = keyRing;
               return callback(null);
+            }
+          )
+          .catch(
+            function(error) {
+              console.log("Failed creating key ring: " + error.message);
             }
           );
         });
@@ -109,7 +125,7 @@ angular.module('diary.services')
     };
 
     var loadVaultMetadata = function(callback) {
-      console.log("Loading vault metadata...")
+      console.log("Loading vault metadata...");
 
       var handleJSON = function(json) {
         var data = angular.fromJson(json);
@@ -121,17 +137,22 @@ angular.module('diary.services')
         return callback(null, vault);
       };
 
+      var handleError = function(err) {
+        console.error("Failed loading vault metadata: " + err.message);
+      };
+
       if (window.cordova) {
         Uta.readFile(Uta.getDataDirectory(), "entries.json")
-          .then(handleJSON);
+          .then(handleJSON, handleError);
       }
       else {
         Uta.readLocalStorage('diaryDB')
-          .then(handleJSON);
+          .then(handleJSON, handleError);
       }
     };
 
     var loadPassphrase = function(callback) {
+      console.log("Loading empty passphrase...");
       // TODO: Prompt for passphrase
       var passphrase = '';
       return callback(null, passphrase);

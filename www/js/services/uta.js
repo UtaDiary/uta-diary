@@ -31,6 +31,7 @@ angular.module('diary.services')
 
   // Creates a new key ring from passphrase and salt.
   KeyRing.create = function(passphrase, salt) {
+    console.log("Creating key ring...");
     var keyRing = new KeyRing();
     var promise = keyRing.configure(passphrase, salt);
     return promise;
@@ -45,11 +46,16 @@ angular.module('diary.services')
 
     // Configures this key ring with passphrase and salt.
     configure: function(passphrase, salt) {
+      console.log("Configuring key ring...");
       var q = $q.defer();
       var self = this;
 
+      console.log("Deriving keys...");
       Crypto.deriveKeys(passphrase, salt, function(err, keys) {
-        if (err) return q.reject(err);
+        if (err) {
+          console.log("Failed deriving keys: " + err.message);
+          return q.reject(err);
+        }
 
         self.passphrase = passphrase;
         self.salt = salt;
