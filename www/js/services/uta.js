@@ -93,7 +93,7 @@ angular.module('diary.services')
     // Gets root of the directory for backups.
     getBackupRoot: function() {
       if (ionic.Platform.isAndroid()) {
-        return cordova.file.externalRootDirectory;
+        return cordova.file.externalRootDirectory || 'file:///storage/sdcard1/';
       }
     },
 
