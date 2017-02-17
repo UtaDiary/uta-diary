@@ -83,6 +83,9 @@ angular.module('diary.services')
     // The Uta Diary database.
     db: {},
 
+    // The external storage directory.
+    externalStorageDirectory: "",
+
     // Gets the directory for application data.
     getDataDirectory: function() {
       if (ionic.Platform.isAndroid()) {
@@ -90,11 +93,67 @@ angular.module('diary.services')
       }
     },
 
+    // Refreshes the external storage directory.
+    refreshExternalStorage: function(callback) {
+      if (ionic.Platform.isAndroid()) {
+        Uta.getExternalStorage(
+          function(err, result) {
+            if (err) {
+              console.log("Failed refreshing external storage: " + err.message);
+              return callback(err);
+            }
+            else {
+              console.log("Found external storage directory: " + result);
+              Uta.externalStorageDirectory = result;
+              return callback(null);
+            }
+          }
+        );
+      }
+      else {
+        return callback(null);
+      }
+    },
+
+    // Gets external storage directory.
+    getExternalStorage: function(callback) {
+      console.log("Getting external storage directory...");
+
+      console.log("Checking for cordova external root...");
+      var cordovaRoot = cordova.file.externalRootDirectory;
+      if (cordovaRoot) {
+        return callback(null, cordovaRoot);
+      }
+
+      console.log("Checking for sdcards...");
+      var storageRoot = 'file:///storage/';
+      var sdcard1 = 'sdcard1/';
+      var sdcard0 = 'sdcard0/';
+
+      console.log("Checking for sdcard1...");
+      $cordovaFile.checkDir(storageRoot, sdcard1)
+      .then(
+        function(success) {
+          return callback(null, storageRoot + sdcard1)
+        },
+        function(error) {
+          console.log("Checking for sdcard0...");
+          $cordovaFile.checkDir(storageRoot, sdcard0)
+          .then(
+            function(success) {
+              return callback(null, storageRoot + sdcard0);
+            },
+            function(error) {
+              return callback(new Error("Failed finding external storage"));
+            }
+          );
+        }
+      );
+    },
+
     // Gets root of the directory for backups.
     getBackupRoot: function() {
-      if (ionic.Platform.isAndroid()) {
-        return cordova.file.externalRootDirectory || 'file:///storage/sdcard1/';
-      }
+      return Uta.externalStorageDirectory;
     },
 
     // Gets parent of the directory for backups.

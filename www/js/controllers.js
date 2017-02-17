@@ -503,8 +503,6 @@ angular.module('diary.controllers', [])
   };
 
   $scope.export = function() {
-    var root = Uta.getBackupRoot();
-    var path = 'UtaDiary/backups/';
     $scope.selectExportOptions(function(options) {
       if (options.filename) {
         var file = options.filename;

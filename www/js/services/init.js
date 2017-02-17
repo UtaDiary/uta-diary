@@ -22,14 +22,18 @@ angular.module('diary.services')
 
       waitForFS(function() {
 
-        startDB(function(err, db) {
-          if (err) return fail("Failed starting database: ", err);
+        refreshDirectories(function(err) {
+          if (err) console.error("Failed refreshing directories: " + err.message);
 
-          runTests(function(err) {
-            if (err) console.error("Failed Uta tests: " + err.message);
+          startDB(function(err, db) {
+            if (err) return fail("Failed starting database: ", err);
 
-            runMigrations(function() {
-              resolveDB();
+            runTests(function(err) {
+              if (err) console.error("Failed Uta tests: " + err.message);
+
+              runMigrations(function() {
+                resolveDB();
+              });
             });
           });
         });
@@ -71,6 +75,15 @@ angular.module('diary.services')
             return callback(null, Uta.Entries.db());
           });
         });
+      });
+    };
+
+    var refreshDirectories = function(callback) {
+      Uta.refreshExternalStorage(function(err) {
+        if (err)
+          return callback(err);
+        else
+          return callback(null);
       });
     };
 
