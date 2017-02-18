@@ -1,7 +1,7 @@
 {
   "name": "uta-diary-desktop",
   "productName": "UtaDiary",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "main": "desktop.js",
   "dependencies": {
     "electron-debug": "^1.1.0"
