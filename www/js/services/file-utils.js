@@ -7,6 +7,7 @@ angular.module('diary.services')
 
     // Lists files within a directory.
     listDir: function(path, callback) {
+      console.debug("Listing directory: '" + path + "'")
 
       $window.resolveLocalFileSystemURL(path,
       function (fileSystem) {

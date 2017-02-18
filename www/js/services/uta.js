@@ -302,6 +302,7 @@ angular.module('diary.services')
 
     // Reads data from the file system.
     readFile: function(path, filename) {
+      console.debug("Reading file '" + filename + "' at path '" + path + "'");
       return $cordovaFile.readAsText(path, filename)
       .then(
         function(data) {
@@ -310,6 +311,7 @@ angular.module('diary.services')
       )
       .catch(
         function(error) {
+          console.debug("Failed reading file: ", error);
           return new Error("Failed reading file: " + error.message);
         }
       );
